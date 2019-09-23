@@ -1,0 +1,23 @@
+{
+  "name": "int3306-4-lms",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "eslint": "./node_modules/.bin/eslint",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "9.0.6",
+    "react": "16.9.0",
+    "react-dom": "16.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.14.3",
+    "prettier": "^1.18.2"
+  }
+}
