@@ -4,15 +4,15 @@
 
 ## Khái niệm hệ thống quản lý học tập
 
-Hệ thống quản lý học tập là một **ứng dụng** cung cấp những tính năng hỗ trợ việc học tập/giảng dạy như: *quản lý người học*, *quản lý tài liệu học tập*, *theo dõi hoạt động học tập*, *trao đổi*, *báo cáo*, ... - tất cả đều trực tuyến.
+Hệ thống quản lý học tập (Learning Management System, LMS) là một **ứng dụng** cung cấp những tính năng hỗ trợ việc học tập/giảng dạy như: *quản lý người học*, *quản lý tài liệu học tập*, *theo dõi hoạt động học tập*, *trao đổi*, *báo cáo*, ... - tất cả những tính năng này đều trực tuyến.
 
-Sử dụng một hệ thống như vậy mang lại một số thuận tiện như: *không cần ghi chép như học tập/giảng dạy truyền thống*, *linh động hơn về giờ giấc*, *không cần phải tập trung thành viên trong lớp học*,...
+Sử dụng một hệ thống như vậy mang lại những thuận tiện như: *không cần ghi chép như học tập/giảng dạy truyền thống*, *linh động hơn về giờ giấc*, *không cần phải tập trung thành viên trong lớp học tại một địa điểm, giờ giấc cụ thể*,...
 
 ## Hệ thống hiện có
 
-Hiện đại, trường đại học công nghệ, đại học quốc gia Hà Nội có triển khai [website môn học](https://courses.uet.vnu.edu.vn).
+Hiện tại, **trường đại học công nghệ, đại học quốc gia Hà Nội** có triển khai [website môn học](https://courses.uet.vnu.edu.vn).
 
-Website này cung cấp được những tính năng thiết yếu như: *tìm kiếm môn học*, *đăng ký tham gia lớp học*, *đăng tài liệu môn học*, *nộp bài tập*, *thi trắc nghiệm trên máy*.
+Website này cung cấp được những tính năng thiết yếu của một **LMS** như: *tìm kiếm môn học*, *đăng ký tham gia lớp học*, *đăng tài liệu môn học*, *nộp bài tập*, *thi trắc nghiệm trên máy*.
 
 Tuy nhiên website môn học này còn những nhược điểm:
 
@@ -27,7 +27,7 @@ Nhóm 1 đề xuất một hệ thống mở hơn so với website môn học.
 
 Cụ thể, hệ thống này sẽ không chỉ gói gọn trong phạm vi một trường học mà là bất cứ ai, bất cứ đâu.
 
-Hơn nữa, trong hầu hết các hệ thống quản lý học tập, kiểu người dùng được quy định chặt chẽ (học viên riêng, giảng viên riêng). Hệ thống được đề xuất dựa trên tư tưởng: *ai cũng có thể đóng vai trò làm học viên hoặc giảng viên (còn làm nổi không là một khía cạnh khác)*.
+Hơn nữa, trong hầu hết các **LMS**, kiểu người dùng được quy định chặt chẽ ngay từ đầu (học viên riêng, giảng viên riêng). Hệ thống được đề xuất dựa trên tư tưởng: *ai cũng có thể đóng vai trò làm học viên hoặc giảng viên (còn làm nổi không là một khía cạnh khác)*.
 
 Như vậy, bất cứ ai cũng có thể tạo khóa học của riêng mình, có thể tham gia bất cứ khóa học nào (trừ khóa học do mình tạo ra). Khóa học có thể *công khai* hoặc *kín*.
 
@@ -146,6 +146,8 @@ Tác nhân được xếp vào loại này nếu chưa đăng nhập.
 
 Tác nhân được xếp vào loại này nếu đã đăng nhập thành công.
 
+Các tính năng trong bảng ngay dưới đây áp dụng cho bất cứ người dùng nào đã đăng nhập.
+
 Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xếp vào loại **giảng viên** hoặc **học viên** (được trình bày kỹ hơn trong hai phần tương ứng bên dưới)
 
 <table>
@@ -166,7 +168,7 @@ Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xế
       <td>Đã xác thực</td>
     </tr>
     <tr>
-      <td>Luồng hoạt đống</td>
+      <td>Luồng hoạt động</td>
       <td>
         <ol>
           <li>Gửi yêu cầu đăng xuất</li>
@@ -184,7 +186,7 @@ Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xế
       <td>Đã xác thực</td>
     </tr>
     <tr>
-      <td>Luồng hoạt đống</td>
+      <td>Luồng hoạt động</td>
       <td>
         <ol>
           <li>Nhập thông tin mới</li>
@@ -209,7 +211,7 @@ Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xế
       <td>Đã xác thực</td>
     </tr>
     <tr>
-      <td>Luồng hoạt đống</td>
+      <td>Luồng hoạt động</td>
       <td>
         <ol>
           <li>Chọn đối tượng muốn báo cáo</li>
@@ -294,7 +296,7 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       <td>Luồng hoạt động</td>
       <td>
         <ol>
-          <li>Chọn tính năng đăng bài</li>
+          <li>Chọn tính năng đăng bài học</li>
           <li>Nhập nội dung bài học</li>
           <li>Đăng bài học</li>
           <li>
