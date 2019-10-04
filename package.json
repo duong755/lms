@@ -7,7 +7,7 @@
   },
   "scripts": {
     "eslint": "./node_modules/.bin/eslint",
-    "dev": "cross-env NODE_OPTIONS=\"--inspect\" next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },

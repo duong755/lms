@@ -8,8 +8,10 @@
       "type": "node",
       "request": "launch",
       "name": "Next: Node",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["dev"],
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/next",
+      "env": {
+        "NODE_OPTIONS": "--inspect"
+      },
       "port": 9229,
       "console": "integratedTerminal"
     },
