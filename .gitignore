@@ -61,4 +61,5 @@ typings/
 .next
 
 # editor
-.vscode
+.vscode/*
+!.vscode/launch.json
