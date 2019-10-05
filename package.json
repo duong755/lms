@@ -7,9 +7,9 @@
   },
   "scripts": {
     "eslint": "./node_modules/.bin/eslint",
-    "dev": "node server.js",
+    "dev": "node server",
     "build": "next build",
-    "start": "next start"
+    "start": "cross-env NODE_ENV=\"production\" node server"
   },
   "dependencies": {
     "@material-ui/core": "4.5.0",
@@ -22,6 +22,7 @@
     "mongoose": "5.7.1",
     "morgan": "1.9.1",
     "next": "9.0.7",
+    "prop-types": "^15.7.2",
     "react": "16.10.2",
     "react-dom": "16.10.2"
   },
