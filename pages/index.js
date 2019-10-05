@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import Head from '../components/CustomHead';
 import Nav from '../components/nav';
 
 const Home = () => (
