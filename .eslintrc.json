@@ -28,7 +28,7 @@
   "plugins": ["react", "prettier"],
   "settings": {
     "react": {
-      "version": "16.9.0"
+      "version": "detect"
     }
   },
   "rules": {
@@ -39,6 +39,7 @@
         "SwitchCase": 1
       }
     ],
+    "no-var": ["error"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "prettier/prettier": ["error", {}, { "usePretierrc": true }],
