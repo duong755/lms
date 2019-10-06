@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const dev = process.env.NODE_ENV !== 'production';
-const port = process.env.PORT ? process.env.PORT : 3000;
+const port = process.env.PORT || 3000;
 const app = next({ dev });
 const handler = app.getRequestHandler();
 
@@ -23,7 +23,7 @@ app
     server.use((req, res) => {
       handler(req, res, '_error', req.query);
     });
-    server.listen(process.env.PORT, err => {
+    server.listen(port, err => {
       if (err) {
         throw err;
       }
