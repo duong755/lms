@@ -13,7 +13,8 @@
     "eslint": "./node_modules/.bin/eslint",
     "dev": "node server",
     "build": "next build",
-    "start": "cross-env NODE_ENV=\"production\" node server"
+    "start": "cross-env NODE_ENV=\"production\" node server",
+    "heroku-postbuild": "yarn build"
   },
   "dependencies": {
     "@material-ui/core": "4.5.0",
