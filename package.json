@@ -14,7 +14,7 @@
     "dev": "node server",
     "build": "next build",
     "start": "cross-env NODE_ENV=\"production\" node server",
-    "heroku-prebuild": "yarn"
+    "heroku-postbuild": "yarn build"
   },
   "dependencies": {
     "@material-ui/core": "4.5.0",
