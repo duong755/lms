@@ -27,7 +27,12 @@ app
       if (err) {
         throw err;
       }
-      console.log(`> Ready on http://localhost${port === 80 ? '' : `:${port}`}`);
+
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('> Ready');
+      } else {
+        console.log(`> Ready on http://localhost${port === 80 ? '' : `:${port}`}`);
+      }
     });
   })
   .catch(err => {
