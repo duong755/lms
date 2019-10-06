@@ -1,4 +1,3 @@
-require('dotenv').config();
 const path = require('path');
 const next = require('next');
 const express = require('express');
@@ -6,8 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const dev = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT ? process.env.PORT : 3000;
 const app = next({ dev });
-const reqHandler = app.getRequestHandler();
+const handler = app.getRequestHandler();
 
 app
   .prepare()
@@ -20,26 +20,14 @@ app
     server.use(cookieParser());
     server.use(express.static(path.join(process.env.PWD, 'static')));
 
-    server.get('/', (req, res) => {
-      reqHandler(req, res, '/', req.query);
-    });
-
-    server.get('/api/member', (req, res) => {
-      reqHandler(req, res, '/api/member', req.query);
-    });
-
-    server.get('/api/member/:id', (req, res) => {
-      reqHandler(req, res, '/api/member/:id', req.query);
-    });
-
     server.use((req, res) => {
-      reqHandler(req, res, '_error', req.query);
+      handler(req, res, '_error', req.query);
     });
     server.listen(process.env.PORT, err => {
       if (err) {
         throw err;
       }
-      console.log(`> Ready on http://localhost${process.env.PORT === 80 ? '' : `:${process.env.PORT}`}`);
+      console.log(`> Ready on http://localhost${port === 80 ? '' : `:${port}`}`);
     });
   })
   .catch(err => {

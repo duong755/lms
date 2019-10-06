@@ -5,6 +5,10 @@
   "repository": {
     "url": "https://github.com/QuangDuong120198/lms"
   },
+  "engines": {
+    "node": "10.x",
+    "yarn": "1.x"
+  },
   "scripts": {
     "eslint": "./node_modules/.bin/eslint",
     "dev": "node server",
