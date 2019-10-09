@@ -163,17 +163,17 @@
       "lesson": [
         {
           "courseId": "",
-          "comments": [{ "studentId": "" }]
+          "comment": [{ "studentId": "" }]
         }
       ],
       "exercise": [
         {
-          "exerciseAssignment": [{ "studentId": "" }]
+          "exerciseWork": [{ "studentId": "" }]
         }
       ],
       "exam": [
         {
-          "examAssignment": [{ "studentId": "" }]
+          "examWork": [{ "studentId": "" }]
         }
       ]
     }
