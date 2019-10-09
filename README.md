@@ -13,6 +13,10 @@
     * Lê Thị Thùy Linh: 17020853
     * Nguyễn Anh Tuấn: 16021213
 
-## [Tài liệu đặc tả](./docs/SRS.md)
+## [Tài liệu đặc tả yêu cầu](./docs/SRS.md)
+
+## [Lược đồ cơ sở dữ liệu](./docs/ERD.md)
+
+## [Mockup và sơ đồ chuyển trang](https://figma.com/file/VmJMXevNuRBfDTOJHPXyHi/UI)
 
 ## [Công cụ phát triển](./docs/tools.md)
