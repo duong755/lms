@@ -1,0 +1,30 @@
+{
+  "course": [
+    {
+      "topic": ["<topicId>"],
+      "joinRequest": [{ "studentId": "" }],
+      "member": [{ "studentId": "" }],
+      "teacherId": "",
+      "courseReview": [{ "studentId": "" }],
+      "lesson": [
+        {
+          "courseId": "",
+          "comments": [{ "studentId": "" }]
+        }
+      ],
+      "exercise": [
+        {
+          "exerciseAssignment": [{ "studentId": "" }]
+        }
+      ],
+      "exam": [
+        {
+          "examAssignment": [{ "studentId": "" }]
+        }
+      ]
+    }
+  ],
+  "student": [{ "joinedCourse": ["<courseId>"] }],
+  "teacher": [{ "ownedCourse": ["<courseId>"] }],
+  "topic": [{ "name": "" }]
+}

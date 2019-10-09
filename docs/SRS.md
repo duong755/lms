@@ -4,22 +4,22 @@
 
 ## Khái niệm hệ thống quản lý học tập
 
-Hệ thống quản lý học tập (Learning Management System, LMS) là một **ứng dụng** cung cấp những tính năng hỗ trợ việc học tập/giảng dạy như: *quản lý người học*, *quản lý tài liệu học tập*, *theo dõi hoạt động học tập*, *trao đổi*, *báo cáo*, ... - tất cả những tính năng này đều trực tuyến.
+Hệ thống quản lý học tập (Learning Management System, LMS) là một **ứng dụng** cung cấp những tính năng hỗ trợ việc học tập/giảng dạy như: _quản lý người học_, _quản lý tài liệu học tập_, _theo dõi hoạt động học tập_, _trao đổi_, _báo cáo_, ... - tất cả những tính năng này đều trực tuyến.
 
-Sử dụng một hệ thống như vậy mang lại những thuận tiện như: *không cần ghi chép như học tập/giảng dạy truyền thống*, *linh động hơn về giờ giấc*, *không cần phải tập trung thành viên trong lớp học tại một địa điểm, giờ giấc cụ thể*,...
+Sử dụng một hệ thống như vậy mang lại những thuận tiện như: _không cần ghi chép như học tập/giảng dạy truyền thống_, _linh động hơn về giờ giấc_, _không cần phải tập trung thành viên trong lớp học tại một địa điểm, giờ giấc cụ thể_,...
 
 ## Hệ thống hiện có
 
 Hiện tại, **trường đại học công nghệ, đại học quốc gia Hà Nội** có triển khai [website môn học](https://courses.uet.vnu.edu.vn).
 
-Website này cung cấp được những tính năng thiết yếu của một **LMS** như: *tìm kiếm môn học*, *đăng ký tham gia lớp học*, *đăng tài liệu môn học*, *nộp bài tập*, *thi trắc nghiệm trên máy*.
+Website này cung cấp được những tính năng thiết yếu của một **LMS** như: _tìm kiếm môn học_, _đăng ký tham gia lớp học_, _đăng tài liệu môn học_, _nộp bài tập_, _thi trắc nghiệm trên máy_.
 
 Tuy nhiên website môn học này còn những nhược điểm:
 
-* Để tham gia một số khóa học, sinh viên cần nhập mã truy cập (điều này làm mất khả năng chủ động)
-* Sinh viên không thể bình luận, phản hồi về khóa học
-* Khi làm bài thi trắc nghiệm, sinh viên không thể trả lời lại câu trước nếu đã chọn hoặc đã bỏ qua.
-* ...
+- Để tham gia một số khóa học, sinh viên cần nhập mã truy cập (điều này làm mất khả năng chủ động)
+- Sinh viên không thể bình luận, phản hồi về khóa học
+- Khi làm bài thi trắc nghiệm, sinh viên không thể trả lời lại câu trước nếu đã chọn hoặc đã bỏ qua.
+- ...
 
 ## Đề xuất
 
@@ -27,9 +27,9 @@ Nhóm 1 đề xuất một hệ thống mở hơn so với website môn học.
 
 Cụ thể, hệ thống này sẽ không chỉ gói gọn trong phạm vi một trường học mà là bất cứ ai, bất cứ đâu.
 
-Các tài khoản trong hệ thống được chia làm hai loại: *giảng viên* và *học viên*. *Học viên* không thể thực hiện những chức năng dành riêng cho *giảng viên*(chẳng hạn như tạo khóa học, giao bài tập, ...) và ngược lại.
+Các tài khoản trong hệ thống được chia làm hai loại: _giảng viên_ và _học viên_. _Học viên_ không thể thực hiện những chức năng dành riêng cho _giảng viên_(chẳng hạn như tạo khóa học, giao bài tập, ...) và ngược lại.
 
-Các khóa học có thể *công khai* hoặc *kín*.
+Các khóa học có thể _công khai_ hoặc _kín_.
 
 # Các tác nhân và tính năng
 
@@ -157,7 +157,7 @@ Tác nhân được xếp vào loại này nếu chưa đăng nhập.
   </tbody>
 </table>
 
-***Lưu ý:*** Tính năng tìm kiếm luôn khả dụng cho dù tác nhân đã xác thực hay chưa.
+**_Lưu ý:_** Tính năng tìm kiếm luôn khả dụng cho dù tác nhân đã xác thực hay chưa.
 
 ## **Đã xác thực**
 
@@ -652,7 +652,7 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
           <li>
             Xác nhận
             <ol>
-              <li>Đồng ý: Rời khỏi khóa học, sao lưu dữ liệu khóa học tính đến thời điểm rời</li>
+              <li>Đồng ý: Rời khỏi khóa học</li>
               <li>Hủy</li>
             </ol>
           </li>

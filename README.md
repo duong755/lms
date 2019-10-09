@@ -15,7 +15,7 @@
 
 ## [Tài liệu đặc tả yêu cầu](./docs/SRS.md)
 
-## [Lược đồ cơ sở dữ liệu](./docs/ERD.md)
+## [Lược đồ cơ sở dữ liệu](./docs/schema.md)
 
 ## [Mockup và sơ đồ chuyển trang](https://figma.com/file/VmJMXevNuRBfDTOJHPXyHi/UI)
 
