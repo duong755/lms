@@ -40,7 +40,7 @@ class CustomDocument extends Document {
           <link rel="shortcut icon" href="/static/favicon.ico" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-          <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-grid.min.css" />
+          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
         </Head>
         <body>
           <Main />
