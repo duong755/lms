@@ -1,13 +1,33 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
+import { ServerStyleSheets } from '@material-ui/styles';
+
 class CustomDocument extends Document {
   constructor(props, context) {
     super(props, context);
   }
 
   static async getInitialProps(context) {
+    const sheets = new ServerStyleSheets();
+    const originalRenderPage = context.renderPage;
+
+    context.renderPage = () =>
+      originalRenderPage({
+        enhanceApp: App => props => sheets.collect(<App {...props} />)
+      });
+
     const initialProps = await Document.getInitialProps(context);
-    return { ...initialProps };
+
+    return {
+      ...initialProps,
+      // Styles fragment is rendered after the app and page rendering finish.
+      styles: (
+        <>
+          {initialProps.styles}
+          {sheets.getStyleElement()}
+        </>
+      )
+    };
   }
 
   render() {
@@ -19,6 +39,7 @@ class CustomDocument extends Document {
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" key="httpEquiv" />
           <link rel="shortcut icon" href="/static/favicon.ico" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap" />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
           <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-grid.min.css" />
         </Head>
         <body>
