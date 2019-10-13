@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { Container } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 
 function Header() {
   return (
@@ -17,7 +17,7 @@ function Header() {
           <Typography>
             <strong>OpenLMS</strong>
           </Typography>
-          <Box className="d-flex justify-content-end flex-grow-1">
+          <Box display="flex" justifyContent="end">
             <IconButton edge="end">
               <Icon>account_box</Icon>
             </IconButton>
