@@ -22,6 +22,9 @@ app
     server.use(cookieParser());
     server.use(express.static(path.join(process.env.PWD, 'static')));
 
+    server.get('/_next/*', handler);
+    server.get('/static/*', handler);
+
     server.use((req, res) => {
       handler(req, res, '_error', req.query);
     });
@@ -30,7 +33,7 @@ app
         throw err;
       }
 
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV === 'production') {
         console.log('> Ready');
       } else {
         console.log(`> Ready on http://localhost${port === 80 ? '' : `:${port}`}`);

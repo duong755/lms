@@ -11,7 +11,7 @@
   },
   "scripts": {
     "eslint": "./node_modules/.bin/eslint",
-    "dev": "node server",
+    "dev": "cross-env NODE_ENV=\"development\" node server",
     "build": "next build",
     "start": "cross-env NODE_ENV=\"production\" node server",
     "heroku-postbuild": "yarn build"
