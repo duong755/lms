@@ -3,6 +3,7 @@ const next = require('next');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const universalCookie = require('universal-cookie-express');
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app
     server.use(express.text());
     server.use(express.urlencoded({ extended: false }));
     server.use(cookieParser());
+    server.use(universalCookie());
     server.use(express.static(path.join(process.env.PWD, 'static')));
 
     server.get('/_next/*', handler);

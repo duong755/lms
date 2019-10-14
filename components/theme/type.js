@@ -33,7 +33,7 @@ const LightTheme = createMuiTheme({
     error: red,
     text: {
       primary: '#000000',
-      secondary: '#010101'
+      secondary: '#333333'
     }
   }
 });
