@@ -2,23 +2,50 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { Container } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import NoSsr from '@material-ui/core/NoSsr';
+
+import { useCookies } from 'react-cookie';
 
 function Header() {
+  const [cookies, setCookie] = useCookies(['paletteType']);
+
+  function toggleTheme() {
+    switch (cookies['paletteType']) {
+      case 'dark':
+        setCookie('paletteType', 'light');
+        break;
+      case 'light':
+        setCookie('paletteType', 'dark');
+        break;
+      default:
+        setCookie('paletteType', 'dark');
+        break;
+    }
+  }
+  function themeIcon() {
+    if (cookies['paletteType'] === 'dark') {
+      return 'brightness_2';
+    }
+    return 'brightness_high';
+  }
+
   return (
-    <AppBar position="static">
+    <AppBar color="default" position="static">
       <Container maxWidth="xl">
-        <Toolbar className="pl-0 pr-0">
-          <IconButton edge="start">
-            <Icon>menu</Icon>
-          </IconButton>
-          <Typography>
-            <strong>OpenLMS</strong>
-          </Typography>
-          <Box className="d-flex justify-content-end flex-grow-1">
-            <IconButton edge="end">
+        <Toolbar style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <Box color="text.primary" display="flex" alignItems="center" alignSelf="stretch">
+            <Typography>OpenLMS</Typography>
+          </Box>
+          <Box display="flex" flexGrow={1} justifyContent="flex-end">
+            <IconButton color="default" onClick={toggleTheme}>
+              <NoSsr>
+                <Icon color="inherit">{themeIcon()}</Icon>
+              </NoSsr>
+            </IconButton>
+            <IconButton>
               <Icon>account_box</Icon>
             </IconButton>
           </Box>

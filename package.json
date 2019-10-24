@@ -18,18 +18,19 @@
   },
   "dependencies": {
     "@material-ui/core": "4.5.0",
-    "@material-ui/icons": "4.4.3",
+    "@material-ui/styles": "4.5.0",
     "aws-sdk": "2.543.0",
     "cookie-parser": "1.4.4",
     "dotenv": "8.1.0",
     "express": "4.17.1",
     "mongoose": "5.7.1",
     "morgan": "1.9.1",
-    "next": "9.0.7",
+    "next": "9.1.1",
     "prop-types": "15.7.2",
     "react": "16.10.2",
     "react-cookie": "4.0.1",
-    "react-dom": "16.10.2"
+    "react-dom": "16.10.2",
+    "universal-cookie-express": "4.0.1"
   },
   "devDependencies": {
     "cross-env": "6.0.3",
