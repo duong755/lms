@@ -12,16 +12,6 @@ class CustomApp extends App {
     super(props, context);
   }
 
-  static async getInitialProps({ Component, ctx }) {
-    const pageProps = {};
-
-    if (Component.getInitialProps) {
-      Object.assign(pageProps, await Component.getInitialProps(ctx));
-    }
-
-    return { pageProps };
-  }
-
   render() {
     const { Component, pageProps } = this.props;
 
