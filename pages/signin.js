@@ -1,10 +1,37 @@
 import React, { useState } from 'react';
+import Head from 'next/head';
+
+import { makeStyles } from '@material-ui/core/styles';
+
 import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import { Typography, TextField, Button, Link } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
+
 import axios from 'axios';
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    paddingTop: theme.spacing(5)
+  },
+  form: {
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(3),
+      marginRight: theme.spacing(3)
+    }
+  },
+  image: {
+    width: '100%',
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3)
+  }
+}));
 function Signin() {
+  const classes = useStyles();
   const [values, setValues] = useState({});
 
   function handleChange(event) {
@@ -26,77 +53,73 @@ function Signin() {
       .catch(err => console.error('Error ', err));
   }
   return (
-    <Grid container component="main" style={{ height: '100vh' }}>
-      <Grid item xs={12} md={6}>
-        <Box display="flex" flexDirection="column" alignItems="center" justifyItems="center">
-          <Box marginBottom={1}>
-            <Typography variant="" component="h1">
-              Sign in to OpenLMS
-            </Typography>
-          </Box>
-          <Box border="2px solid #cdcdcd" borderRadius="6px" width="400px" height="350px">
-            <form onSubmit={handleSubmit}>
-              <Box paddingLeft={3} paddingTop={4} paddingRight={3}>
-                <Typography variant="" component="h3">
-                  Username or email
+    <>
+      <Head>
+        <title>Sign in to OpenLMS</title>
+      </Head>
+      <Box>
+        <Container maxWidth="xl">
+          <Grid className={classes.root} container component="main" alignItems="center">
+            <Grid item xs={12} sm={6}>
+              <Box className={classes.form} display="flex" flexDirection="column" alignItems="stretch">
+                <Typography gutterBottom align="center" variant="h4">
+                  <strong>Sign in to OpenLMS</strong>
                 </Typography>
-                <TextField
-                  fullWidth
-                  required
-                  autoFocus
-                  variant="outlined"
-                  onChange={handleChange}
-                  name="account"
-                  type="email"
-                />
-              </Box>
-              <Box paddingLeft={3} paddingTop={3} paddingRight={3}>
-                <Typography variant="" component="h3">
-                  Password
-                </Typography>
-                <TextField
-                  fullWidth
-                  required
-                  variant="outlined"
-                  onChange={handleChange}
-                  name="password"
-                  type="password"
-                />
-              </Box>
-              <Box paddingLeft={3} paddingTop={1.5} paddingRight={3}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  type="submit"
-                  style={{ backgroundColor: '#FF5722', color: '#FFFFFF' }}
-                >
-                  Sign in
+                <Paper>
+                  <form onSubmit={handleSubmit}>
+                    <Box paddingTop={3} paddingX={3}>
+                      <Box fontWeight="bold">Username</Box>
+                      <TextField
+                        fullWidth
+                        required
+                        autoFocus
+                        variant="outlined"
+                        onChange={handleChange}
+                        name="account"
+                        type="email"
+                      />
+                    </Box>
+                    <Box paddingLeft={3} paddingTop={3} paddingRight={3}>
+                      <Box fontWeight="bold">Password</Box>
+                      <TextField
+                        fullWidth
+                        required
+                        variant="outlined"
+                        onChange={handleChange}
+                        name="password"
+                        type="password"
+                      />
+                    </Box>
+                    <Box paddingLeft={3} paddingTop={1.5} paddingRight={3}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        type="submit"
+                        style={{ backgroundColor: '#FF5722', color: '#FFFFFF' }}
+                      >
+                        Sign in
+                      </Button>
+                    </Box>
+                    <Box paddingX={3} paddingY={1.5}>
+                      <Button fullWidth variant="text">
+                        <Link>forgot your password</Link>
+                      </Button>
+                    </Box>
+                  </form>
+                </Paper>
+                <Box height={30} />
+                <Button color="primary" variant="outlined" fullWidth>
+                  <Link>CREATE AN ACCOUT</Link>
                 </Button>
               </Box>
-              <Box paddingLeft={3} paddingRight={3} paddingTop={1.5}>
-                <Button fullWidth variant="text">
-                  <Link>forgot your password</Link>
-                </Button>
-              </Box>
-            </form>
-          </Box>
-          <hr />
-          <Box width={400} border="2px solid #ff5722" borderRadius={6}>
-            <Button fullWidth>
-              <Link>CREATE AN ACCOUT</Link>
-            </Button>
-          </Box>
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={false}
-        md={6}
-        style={{
-          backgroundImage: 'url(https://loremflickr.com/320/240)'
-        }}
-      ></Grid>
-    </Grid>
+            </Grid>
+            <Grid item xs={false} sm={6}>
+              <img className={classes.image} src="https://loremflickr.com/320/240" />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+    </>
   );
 }
 
