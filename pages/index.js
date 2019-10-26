@@ -35,7 +35,7 @@ function Home() {
   return (
     <>
       <Head>
-        <title>Home</title>
+        <title>Home</title> 
       </Head>
       <Box>
         <Container maxWidth="xl">
