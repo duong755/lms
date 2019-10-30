@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
+import { Formik } from 'formik';
 
 import { makeStyles } from '@material-ui/core/styles';
-
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.spacing(3)
   }
 }));
+
 function Signin() {
   const classes = useStyles();
   const [values, setValues] = useState({});
@@ -68,7 +69,9 @@ function Signin() {
                 <Paper>
                   <form onSubmit={handleSubmit}>
                     <Box paddingTop={3} paddingX={3}>
-                      <Box fontWeight="bold">Username</Box>
+                      <Box paddingBottom={1} fontWeight="bold">
+                        Username
+                      </Box>
                       <TextField
                         fullWidth
                         required
@@ -80,7 +83,9 @@ function Signin() {
                       />
                     </Box>
                     <Box paddingLeft={3} paddingTop={3} paddingRight={3}>
-                      <Box fontWeight="bold">Password</Box>
+                      <Box paddingBottom={1} fontWeight="bold">
+                        Password
+                      </Box>
                       <TextField
                         fullWidth
                         required
