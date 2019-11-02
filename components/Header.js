@@ -7,7 +7,6 @@ import Icon from '@material-ui/core/Icon';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import NoSsr from '@material-ui/core/NoSsr';
 
 import AppTheme from './theme/AppTheme';
 
@@ -30,9 +29,7 @@ function Header() {
           </Box>
           <Box display="flex" flexGrow={1} justifyContent="flex-end">
             <IconButton color="default" onClick={themeContext.toggleTheme}>
-              <NoSsr>
-                <Icon color="inherit">{themeIcon()}</Icon>
-              </NoSsr>
+              <Icon color="inherit">{themeIcon()}</Icon>
             </IconButton>
             <IconButton>
               <Icon>account_box</Icon>
