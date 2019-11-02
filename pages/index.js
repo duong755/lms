@@ -4,6 +4,8 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
+import withLayout from '../components/lib/withLayout';
+
 function Home() {
   return (
     <>
@@ -21,4 +23,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default withLayout(Home);
