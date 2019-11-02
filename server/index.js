@@ -1,13 +1,14 @@
-require('dotenv').config();
 const path = require('path');
 const next = require('next');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const universalCookie = require('universal-cookie-express');
 
 const dev = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT || 3000;
 const app = next({ dev });
-const reqHandler = app.getRequestHandler();
+const handler = app.getRequestHandler();
 
 app
   .prepare()
@@ -16,30 +17,29 @@ app
 
     server.use(logger('dev'));
     server.use(express.json());
-    server.use(express.urlencoded({ extended: true }));
+    server.use(express.raw());
+    server.use(express.text());
+    server.use(express.urlencoded({ extended: false }));
     server.use(cookieParser());
-    server.use(express.static(path.join(process.env.PWD, 'static')));
+    server.use(universalCookie());
+    server.use(express.static(path.resolve(__dirname, '../public')));
 
-    server.get('/', (req, res) => {
-      reqHandler(req, res, '/', req.query);
-    });
-
-    server.get('/api/member', (req, res) => {
-      reqHandler(req, res, '/api/member', req.query);
-    });
-
-    server.get('/api/member/:id', (req, res) => {
-      reqHandler(req, res, '/api/member/:id', req.query);
-    });
+    server.get('/_next/*', handler);
+    server.get('/static/*', handler);
 
     server.use((req, res) => {
-      reqHandler(req, res, '_error', req.query);
+      handler(req, res, '_error', req.query);
     });
-    server.listen(process.env.PORT, err => {
+    server.listen(port, err => {
       if (err) {
         throw err;
       }
-      console.log(`> Ready on http://localhost${process.env.PORT === 80 ? '' : `:${process.env.PORT}`}`);
+
+      if (process.env.NODE_ENV === 'production') {
+        console.log('> Ready');
+      } else {
+        console.log(`> Ready on http://localhost${port === 80 ? '' : `:${port}`}`);
+      }
     });
   })
   .catch(err => {
