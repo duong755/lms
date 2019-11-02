@@ -31,6 +31,8 @@ const courses = [
   }
 ];
 
+import withLayout from '../components/lib/withLayout';
+
 function Home() {
   return (
     <>
@@ -170,4 +172,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default withLayout(Home);

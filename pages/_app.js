@@ -4,9 +4,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { CookiesProvider } from 'react-cookie';
 
-import CustomThemeProvider from '../components/theme/CustomThemeProvider';
-import Header from '../components/Header';
-
 class CustomApp extends App {
   constructor(props, context) {
     super(props, context);
@@ -18,11 +15,8 @@ class CustomApp extends App {
     return (
       <>
         <CookiesProvider>
-          <CustomThemeProvider>
-            <CssBaseline />
-            <Header />
-            <Component {...pageProps} />
-          </CustomThemeProvider>
+          <CssBaseline />
+          <Component {...pageProps} />
         </CookiesProvider>
       </>
     );
