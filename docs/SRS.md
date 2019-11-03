@@ -224,29 +224,6 @@ Các tính năng trong bảng ngay dưới đây áp dụng cho bất cứ ngư�
         </ol>
       </td>
     </tr>
-    <tr>
-      <td rowspan="4">Báo cáo vi phạm</td>
-      <td>ID</td>
-      <td>AUTH_003</td>
-    </tr>
-    <tr>
-      <td>Mô tả</td>
-      <td>Gửi báo cáo về những khóa học, người dùng có nội dung, hành vi không phù hợp</td>
-    </tr>
-    <tr>
-      <td>Điều kiện</td>
-      <td>Đã xác thực</td>
-    </tr>
-    <tr>
-      <td>Luồng hoạt động</td>
-      <td>
-        <ol>
-          <li>Chọn đối tượng muốn báo cáo</li>
-          <li>Nhập nội dung báo cáo</li>
-          <li>Gửi báo cáo</li>
-        </ol>
-      </td>
-    </tr>
   </tbody>
 </table>
 
@@ -527,13 +504,7 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       <td>
         <ol>
           <li>Chọn một khóa học, gửi yêu cầu tham gia</li>
-          <li>
-            Về tính riêng tư, có hai loại khóa học:
-            <ol>
-              <li>Khóa học công khai: được tham gia ngay lập tức</li>
-              <li>Khóa học kín: chờ sự chấp nhận của giảng viên</li>
-            </ol>
-          </li>
+          <li>Yêu cầu được lưu vào danh sách chờ</li>
         </ol>
       </td>
     </tr>
@@ -590,7 +561,7 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
     </tr>
     <tr>
       <td>Mô tả</td>
-      <td>Gửi file bài tập kèm phần mô tả</td>
+      <td>Trình bày bài làm và gửi</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
@@ -602,7 +573,7 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
         <ol>
           <li>Truy cập vào trang bài học</li>
           <li>Chọn nộp bài tập</li>
-          <li>Upload file bài tập, gửi kèm mô tả (không bắt buộc)</li>
+          <li>Trình bày bài làm</li>
           <li>Chọn nộp</li>
         </ol>
       </td>

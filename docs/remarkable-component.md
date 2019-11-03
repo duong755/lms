@@ -18,20 +18,29 @@ Chia lưới, một dòng có 12 cột
 Thay thế cho bất cứ thẻ nào trong `html`
 
 ```javascript
-<Box component="element-name">...</Box>
+<Box
+  component="element-name"
+  display="flex"
+  flexDirection="row"
+  justifyContent="flex-start"
+  alignItems="center"
+  alignSelf="stretch"
+>
+  ...
+</Box>
 ```
 
 - `Typography`
 
-Chỉ dùng để hiển thị t
+Chỉ dùng để hiển thị text
 
 ```javascript
-<Typography></Typography>
+<Typography>...</Typography>
 ```
 
 - `Paper`
 
-Một element dùng để chứa, có background và border nổi hơn so với xung quanh
+Một element có background và border nổi hơn so với xung quanh
 
 ```javascript
 <Paper></Paper>
@@ -40,10 +49,11 @@ Một element dùng để chứa, có background và border nổi hơn so với 
 - `Button`
 
 ```javascript
-<Button variant="" color="" size="">CLICK ME</Button>
+<Button variant="text|outlined|contained" color="" size="">
+  CLICK ME
+</Button>
 ```
 
 - `Link`
 
 Cần phân biệt `Link` của material ui với `Link` của nextjs. Đặt `Link` của nextjs bao ngoài `Link` của material ui.
-
