@@ -26,6 +26,7 @@ app
 
     server.get('/_next/*', handler);
     server.get('/static/*', handler);
+    server.get('/css/*', handler);
 
     server.use((req, res) => {
       handler(req, res, '_error', req.query);

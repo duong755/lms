@@ -17,7 +17,7 @@ function withLayout(BaseComponent) {
   );
 
   Layout.getInitialProps = async context => {
-    const paletteType = new Cookies().get('paletteType');
+    const paletteType = new Cookies().get('paletteType') || 'light';
     return { theme: get(context, ['req', 'cookies', 'paletteType'], paletteType) };
   };
 
