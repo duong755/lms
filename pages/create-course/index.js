@@ -45,40 +45,44 @@ function CreateCourse() {
       </Head>
       <Box>
         <Container maxWidth="xl">
-          <Grid container direction="column" spacing={1} alignItems="center" justify="center">
-            <Grid item xs={12} sm={8} className={classes.item}>
-              <Box className="pt-3" component="h1">
-                Create new course
-              </Box>
-              <Divider />
-            </Grid>
-            <Grid item xs={12} sm={8} className={classes.item}>
-              <Box component="h3">Course Name</Box>
-              <TextField className={classes.textField} required id="course-name" variant="outlined" />
-            </Grid>
-            <Grid item xs={12} sm={8} className={classes.item}>
-              <Box component="h3">Description(Optional)</Box>
-              <TextField className={classes.textField} multiline id="description" variant="outlined" />
-            </Grid>
-            {/* <Grid item xs={12} sm={8} className={classes.item}>
-              <RadioGroup defaultValue="Public" aria-label="privacy" name="customized-radios" row>
-                <FormControlLabel value="public" control={<Radio color="primary" />} label="Public" />
-                <FormControlLabel value="private" control={<Radio color="primary" />} label="Private" />
-              </RadioGroup>
-            </Grid> */}
-            <Grid item xs={12} sm={8} className={classes.item}>
-              <Box component="h3">Topics</Box>
-              <NoSsr>
-                <ReactSelect isMulti options={[{ label: 'A', value: 0 }, { label: 'B', value: 1 }]} />
-              </NoSsr>
-            </Grid>
-            <Grid item xs={12} sm={8} className={classes.item}>
-              <Divider />
-            </Grid>
-            <Grid item xs={12} sm={8} className={classes.item}>
-              <Button variant="contained" className={classes.button}>
-                Create
-              </Button>
+          <Grid container justify="center">
+            <Grid item xs={12} sm={8}>
+              <Grid container direction="column" spacing={1} alignItems="stretch">
+                <Grid item className={classes.item}>
+                  <Box paddingTop={3} component="h1">
+                    Create new course
+                  </Box>
+                  <Divider />
+                </Grid>
+                <Grid item className={classes.item}>
+                  <Box component="h3">Course Name</Box>
+                  <TextField className={classes.textField} required id="course-name" variant="outlined" />
+                </Grid>
+                <Grid item className={classes.item}>
+                  <Box component="h3">Description(Optional)</Box>
+                  <TextField className={classes.textField} multiline id="description" variant="outlined" />
+                </Grid>
+                {/* <Grid item xs={12} sm={8} className={classes.item}>
+                    <RadioGroup defaultValue="Public" aria-label="privacy" name="customized-radios" row>
+                      <FormControlLabel value="public" control={<Radio color="primary" />} label="Public" />
+                      <FormControlLabel value="private" control={<Radio color="primary" />} label="Private" />
+                    </RadioGroup>
+                  </Grid> */}
+                <Grid item className={classes.item}>
+                  <Box component="h3">Topics</Box>
+                  <NoSsr>
+                    <ReactSelect isMulti options={[{ label: 'A', value: 0 }, { label: 'B', value: 1 }]} />
+                  </NoSsr>
+                </Grid>
+                <Grid item xs={12} sm={8} className={classes.item}>
+                  <Divider />
+                </Grid>
+                <Grid item xs={12} sm={8} className={classes.item}>
+                  <Button variant="contained" className={classes.button}>
+                    Create
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Container>
