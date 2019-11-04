@@ -46,7 +46,7 @@ function Home() {
               <Grid container>
                 <Grid item md={12} sm={4} xs={3}>
                   <Box>
-                    <img src="/static/favicon.ico" style={{ width: '100%' }} />
+                    <img src="/favicon.ico" style={{ width: '100%' }} />
                   </Box>
                 </Grid>
                 <Grid item md={12} sm={8} xs={9}>
