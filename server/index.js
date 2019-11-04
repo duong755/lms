@@ -1,4 +1,5 @@
 const path = require('path');
+
 const next = require('next');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -26,8 +27,6 @@ app
     server.use(express.static(path.resolve(__dirname, '../public')));
 
     server.get('/_next/*', handler);
-    server.get('/static/*', handler);
-    server.get('/css/*', handler);
 
     server.use((req, res) => {
       handler(req, res, '_error', req.query);

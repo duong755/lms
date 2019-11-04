@@ -4,22 +4,22 @@
 
 ## Khái niệm hệ thống quản lý học tập
 
-Hệ thống quản lý học tập (Learning Management System, LMS) là một **ứng dụng** cung cấp những tính năng hỗ trợ việc học tập/giảng dạy như: *quản lý người học*, *quản lý tài liệu học tập*, *theo dõi hoạt động học tập*, *trao đổi*, *báo cáo*, ... - tất cả những tính năng này đều trực tuyến.
+Hệ thống quản lý học tập (Learning Management System, LMS) là một **ứng dụng** cung cấp những tính năng hỗ trợ việc học tập/giảng dạy như: _quản lý người học_, _quản lý tài liệu học tập_, _theo dõi hoạt động học tập_, _trao đổi_, _báo cáo_, ... - tất cả những tính năng này đều trực tuyến.
 
-Sử dụng một hệ thống như vậy mang lại những thuận tiện như: *không cần ghi chép như học tập/giảng dạy truyền thống*, *linh động hơn về giờ giấc*, *không cần phải tập trung thành viên trong lớp học tại một địa điểm, giờ giấc cụ thể*,...
+Sử dụng một hệ thống như vậy mang lại những thuận tiện như: _không cần ghi chép như học tập/giảng dạy truyền thống_, _linh động hơn về giờ giấc_, _không cần phải tập trung thành viên trong lớp học tại một địa điểm, giờ giấc cụ thể_,...
 
 ## Hệ thống hiện có
 
 Hiện tại, **trường đại học công nghệ, đại học quốc gia Hà Nội** có triển khai [website môn học](https://courses.uet.vnu.edu.vn).
 
-Website này cung cấp được những tính năng thiết yếu của một **LMS** như: *tìm kiếm môn học*, *đăng ký tham gia lớp học*, *đăng tài liệu môn học*, *nộp bài tập*, *thi trắc nghiệm trên máy*.
+Website này cung cấp được những tính năng thiết yếu của một **LMS** như: _tìm kiếm môn học_, _đăng ký tham gia lớp học_, _đăng tài liệu môn học_, _nộp bài tập_, _thi trắc nghiệm trên máy_.
 
 Tuy nhiên website môn học này còn những nhược điểm:
 
-* Để tham gia một số khóa học, sinh viên cần nhập mã truy cập (điều này làm mất khả năng chủ động)
-* Sinh viên không thể bình luận, phản hồi về khóa học
-* Khi làm bài thi trắc nghiệm, sinh viên không thể trả lời lại câu trước nếu đã chọn hoặc đã bỏ qua.
-* ...
+- Để tham gia một số khóa học, sinh viên cần nhập mã truy cập (điều này làm mất khả năng chủ động)
+- Sinh viên không thể bình luận, phản hồi về khóa học
+- Khi làm bài thi trắc nghiệm, sinh viên không thể trả lời lại câu trước nếu đã chọn hoặc đã bỏ qua.
+- ...
 
 ## Đề xuất
 
@@ -27,9 +27,9 @@ Nhóm 1 đề xuất một hệ thống mở hơn so với website môn học.
 
 Cụ thể, hệ thống này sẽ không chỉ gói gọn trong phạm vi một trường học mà là bất cứ ai, bất cứ đâu.
 
-Hơn nữa, trong hầu hết các **LMS**, kiểu người dùng được quy định chặt chẽ ngay từ đầu (học viên riêng, giảng viên riêng). Hệ thống được đề xuất dựa trên tư tưởng: *ai cũng có thể đóng vai trò làm học viên hoặc giảng viên (còn làm nổi không là một khía cạnh khác)*.
+Các tài khoản trong hệ thống được chia làm hai loại: _giảng viên_ và _học viên_. _Học viên_ không thể thực hiện những chức năng dành riêng cho _giảng viên_(chẳng hạn như tạo khóa học, giao bài tập, ...) và ngược lại.
 
-Như vậy, bất cứ ai cũng có thể tạo khóa học của riêng mình, có thể tham gia bất cứ khóa học nào (trừ khóa học do mình tạo ra). Khóa học có thể *công khai* hoặc *kín*.
+Các khóa học có thể _công khai_ hoặc _kín_.
 
 # Các tác nhân và tính năng
 
@@ -46,7 +46,11 @@ Tác nhân được xếp vào loại này nếu chưa đăng nhập.
   </thead>
   <tbody>
     <tr>
-      <td rowspan="3">Đăng ký</td>
+      <td rowspan="4">Đăng ký</td>
+      <td>ID</td>
+      <td>UNAUTH_001</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Tạo tài khoản mới để có thể sử dụng hệ thống</td>
     </tr>
@@ -59,6 +63,7 @@ Tác nhân được xếp vào loại này nếu chưa đăng nhập.
       <td>
         <ol>
           <li>Cung cấp thông tin như: tên người dùng, mật khẩu và một số thông tin khác</li>
+          <li>Chọn kiểu tài khoản muốn tạo: <em>giảng viên</em> hoặc <em>học viên</em></li>
           <li>Gửi yêu cầu đăng ký</li>
           <li>
             Có hai khả năng khi gửi yêu cầu đăng ký:
@@ -71,7 +76,11 @@ Tác nhân được xếp vào loại này nếu chưa đăng nhập.
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Đăng nhập</td>
+      <td rowspan="4">Đăng nhập</td>
+      <td>ID</td>
+      <td>UNAUTH_002</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Cung cấp thông tin đăng nhập để sử dụng hệ thống</td>
     </tr>
@@ -96,7 +105,11 @@ Tác nhân được xếp vào loại này nếu chưa đăng nhập.
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Tìm kiếm và xem thông tin khóa học</td>
+      <td rowspan="4">Tìm kiếm và xem thông tin khóa học</td>
+      <td>ID</td>
+      <td>UNAUTH_003</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Tìm kiếm khóa học dựa trên những tiêu chí như <em>tên khóa học, giảng viên, chủ đề ...</em></td>
     </tr>
@@ -117,7 +130,11 @@ Tác nhân được xếp vào loại này nếu chưa đăng nhập.
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Tìm kiếm và xem thông tin người dùng</td>
+      <td rowspan="4">Tìm kiếm và xem thông tin người dùng</td>
+      <td>ID</td>
+      <td>UNAUTH_004</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Tìm kiếm người dùng dựa theo tên</td>
     </tr>
@@ -140,15 +157,13 @@ Tác nhân được xếp vào loại này nếu chưa đăng nhập.
   </tbody>
 </table>
 
-***Lưu ý:*** Tính năng tìm kiếm luôn khả dụng cho dù tác nhân đã xác thực hay chưa.
+**_Lưu ý:_** Tính năng tìm kiếm luôn khả dụng cho dù tác nhân đã xác thực hay chưa.
 
 ## **Đã xác thực**
 
 Tác nhân được xếp vào loại này nếu đã đăng nhập thành công.
 
 Các tính năng trong bảng ngay dưới đây áp dụng cho bất cứ người dùng nào đã đăng nhập.
-
-Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xếp vào loại **giảng viên** hoặc **học viên** (được trình bày kỹ hơn trong hai phần tương ứng bên dưới)
 
 <table>
   <thead>
@@ -159,7 +174,11 @@ Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xế
   </thead>
   <tbody>
     <tr>
-      <td rowspan="3">Đăng xuất</td>
+      <td rowspan="4">Đăng xuất</td>
+      <td>ID</td>
+      <td>AUTH_001</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Thoát khỏi phiên đăng nhập</td>
     </tr>
@@ -177,7 +196,11 @@ Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xế
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Sửa thông tin tài khoản</td>
+      <td rowspan="4">Sửa thông tin tài khoản</td>
+      <td>ID</td>
+      <td>AUTH_002</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Sửa tên người dùng, mật khẩu và các thông tin khác</td>
     </tr>
@@ -201,33 +224,31 @@ Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xế
         </ol>
       </td>
     </tr>
+  </tbody>
+</table>
+
+### **Giảng viên**
+
+<table>
+  <thead>
     <tr>
-      <td rowspan="3">Báo cáo vi phạm</td>
-      <td>Mô tả</td>
-      <td>Gửi báo cáo về những khóa học, người dùng có nội dung, hành vi không phù hợp</td>
+      <th>Tính năng</th>
+      <th colspan="2">Chi tiết</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="4">Tạo khóa học</td>
+      <td>ID</td>
+      <td>AUTH_TEACHER_001</td>
     </tr>
     <tr>
-      <td>Điều kiện</td>
-      <td>Đã xác thực</td>
-    </tr>
-    <tr>
-      <td>Luồng hoạt động</td>
-      <td>
-        <ol>
-          <li>Chọn đối tượng muốn báo cáo</li>
-          <li>Nhập nội dung báo cáo</li>
-          <li>Gửi báo cáo</li>
-        </ol>
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="3">Tạo khóa học</td>
       <td>Mô tả</td>
       <td>Tạo một khóa học. Người dùng sẽ có toàn quyền với khóa học mà mình tạo</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực</td>
+      <td>Đã xác thực với tài khoản giảng viên</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -245,52 +266,17 @@ Khi đã đăng nhập, tùy vào hoàn cảnh mà tác nhân đó được xế
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Tham gia khóa học</td>
-      <td>Mô tả</td>
-      <td>Tham gia khóa học để có quyền bình luận và làm các bài tập, bài kiểm tra</td>
+      <td rowspan="4">Đăng bài học</td>
+      <td>ID</td>
+      <td>AUTH_TEACHER_002</td>
     </tr>
     <tr>
-      <td>Điều kiện</td>
-      <td>Đã xác thực</td>
-    </tr>
-    <tr>
-      <td>Luồng hoạt động</td>
-      <td>
-        <ol>
-          <li>Chọn một khóa học, gửi yêu cầu tham gia</li>
-          <li>
-            Về tính riêng tư, có hai loại khóa học:
-            <ol>
-              <li>Khóa học công khai: được tham gia ngay lập tức</li>
-              <li>Khóa học kín: chờ sự chấp nhận của giảng viên</li>
-            </ol>
-          </li>
-        </ol>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-### **Giảng viên**
-
-Tác nhân được xếp vào loại này nếu đã đăng nhập thành công và đang truy cập/sử dụng khóa học do mình tạo ra.
-
-<table>
-  <thead>
-    <tr>
-      <th>Tính năng</th>
-      <th colspan="2">Chi tiết</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td rowspan="3">Đăng bài học</td>
       <td>Mô tả</td>
       <td>Giảng viên đăng nội dung bài học cho khóa học mà mình tạo</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực và truy cập vào khóa học do mình tạo</td>
+      <td>Đã xác thực với tài khoản giảng viên và truy cập vào khóa học do mình tạo</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -310,13 +296,17 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Đăng bài tập</td>
+      <td rowspan="4">Đăng bài tập</td>
+      <td>ID</td>
+      <td>AUTH_TEACHER_003</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Tạo bài tập tương ứng với một bài học</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực và truy cập vào khóa học do mình tạo</td>
+      <td>Đã xác thực với tài khoản giảng viên và truy cập vào khóa học do mình tạo</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -336,13 +326,17 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Tạo bài kiểm tra</td>
+      <td rowspan="4">Tạo bài kiểm tra</td>
+      <td>ID</td>
+      <td>AUTH_TEACHER_004</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Tạo bài kiểm tra trắc nghiệm cho một khóa học</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực và truy cập vào khóa học do mình tạo</td>
+      <td>Đã xác thực với tài khoản giảng viên và truy cập vào khóa học do mình tạo</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -361,13 +355,17 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Thống kê bài tập, bài kiểm tra</td>
+      <td rowspan="4">Thống kê bài tập, bài kiểm tra</td>
+      <td>ID</td>
+      <td>AUTH_TEACHER_005</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Thống kê số lượng học viên làm bài tập, bài kiểm tra và nội dung bài làm</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực và truy cập vào khóa học do mình tạo</td>
+      <td>Đã xác thực với tài khoản giảng viên và truy cập vào khóa học do mình tạo</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -392,13 +390,17 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Đóng khóa học</td>
+      <td rowspan="4">Đóng khóa học</td>
+      <td>ID</td>
+      <td>AUTH_TEACHER_006</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Sau khi đóng khóa học, người dùng chỉ có thể xem, không thể tương tác với khóa học nữa</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực và truy cập vào khóa học do mình tạo</td>
+      <td>Đã xác thực với tài khoản giảng viên và truy cập vào khóa học do mình tạo</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -409,6 +411,60 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
             Xác nhận đóng khóa học
             <ol>
               <li>Đồng ý: đóng khóa học</li>
+              <li>Hủy</li>
+            </ol>
+          </li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="4">Xử lý yêu cầu tham gia khóa học</td>
+      <td>ID</td>
+      <td>AUTH_TEACHER_007</td>
+    </tr>
+    <tr>
+      <td>Mô tả</td>
+      <td>Chấp nhận hoặc từ chối yêu cầu tham gia khóa học kín của học viên</td>
+    </tr>
+    <tr>
+      <td>Điều kiện</td>
+      <td>Đã xác thực với tài khoản giảng viên và truy cập vào khóa học *kín* do mình tạo</td>
+    </tr>
+    <tr>
+      <td>Luồng hoạt động</td>
+      <td>
+        <ol>
+          <li>Chọn danh sách yêu cầu đang chờ</li>
+          <li>Chọn yêu cầu
+            <ol>
+              <li>Đồng ý: Thêm vào danh sách học viên và xóa khỏi danh sách yêu cầu</li>
+              <li>Từ chối: Xóa khỏi danh sách yêu cầu</li>
+            </ol>
+          </li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="4">Xóa học viên</td>
+      <td>ID</td>
+      <td>AUTH_TEACHER_008</td>
+    </tr>
+    <tr>
+      <td>Mô tả</td>
+      <td>Loại học viên khỏi khóa học</td>
+    </tr>
+    <tr>
+      <td>Điều kiện</td>
+      <td>Đã xác thực với tài khoảng giảng viên và truy cập vào khóa học do mình tạo</td>
+    </tr>
+    <tr>
+      <td>Luồng hoạt động</td>
+      <td>
+        <ol>
+          <li>Chọn học viên</li>
+          <li>Chọn tính năng xóa học viên
+            <ol>
+              <li>Đồng ý: Loại học viên khỏi khóa học</li>
               <li>Hủy</li>
             </ol>
           </li>
@@ -431,13 +487,39 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
   </thead>
   <tbody>
     <tr>
-      <td rowspan="3">Đánh giá khóa học</td>
+      <td rowspan="4">Tham gia khóa học</td>
+      <td>ID</td>
+      <td>AUTH_STUDENT_001</td>
+    </tr>
+    <tr>
+      <td>Mô tả</td>
+      <td>Tham gia khóa học để có quyền bình luận và làm các bài tập, bài kiểm tra</td>
+    </tr>
+    <tr>
+      <td>Điều kiện</td>
+      <td>Đã xác thực với tài khoản học viên</td>
+    </tr>
+    <tr>
+      <td>Luồng hoạt động</td>
+      <td>
+        <ol>
+          <li>Chọn một khóa học, gửi yêu cầu tham gia</li>
+          <li>Yêu cầu được lưu vào danh sách chờ</li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="4">Đánh giá khóa học</td>
+      <td>ID</td>
+      <td>AUTH_STUDENT_002</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Đánh giá khóa học theo thang điểm 5, đi kèm lời nhận xét(nếu có)</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực, tham gia một khóa học và truy cập vào trang của khóa học đó</td>
+      <td>Đã xác thực với tài khoản học viên</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -450,13 +532,17 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Bình luận về bài học</td>
+      <td rowspan="4">Bình luận về bài học</td>
+      <td>ID</td>
+      <td>AUTH_STUDENT_003</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Đưa ra câu hỏi, thảo luận bên dưới một bài học</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực, tham gia một khóa học và truy cập vào trang của khóa học đó</td>
+      <td>Đã xác thực với tài khoản học viên</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -469,13 +555,17 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Nộp bài tập</td>
+      <td rowspan="4">Nộp bài tập</td>
+      <td>ID</td>
+      <td>AUTH_STUDENT_004</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
-      <td>Gửi file bài tập kèm phần mô tả</td>
+      <td>Trình bày bài làm và gửi</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực, tham gia một khóa học và truy cập vào trang của khóa học đó</td>
+      <td>Đã xác thực với tài khoản học viên</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -483,19 +573,23 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
         <ol>
           <li>Truy cập vào trang bài học</li>
           <li>Chọn nộp bài tập</li>
-          <li>Upload file bài tập, gửi kèm mô tả (không bắt buộc)</li>
+          <li>Trình bày bài làm</li>
           <li>Chọn nộp</li>
         </ol>
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Làm bài kiểm tra</td>
+      <td rowspan="4">Làm bài kiểm tra</td>
+      <td>ID</td>
+      <td>AUTH_STUDENT_005</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Trả lời các câu hỏi trắc nghiệm</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực, tham gia một khóa học và truy cập vào trang của khóa học đó</td>
+      <td>Đã xác thực với tài khoản học viên</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -509,13 +603,17 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Rời khóa học</td>
+      <td rowspan="4">Rời khóa học</td>
+      <td>ID</td>
+      <td>AUTH_STUDENT_006</td>
+    </tr>
+    <tr>
       <td>Mô tả</td>
       <td>Sau khi rời khóa học, học viên sẽ không thể bình luận, làm bài tập, bài kiểm tra của khóa học đó nhưng vẫn xem được những nội dung của khóa học tính đến thời điểm rời đi</td>
     </tr>
     <tr>
       <td>Điều kiện</td>
-      <td>Đã xác thực, tham gia một khóa học và truy cập vào trang của khóa học đó</td>
+      <td>Đã xác thực với tài khoản học viên</td>
     </tr>
     <tr>
       <td>Luồng hoạt động</td>
@@ -525,7 +623,7 @@ Tác nhân được xếp vào loại này nếu đã đăng nhập thành công
           <li>
             Xác nhận
             <ol>
-              <li>Đồng ý: Rời khỏi khóa học, sao lưu dữ liệu khóa học tính đến thời điểm rời</li>
+              <li>Đồng ý: Rời khỏi khóa học</li>
               <li>Hủy</li>
             </ol>
           </li>
