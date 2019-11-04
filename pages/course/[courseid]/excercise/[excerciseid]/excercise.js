@@ -5,9 +5,11 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { Paper } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+
+import withLayout from '../../../../../components/lib/withLayout';
+import QuillEditor from '../../../../../components/QuillEditor';
 
 const exercise = {
   name: 'Exercise1',
@@ -42,7 +44,7 @@ function Exercise() {
                   </Box>
                 </Paper>
               </Box>
-              <Box m={1}> 
+              <Box m={1}>
                 <Paper>
                   <Box p={1.5}>
                     <Typography title="your-work" noWrap variant="h5">
@@ -50,18 +52,12 @@ function Exercise() {
                     </Typography>
                   </Box>
                   <Box p={1.5}>
-                    <TextField
-                      id="outlined-multiline-static"
-                      multiline
-                      rows="8"
-                      fullWidth
-                      defaultValue=""
-                      margin="normal"
-                      variant="outlined"
-                    />
+                    <QuillEditor></QuillEditor>
                   </Box>
-                  <Box pl={1.5} pb={1.5}>
-                    <Button variant="contained" color="primary">Submit</Button>
+                  <Box pl={1.5} pb={1.5} width={150}>
+                    <Button fullWidth variant="contained" color="primary">
+                      Submit
+                    </Button>
                   </Box>
                 </Paper>
               </Box>
@@ -73,4 +69,4 @@ function Exercise() {
   );
 }
 
-export default Exercise;
+export default withLayout(Exercise);
