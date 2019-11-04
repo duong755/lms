@@ -45,8 +45,16 @@
     "no-var": ["error"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "any",
+        "ignoreReadBeforeAssign": false
+      }
+    ],
     "prettier/prettier": ["error", {}, { "usePretierrc": true }],
     "react/react-in-jsx-scope": "off",
-    "import/order": ["error", { "newlines-between": "always-and-inside-groups" }]
+    "import/order": ["error", { "newlines-between": "always-and-inside-groups" }],
+    "import/no-unresolved": "error"
   }
 }
