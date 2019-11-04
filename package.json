@@ -17,10 +17,12 @@
     "heroku-postbuild": "yarn build"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "7.4.0",
     "@material-ui/core": "4.5.0",
     "@material-ui/icons": "4.4.3",
     "@material-ui/styles": "4.5.0",
     "aws-sdk": "^2.538.0",
+    "cassandra-driver": "4.3.0",
     "cookie-parser": "1.4.4",
     "cross-env": "^6.0.3",
     "dotenv": "8.1.0",
