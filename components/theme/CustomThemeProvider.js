@@ -10,7 +10,7 @@ function CustomThemeProvider(props) {
   const [cookies, setCookies] = useCookies(['paletteType']);
 
   const toggleTheme = useCallback(() => {
-    const currentTheme = cookies['paletteType'] || props.theme;
+    const currentTheme = cookies['paletteType'] || props.theme || 'light';
     if (currentTheme === 'dark') {
       setCookies('paletteType', 'light');
     } else {
@@ -19,7 +19,7 @@ function CustomThemeProvider(props) {
   }, [cookies['paletteType'], props.theme]);
 
   const theme = useMemo(() => {
-    return cookies['paletteType'] || props.theme;
+    return cookies['paletteType'] || props.theme || 'light';
   }, [cookies['paletteType'], props.theme]);
 
   return (
