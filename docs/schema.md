@@ -1,5 +1,9 @@
 # **Lược đồ cơ sở dữ liệu**
 
+## Kết quả
+
+[Database Schema in JSON file](./schema.jsonc)
+
 ## Truy vấn
 
 - **Đăng ký**:
@@ -76,7 +80,7 @@
     - Danh sách các học viên
     - Điểm kiểm tra (số câu trả lời đúng/tổng số câu hỏi)
     - Link đến bài làm của học viên
-- **Xử lý yêu cầu tham gia khóa học(đối với khóa học kín)**
+- **Xử lý yêu cầu tham gia khóa học**
   - Chấp nhận yêu cầu: Thêm vào danh sách học viên của khóa học, xóa khỏi danh sách yêu cầu
   - Từ chối yêu cầu: Xóa khỏi danh sách yêu cầu
 - **Xóa học viên**
@@ -93,6 +97,7 @@
   - Thông tin về bài tập bao gồm:
     - Học viên
     - Nội dung bài tập
+    - Thời điểm nộp
 - **Nộp bài kiểm tra**
   - Bài làm bao gồm:
     - Câu hỏi
@@ -146,40 +151,3 @@
 - Lesson 1 - N Comment on lesson
 - Exercise 1 - N Exercise Assignment 1 - 1 Student
 - Exam 1 - N Exam Assignment 1 - 1 Student
-
-## Lược đồ cơ sở dữ liệu
-
-[Database Schema in JSON file](./schema.json)
-
-```json
-{
-  "course": [
-    {
-      "topic": ["<topicId>"],
-      "joinRequest": [{ "studentId": "" }],
-      "member": [{ "studentId": "" }],
-      "teacherId": "",
-      "courseReview": [{ "studentId": "" }],
-      "lesson": [
-        {
-          "courseId": "",
-          "comment": [{ "studentId": "" }]
-        }
-      ],
-      "exercise": [
-        {
-          "exerciseWork": [{ "studentId": "" }]
-        }
-      ],
-      "exam": [
-        {
-          "examWork": [{ "studentId": "" }]
-        }
-      ]
-    }
-  ],
-  "student": [{ "joinedCourse": ["<courseId>"] }],
-  "teacher": [{ "ownedCourse": ["<courseId>"] }],
-  "topic": [{ "name": "" }]
-}
-```

@@ -1,83 +1,91 @@
-import Head from '../components/CustomHead';
-import Nav from '../components/nav';
+import Head from 'next/head';
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Home</title>
-    </Head>
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 
-    <Nav />
+const exercise = {
+  name: 'Exercise1',
+  description:
+    'Proin euismod orci eu lacus cursus, sed tincidunt risus auctor. Nam convallis tempor urna ac vestibulum. Integer porta, dolor vestibulum mattis posuere, risus sapien fermentum velit, vel ultricies nibh erat at erat. Mauris eros velit, rutrum in tristique eget, sollicitudin nec ipsum. Pellentesque non tincidunt magna. Aliquam nec turpis mauris. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis mattis tellus ut eros pharetra faucibus.'
+};
 
-    <div className="hero">
-      <h1 className="title">Welcome to Next.js!</h1>
-      <p className="description">
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
+import withLayout from '../components/lib/withLayout';
 
-      <div className="row">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Learn more about Next.js in the documentation.</p>
-        </a>
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Next.js Learn &rarr;</h3>
-          <p>Learn about Next.js by following an interactive tutorial!</p>
-        </a>
-        <a href="https://github.com/zeit/next.js/tree/master/examples" className="card">
-          <h3>Examples &rarr;</h3>
-          <p>Find other example boilerplates on the Next.js GitHub.</p>
-        </a>
-      </div>
-    </div>
+function Home() {
+  return (
+    <>
+      <Head>
+        <title>Exercise</title>
+      </Head>
+      <Box>
+        <Container maxWidth="xl">
+          <Grid container spacing={1}>
+            <Grid item md={3} sm={12}>
+              <Grid container>
+                <Grid item md={12} sm={4} xs={3}>
+                  <Box>
+                    <img src="/favicon.ico" style={{ width: '100%' }} />
+                  </Box>
+                </Grid>
+                <Grid item md={12} sm={8} xs={9}>
+                  <Typography title="Ngo Quang Duong" noWrap variant="h5">
+                    Ngo Quang Duong
+                  </Typography>
+                  <Typography title="QuangDuong120198" noWrap variant="h6">
+                    QuangDuong120198
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Box className="d-flex">
+                    <Icon>edit_location</Icon>
+                    <Typography noWrap className="pl-2">
+                      Hai Ba Trung, Ha Noi, Viet Nam
+                    </Typography>
+                  </Box>
+                  <Box p={2}>
+                    <Typography title="exercise-description">{exercise.description}</Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+              <Box m={1}>
+                <Paper>
+                  <Box p={1.5}>
+                    <Typography title="your-work" noWrap variant="h5">
+                      Your work
+                    </Typography>
+                  </Box>
+                  <Box p={1.5}>
+                    <TextField
+                      id="outlined-multiline-static"
+                      multiline
+                      rows="8"
+                      fullWidth
+                      defaultValue=""
+                      margin="normal"
+                      variant="outlined"
+                    />
+                  </Box>
+                  <Box pl={1.5} pb={1.5} width={150}>
+                    <Button fullWidth variant="contained" color="primary">
+                      Submit
+                    </Button>
+                  </Box>
+                </Paper>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+    </>
+  );
+}
 
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-  </div>
-);
-
-export default Home;
+export default withLayout(Home);
