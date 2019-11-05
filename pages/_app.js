@@ -18,12 +18,12 @@ class CustomApp extends App {
     return (
       <>
         <CookiesProvider>
-          <CustomThemeProvider theme={pageProps.theme}>
-            <MuiPickersUtilsProvider utils={DayjsUtils}>
+          <MuiPickersUtilsProvider utils={DayjsUtils}>
+            <CustomThemeProvider theme={pageProps.theme}>
               <CssBaseline />
               <Component {...pageProps} />
-            </MuiPickersUtilsProvider>
-          </CustomThemeProvider>
+            </CustomThemeProvider>
+          </MuiPickersUtilsProvider>
         </CookiesProvider>
       </>
     );
