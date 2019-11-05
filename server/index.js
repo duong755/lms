@@ -31,7 +31,7 @@ app
     server.use((req, res) => {
       handler(req, res, '_error', req.query);
     });
-    server.listen(port, err => {
+    server.listen(port, (err) => {
       if (err) {
         throw err;
       }
@@ -43,6 +43,6 @@ app
       }
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });
