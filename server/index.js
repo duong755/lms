@@ -22,6 +22,7 @@ app
     server.use(express.text());
     server.use(express.urlencoded({ extended: false }));
     server.use(cookieParser());
+
     server.use(universalCookie());
     server.use(express.static(path.resolve(__dirname, '../public')));
 
