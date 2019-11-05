@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import { Formik } from 'formik';
+import NextLink from 'next/link';
+import axios from 'axios';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -11,10 +12,11 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
+import Hidden from '@material-ui/core/Hidden';
 
-import axios from 'axios';
+import withLayout from '../../components/lib/withLayout';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: theme.spacing(5)
   },
@@ -37,7 +39,7 @@ function Signin() {
 
   function handleChange(event) {
     event.persist();
-    setValues(values => ({
+    setValues((values) => ({
       ...values,
       [event.target.name]: event.target.value
     }));
@@ -50,8 +52,8 @@ function Signin() {
     console.log(values);
     axios
       .post('/signin', values)
-      .then(res => console.log('Success ', res))
-      .catch(err => console.error('Error ', err));
+      .then((res) => console.log('Success ', res))
+      .catch((err) => console.error('Error ', err));
   }
   return (
     <>
@@ -96,30 +98,31 @@ function Signin() {
                       />
                     </Box>
                     <Box paddingLeft={3} paddingTop={1.5} paddingRight={3}>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        type="submit"
-                        style={{ backgroundColor: '#FF5722', color: '#FFFFFF' }}
-                      >
+                      <Button fullWidth variant="contained" type="submit" color="primary">
                         Sign in
                       </Button>
                     </Box>
                     <Box paddingX={3} paddingY={1.5}>
                       <Button fullWidth variant="text">
-                        <Link>forgot your password</Link>
+                        <NextLink href="/">
+                          <Link href="/">forgot your password</Link>
+                        </NextLink>
                       </Button>
                     </Box>
                   </form>
                 </Paper>
                 <Box height={30} />
                 <Button color="primary" variant="outlined" fullWidth>
-                  <Link>CREATE AN ACCOUT</Link>
+                  <NextLink href="/signup">
+                    <Link href="/signup">CREATE AN ACCOUNT</Link>
+                  </NextLink>
                 </Button>
               </Box>
             </Grid>
             <Grid item xs={false} sm={6}>
-              <img className={classes.image} src="https://loremflickr.com/320/240" />
+              <Hidden smDown>
+                <img className={classes.image} src="https://lh3.googleusercontent.com/UGQxZMBLsql2ED-_Kx7GHy0c7l3O64uhqeubwu1A-53VIamRM_VsDth_EyKEXnrwIwxUetQmY_3c03gHCMqAG49UJi7Fom1kqwNVdR9Az13WIrgGBBbTKxIZlKy8xdOuXuKJcPeE-1nLQ2qsBzReTYupwLqXr7ie2sxjPa8jafUEK4L7zlyLfjdlAfoz6GzDgoYva2sqJALVYx4Uv_UUemEZRZWmEQGPImpJfVQxamw0xPSuak39lHflrVDQUhzZAkw5Mf1fMUuKMBkD3sb9T8UdnYMRhDp8XUM6ZLBhVfIWASw_pSuPSVHTSWvVrGobxf0pp4BmgjZ6l39lK14OtkHcQO3_R4a9DdO3D7uRk7ad85mWBpGO8EkouV0xCi5MsXFTOuF5vd89SnpZFmLvMW6_TEXYKHf4RpIECUS_8I_MrLEW2aPmY9ir2DkIlnzJUY59g754P9O6AtCyik3FHFWxRYJzfQKnCQUk7JaTMWK15BrW3CW_ka1Ah_rAgmTAjsMXYqMWqnDPjIJx3HQOZWBYSYCIRrHk9hRfOuPlY4M2umzZPKSGKOOKc4mhBFr0P9F5BvD_4xH4b2DlSwZCxDtwbAQtiYcSrloLdCU5caHVWM4IcZSss5jlYDI=w1366-h590" />
+              </Hidden>
             </Grid>
           </Grid>
         </Container>
@@ -128,4 +131,4 @@ function Signin() {
   );
 }
 
-export default Signin;
+export default withLayout(Signin);

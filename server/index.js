@@ -1,4 +1,5 @@
 const path = require('path');
+
 const next = require('next');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -25,14 +26,12 @@ app
     server.use(universalCookie());
     server.use(express.static(path.resolve(__dirname, '../public')));
 
-
     server.get('/_next/*', handler);
-    server.get('/static/*', handler);
 
     server.use((req, res) => {
       handler(req, res, '_error', req.query);
     });
-    server.listen(port, err => {
+    server.listen(port, (err) => {
       if (err) {
         throw err;
       }
@@ -44,6 +43,6 @@ app
       }
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });
