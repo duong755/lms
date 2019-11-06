@@ -1,7 +1,8 @@
 const cassandra = require('cassandra-driver');
+const elasticsearch = require('@elastic/elasticsearch');
 
 const cassandraClient = new cassandra.Client({
-  contactPoints: ['127.0.0.1'],
+  contactPoints: ['127.0.0.1:9042'],
   keyspace: 'lms',
   localDataCenter: 'DC1',
   isMetadataSyncEnabled: true,
@@ -25,7 +26,22 @@ const mapper = (tableName, modelName) =>
     }
   });
 
+const elasticsearchClient = new elasticsearch.Client({
+  node: ['http://127.0.0.1:9200']
+});
+
+elasticsearchClient.search(
+  {
+    index: 'lms'
+  },
+  (err, result) => {
+    if (err) throw err;
+    console.log(result);
+  }
+);
+
 module.exports = {
   cassandraClient: cassandraClient,
-  mapper: mapper
+  mapper: mapper,
+  elasticsearchClient: elasticsearchClient
 };

@@ -1,5 +1,6 @@
 module.exports = {
   cassandraClient: require('./connector').cassandraClient,
+  elasticsearchClient: require('./connector').elasticsearchClient,
 
   User: require('./User'),
   Course: require('./Course'),

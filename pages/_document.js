@@ -13,7 +13,7 @@ class CustomDocument extends Document {
 
     context.renderPage = () =>
       originalRenderPage({
-        enhanceApp: App => props => sheets.collect(<App {...props} />)
+        enhanceApp: (App) => (props) => sheets.collect(<App {...props} />)
       });
 
     const initialProps = await Document.getInitialProps(context);
