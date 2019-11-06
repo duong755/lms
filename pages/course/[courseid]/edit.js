@@ -15,6 +15,7 @@ import withLayout from '../../../components/lib/withLayout';
 
 const useStyles = makeStyles(theme => ({
   save: {
+    marginRight: theme.spacing(2),
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
     fontWeight: 'bold',
@@ -24,8 +25,10 @@ const useStyles = makeStyles(theme => ({
     }
   },
   cancel: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
+    boxSizing: 'border-box',
+    borderWidth: '2px',
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
     fontWeight: 'bold',
     width: '15%',
     '&:hover': {
@@ -85,7 +88,7 @@ function EditCourse() {
                   <Button variant="contained" className={classes.save}>
                     Save
                   </Button>
-                  <Button variant="contained" className={classes.cancel}>
+                  <Button variant="outlined" className={classes.cancel}>
                     Cancel
                   </Button>
                 </Grid>
