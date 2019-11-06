@@ -1,12 +1,12 @@
 module.exports = {
   cassandraClient: require('./connector').cassandraClient,
-  elasticsearchClient: require('./connector').elasticsearchClient,
+  // elasticsearchClient: require('./connector').elasticsearchClient,
 
   User: require('./User'),
   Course: require('./Course'),
   Topic: require('./Topic'),
-  StudentJoinCourse: require('./StudentJoinCourse'),
-  StudentJoinRequest: require('./StudentJoinRequest'),
+  CourseMember: require('./CourseMember'),
+  JoinRequest: require('./JoinRequest'),
   Review: require('./Review'),
   Lesson: require('./Lesson'),
   Comment: require('./Comment'),

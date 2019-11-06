@@ -1,13 +1,17 @@
 const cassandra = require('cassandra-driver');
-const elasticsearch = require('@elastic/elasticsearch');
+// const elasticsearch = require('@elastic/elasticsearch');
+
+const CASSANDRA_CONTACT_POINTS = process.env.CASSANDRA_CONTACT_POINTS.split(/,\s+/g);
+const KEYSPACE = process.env.KEYSPACE;
+const LOCAL_DATA_CENTER = process.env.LOCAL_DATA_CENTER;
 
 const cassandraClient = new cassandra.Client({
-  contactPoints: ['127.0.0.1:9042'],
-  keyspace: 'lms',
-  localDataCenter: 'DC1',
+  contactPoints: CASSANDRA_CONTACT_POINTS,
+  keyspace: KEYSPACE,
+  localDataCenter: LOCAL_DATA_CENTER,
   isMetadataSyncEnabled: true,
   queryOptions: {
-    keyspace: 'lms',
+    keyspace: KEYSPACE,
     traceQuery: true,
     logged: true,
     captureStackTrace: true,
@@ -15,33 +19,28 @@ const cassandraClient = new cassandra.Client({
   }
 });
 
-const mapper = (tableName, modelName) =>
-  new cassandra.mapping.Mapper(tableName, {
+/**
+ *
+ * @param {string[]} tableNames
+ * @param {string} modelName
+ */
+const mapper = (tableNames, modelName) =>
+  new cassandra.mapping.Mapper(cassandraClient, {
     models: {
       [modelName]: {
-        keyspace: 'lms',
-        tables: [tableName],
+        keyspace: KEYSPACE,
+        tables: tableNames,
         mappings: new cassandra.mapping.UnderscoreCqlToCamelCaseMappings()
       }
     }
   });
 
-const elasticsearchClient = new elasticsearch.Client({
-  node: ['http://127.0.0.1:9200']
-});
-
-elasticsearchClient.search(
-  {
-    index: 'lms'
-  },
-  (err, result) => {
-    if (err) throw err;
-    console.log(result);
-  }
-);
+// const elasticsearchClient = new elasticsearch.Client({
+//   node: ['http://127.0.0.1:9200']
+// });
 
 module.exports = {
   cassandraClient: cassandraClient,
-  mapper: mapper,
-  elasticsearchClient: elasticsearchClient
+  mapper: mapper
+  // elasticsearchClient: elasticsearchClient
 };

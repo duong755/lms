@@ -1,3 +1,3 @@
 const { mapper } = require('./connector');
 
-module.exports = mapper('course', 'Course').forModel('Course');
+module.exports = mapper(['course'], 'Course').forModel('Course');

@@ -1788,10 +1788,10 @@ caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001004, caniuse-lite@^1.0.300010
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001006.tgz#5b6e8288792cfa275f007b2819a00ccad7112655"
   integrity sha512-MXnUVX27aGs/QINz+QG1sWSLDr3P1A3Hq5EUWoIt0T7K24DuvMxZEnh3Y5aHlJW6Bz2aApJdSewdYLd8zQnUuw==
 
-cassandra-driver@4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/cassandra-driver/-/cassandra-driver-4.3.0.tgz#0a8ffb0d89885d6638f6a4f8996c0e75b5a97ad0"
-  integrity sha512-IWpDxTJtaH9y7nvWuqyA4R0CgfhQ4clvSt0noLoaQPD/LBU+SdJlBGk0jCs16zHFJ4KhA6sshVY1m/2WUiSZ1g==
+cassandra-driver@4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/cassandra-driver/-/cassandra-driver-4.3.1.tgz#3998730c702aff3545f691118d3eebdb9347cd11"
+  integrity sha512-4Yuf9UkmwidiXKdAb4AgkC92CcUhP4hNUNaMNnKMGA3MRMQj2ZCEL6BR0/PrMPkYGC5faMPHJ4YzWAu3FFvM6g==
   dependencies:
     "@types/long" "^4.0.0"
     "@types/node" ">=4"
