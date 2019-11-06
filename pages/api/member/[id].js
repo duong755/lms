@@ -6,7 +6,7 @@ import { member } from '../../../mock-data';
  * @returns {void}
  */
 export default (req, res) => {
-  const result = member.find(currentMember => currentMember.id === req.query.id);
+  const result = member.find((currentMember) => currentMember.id === req.query.id);
   if (result) {
     res.json(result);
     return;
