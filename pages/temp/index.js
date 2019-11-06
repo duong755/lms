@@ -14,9 +14,21 @@ import ReactSelect from 'react-select';
 import withLayout from '../../components/lib/withLayout';
 
 const useStyles = makeStyles(theme => ({
-  button: {
+  save: {
+    marginRight: theme.spacing(2),
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
+    fontWeight: 'bold',
+    width: '15%',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark
+    }
+  },
+  cancel: {
+    boxSizing: 'border-box',
+    borderWidth: '2px',
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
     fontWeight: 'bold',
     width: '15%',
     '&:hover': {
@@ -36,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function CreateCourse() {
+function EditCourse() {
   const classes = useStyles();
 
   return (
@@ -51,7 +63,7 @@ function CreateCourse() {
               <Grid container direction="column" spacing={1} alignItems="stretch">
                 <Grid item className={classes.item}>
                   <Box paddingTop={3} component="h1">
-                    Create new course
+                    Edit course
                   </Box>
                   <Divider />
                 </Grid>
@@ -63,12 +75,6 @@ function CreateCourse() {
                   <Box component="h3">Description(Optional)</Box>
                   <TextField className={classes.textField} multiline id="description" variant="outlined" />
                 </Grid>
-                {/* <Grid item xs={12} sm={8} className={classes.item}>
-                    <RadioGroup defaultValue="Public" aria-label="privacy" name="customized-radios" row>
-                      <FormControlLabel value="public" control={<Radio color="primary" />} label="Public" />
-                      <FormControlLabel value="private" control={<Radio color="primary" />} label="Private" />
-                    </RadioGroup>
-                  </Grid> */}
                 <Grid item className={classes.item}>
                   <Box component="h3">Topics</Box>
                   <NoSsr>
@@ -79,8 +85,11 @@ function CreateCourse() {
                   <Divider />
                 </Grid>
                 <Grid item xs={12} sm={8} className={classes.item}>
-                  <Button variant="contained" className={classes.button}>
-                    Create
+                  <Button variant="contained" className={classes.save}>
+                    Save
+                  </Button>
+                  <Button variant="outlined" className={classes.cancel}>
+                    Cancel
                   </Button>
                 </Grid>
               </Grid>
@@ -92,4 +101,4 @@ function CreateCourse() {
   );
 }
 
-export default withLayout(CreateCourse);
+export default withLayout(EditCourse);
