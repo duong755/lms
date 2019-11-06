@@ -13,7 +13,7 @@ import ReactSelect from 'react-select';
 
 import withLayout from '../../components/lib/withLayout';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   button: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,

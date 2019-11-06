@@ -13,7 +13,7 @@ import ReactSelect from 'react-select';
 
 import withLayout from '../../../components/lib/withLayout';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   save: {
     marginRight: theme.spacing(2),
     backgroundColor: theme.palette.primary.main,
@@ -32,7 +32,8 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
     width: '15%',
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark
+      backgroundColor: theme.palette.primary.dark,
+      color: theme.palette.common.white
     }
   },
   item: {
