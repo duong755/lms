@@ -13,7 +13,6 @@ declare module 'redux-persist-cookie-storage' {
     indexKey: string;
     keyPrefix: string;
     setCookieOptions: any;
-    expiration: any;
 
     constructor(cookies: any, options?: Options);
 
