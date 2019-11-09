@@ -10,6 +10,10 @@ const cassandraClient = new cassandra.Client({
   keyspace: KEYSPACE,
   localDataCenter: LOCAL_DATA_CENTER,
   isMetadataSyncEnabled: true,
+  encoding: {
+    map: Map,
+    set: Set
+  },
   queryOptions: {
     keyspace: KEYSPACE,
     traceQuery: true,
@@ -21,7 +25,7 @@ const cassandraClient = new cassandra.Client({
 
 /**
  *
- * @param {string[]} tableNames
+ * @param {string[] | import('cassandra-driver').mapping.ModelTables[]} tableNames
  * @param {string} modelName
  */
 const mapper = (tableNames, modelName) =>
@@ -41,6 +45,7 @@ const mapper = (tableNames, modelName) =>
 
 module.exports = {
   cassandraClient: cassandraClient,
+  cassandraTypes: cassandra.types,
   mapper: mapper
   // elasticsearchClient: elasticsearchClient
 };
