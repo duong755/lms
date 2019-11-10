@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -11,8 +12,41 @@ import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import AppBar from '@material-ui/core/AppBar';
 
 import withLayout from '../../../components/lib/withLayout';
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      <Box p={3}>{children}</Box>
+    </Typography>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`
+  };
+}
 
 const useStyle = makeStyles((theme) => ({
   breadCrumbs: {
@@ -54,6 +88,12 @@ const useStyle = makeStyles((theme) => ({
 function CourseDetail() {
   const classes = useStyle();
 
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <>
       <Head>
@@ -78,81 +118,85 @@ function CourseDetail() {
               </Typography>
             </Grid>
           </Grid>
-          <Grid container justify="flex-start" className={classes.container}>
-            <Grid item xs={2}>
-              <Button variant="outlined" className={classes.currentButton}>
-                Lesson
+          <AppBar position="static">
+            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+              <Tab label="Lesson" {...a11yProps(0)} />
+              <Tab label="Exercise" {...a11yProps(1)} />
+              <Tab label="Exam" {...a11yProps(2)} />
+              <Tab label="Students" {...a11yProps(3)} />
+              <Tab label="Join request" {...a11yProps(4)} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <Grid container justify="flex-end" className={classes.container}>
+              <Button variant="contained" color="primary">
+                <Icon>add</Icon>Create Lesson
               </Button>
             </Grid>
-            <Grid item xs={2} className={classes.item}>
-              <Button className={classes.button}>Exercise</Button>
+            <Grid container justify="center" direction="column" className={classes.container}>
+              <Grid item>
+                <Paper className={classes.lesson}>
+                  <Typography className={classes.title}>Lesson title</Typography>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item>
+                <Paper className={classes.lesson}>
+                  <Typography className={classes.title}>Lesson title</Typography>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item>
+                <Paper className={classes.lesson}>
+                  <Typography className={classes.title}>Lesson title</Typography>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.
+                  </Typography>
+                </Paper>
+              </Grid>
             </Grid>
-            <Grid item xs={2} className={classes.item}>
-              <Button className={classes.button}>Exam</Button>
+            <Grid container justify="center">
+              <Grid item>
+                <ButtonGroup variant="outlined" color="primary" size="large">
+                  <Button className={classes.navButton}>
+                    <Icon>keyboard_arrow_left</Icon>
+                  </Button>
+                  <Button variant="contained" className={classes.navButton}>
+                    1
+                  </Button>
+                  <Button className={classes.navButton}>2</Button>
+                  <Button className={classes.navButton}>3</Button>
+                  <Button className={classes.navButton}>...</Button>
+                  <Button className={classes.navButton}>10</Button>
+                  <Button className={classes.navButton}>
+                    <Icon>keyboard_arrow_right</Icon>
+                  </Button>
+                </ButtonGroup>
+              </Grid>
             </Grid>
-            <Grid item xs={2} className={classes.item}>
-              <Button className={classes.button}>Students</Button>
-            </Grid>
-            <Grid item xs={2} className={classes.item}>
-              <Button className={classes.button}>Join request</Button>
-            </Grid>
-          </Grid>
-          <Grid container justify="flex-end" className={classes.container}>
-            <Button variant="contained" color="primary">
-              <Icon>add</Icon>Create Lesson
-            </Button>
-          </Grid>
-          <Grid container justify="center" direction="column" className={classes.container}>
-            <Grid item>
-              <Paper className={classes.lesson}>
-                <Typography className={classes.title}>Lesson title</Typography>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                  dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                  aliquip ex ea commodo consequat.
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper className={classes.lesson}>
-                <Typography className={classes.title}>Lesson title</Typography>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                  dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                  aliquip ex ea commodo consequat.
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper className={classes.lesson}>
-                <Typography className={classes.title}>Lesson title</Typography>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                  dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                  aliquip ex ea commodo consequat.
-                </Typography>
-              </Paper>
-            </Grid>
-          </Grid>
-          <Grid container justify="center">
-            <Grid item>
-              <ButtonGroup variant="outlined" color="primary" size="large">
-                <Button className={classes.navButton}>
-                  <Icon>keyboard_arrow_left</Icon>
-                </Button>
-                <Button variant="contained" className={classes.navButton}>
-                  1
-                </Button>
-                <Button className={classes.navButton}>2</Button>
-                <Button className={classes.navButton}>3</Button>
-                <Button className={classes.navButton}>...</Button>
-                <Button className={classes.navButton}>10</Button>
-                <Button className={classes.navButton}>
-                  <Icon>keyboard_arrow_right</Icon>
-                </Button>
-              </ButtonGroup>
-            </Grid>
-          </Grid>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            Lesson
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            Exam
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            Students
+          </TabPanel>
+          <TabPanel value={value} index={4}>
+            Join request
+          </TabPanel>
         </Container>
       </Box>
     </>
