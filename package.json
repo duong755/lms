@@ -10,6 +10,8 @@
     "yarn": "1.x"
   },
   "scripts": {
+    "start-elassandra": "docker-compose up -d",
+    "rm-elassandra": "docker rm -f elassandra",
     "test": "./node_modules/.bin/jest",
     "eslint": "./node_modules/.bin/eslint",
     "dev": "cross-env NODE_ENV=development node server",
@@ -38,7 +40,6 @@
     "helmet": "3.21.2",
     "jsonwebtoken": "8.5.1",
     "lodash": "^4.17.15",
-    "mongoose": "5.7.7",
     "morgan": "1.9.1",
     "next": "9.1.2",
     "passport": "0.4.0",
