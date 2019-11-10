@@ -1,5 +1,5 @@
 const cassandra = require('cassandra-driver');
-// const elasticsearch = require('@elastic/elasticsearch');
+const elasticsearch = require('@elastic/elasticsearch');
 
 const CASSANDRA_CONTACT_POINTS = process.env.CASSANDRA_CONTACT_POINTS.split(/,\s+/g);
 const KEYSPACE = process.env.KEYSPACE;
@@ -39,13 +39,13 @@ const mapper = (tableNames, modelName) =>
     }
   });
 
-// const elasticsearchClient = new elasticsearch.Client({
-//   node: ['http://127.0.0.1:9200']
-// });
+const elasticsearchClient = new elasticsearch.Client({
+  node: process.env.ELASTICSEARCH_URL.split(/,\s+/g)
+});
 
 module.exports = {
   cassandraClient: cassandraClient,
   cassandraTypes: cassandra.types,
-  mapper: mapper
-  // elasticsearchClient: elasticsearchClient
+  mapper: mapper,
+  elasticsearchClient: elasticsearchClient
 };

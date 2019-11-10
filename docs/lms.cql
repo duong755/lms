@@ -13,13 +13,13 @@ CREATE TYPE IF NOT EXISTS "quiz" (
 );
 
 CREATE TABLE IF NOT EXISTS "user" (
-    "id" uuid,
-    "username" text,
-    "email" text,
-    "hash_password" text,
-    "type" text,
-    "info" map<text, text>,
-    PRIMARY KEY ("id")
+   "id" uuid,
+   "username" text,
+   "email" text,
+   "hash_password" text,
+   "type" text,
+   "info" map<text, text>,
+   PRIMARY KEY ("id")
 );
 
 CREATE TABLE IF NOT EXISTS "topic" (
