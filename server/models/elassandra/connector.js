@@ -1,3 +1,4 @@
+require('dotenv').config();
 const cassandra = require('cassandra-driver');
 // const elasticsearch = require('@elastic/elasticsearch');
 
