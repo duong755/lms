@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
@@ -42,8 +43,8 @@ function withCourse(CoursePage, tab) {
   const tabs = ['lesson', 'exercise', 'exam', 'members', 'join requests'];
 
   const FullCoursePage = () => (
-    <>
-      <Box px={3}>
+    <Box>
+      <Container maxWidth="xl">
         <Box pt={3}>
           <Breadcrumbs aria-label="breadcrumb">
             <NextLink href="/">
@@ -65,9 +66,9 @@ function withCourse(CoursePage, tab) {
             <CourseTab key={currentTabName} tabName={currentTabName} focusTab={tab} />
           ))}
         </Box>
-      </Box>
-      <CoursePage />
-    </>
+        <CoursePage />
+      </Container>
+    </Box>
   );
   return FullCoursePage;
 }
