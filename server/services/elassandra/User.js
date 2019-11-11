@@ -1,75 +1,104 @@
-const crypto = require('crypto');
+require('dotenv').config();
+const cryto = require('crypto');
 
-const { User } = require('../../models/elassandra');
+const User = require('../../models/elassandra/User');
+const { cassandraClient } = require('../../models/elassandra/connector');
+const { cassandraTypes } = require('../../models/elassandra/connector');
 
+const Uuid = cassandraTypes.Uuid;
 const GRAVATAR_URL = 'https://gravatar.com/avatar';
-/**
- *
- * @param {string} username
- */
-function getUserByUsername(username) {
-  return User.get({
-    username: username
-  });
-}
+
+function getUserByEmail() {}
 
 /**
- *
- * @param {object} user
- * @param {string} user.username
- * @param {string} user.email
- * @param {string} user.hashPassword
- * @param {'teacher' | 'student'} user.type
- * @param {number} user.createAt
- * @param {object} [user.info]
+ * @param {String} user.userId
+ * @param {String} user.email
+ * @param {String} user.hashPassword
+ * @param {Object} user.info
+ * @param {String} user.username
+ * @param {String} user.type
+ * @param {Object} user
  */
 function createUser(user) {
-  const md5email = crypto
+  const md5Email = cryto
     .createHash('md5')
     .update(String(user.email))
     .digest('hex');
 
   return User.insert({
     username: user.username,
-    email: user.email,
     hashPassword: user.hashPassword,
-    type: user.type,
-    createAt: user.createAt,
     info: {
-      fullname: '',
+      fullName: '',
       birthday: '',
-      ...user.info,
-      image: `${GRAVATAR_URL}/${md5email}`
-    }
+      image: `${GRAVATAR_URL}/${md5Email}`
+    },
+    email: user.email,
+    type: user.type,
+    id: Uuid.random()
   });
 }
 
 /**
  *
- * @param {string} username
- * @param {object} info
- * @param {string} [info.fullname]
- * @param {string} [info.birthday]
+ * @param {String} userId
+ * @param {String} newPassword
  */
-function updateUserInfo(username, info) {
-  if (typeof info === 'object') {
-    delete info.image;
-  }
-  return User.update({ username: username, info: info }, { ifExists: true });
+function updateUserPassword(userId, newPassword) {
+  return User.update({ id: userId, hashPassword: newPassword }, { ifExists: true });
 }
 
 /**
  *
- * @param {string} username
- * @param {string} newHashPassword
+ * @param {String} userId
+ * @param {Object} info
  */
-function updateUserPassword(username, newHashPassword) {
-  return User.update({ username: username, hashPassword: newHashPassword }, { ifExists: false });
+function updateUserInfo(userId, newInfo) {
+  if (typeof newInfo === 'object') {
+    delete newInfo.image;
+  }
+  const queries = Object.keys(newInfo).map((currentKey) => {
+    switch (newInfo[currentKey]) {
+      case void 0:
+        break;
+      case '':
+        return {
+          query: 'DELETE info[?] FROM user WHERE id = ? IF EXISTS',
+          params: [currentKey, userId]
+        };
+      default:
+        return {
+          query: `UPDATE user SET info[?] = ? WHERE id = ${userId} IF EXISTS`,
+          params: [currentKey, newInfo[currentKey]]
+        };
+    }
+  });
+  return cassandraClient.batch(queries, { prepare: true });
 }
 
-module.exports = {
-  getUserByUsername: getUserByUsername,
-  createUser: createUser,
-  updateUserPassword: updateUserPassword,
-  updateUserInfo: updateUserInfo
+/**
+ *
+ * @param {String} userId
+ * @param {String} newUsername
+ */
+function updateUserName(userId, newUsername) {
+  return User.update({ id: userId, username: newUsername }, { ifExists: true });
+}
+
+/**
+ *
+ * @param {String} userId
+ * @param {String} newEmail
+ */
+function updateEmail(userId, newEmail) {
+  return User.update({ id: userId, email: newEmail }, { ifExists: true });
+}
+
+module.export = {
+  getUserByEmail,
+  createUser,
+  updateUserPassword,
+  updateUserInfo,
+  updateEmail,
+  updateUserName
 };
