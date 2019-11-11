@@ -1,4 +1,3 @@
-require('dotenv').config();
 const cryto = require('crypto');
 
 const User = require('../../models/elassandra/User');
@@ -11,13 +10,13 @@ const GRAVATAR_URL = 'https://gravatar.com/avatar';
 function getUserByEmail() {}
 
 /**
- * @param {String} user.userId
- * @param {String} user.email
- * @param {String} user.hashPassword
- * @param {Object} user.info
- * @param {String} user.username
- * @param {String} user.type
- * @param {Object} user
+ * @param {object} user
+ * @param {string} user.userId
+ * @param {string} user.email
+ * @param {string} user.hashPassword
+ * @param {object} user.info
+ * @param {string} user.username
+ * @param {'student' | 'teacher'} user.type
  */
 function createUser(user) {
   const md5Email = cryto
@@ -41,8 +40,8 @@ function createUser(user) {
 
 /**
  *
- * @param {String} userId
- * @param {String} newPassword
+ * @param {string} userId
+ * @param {string} newPassword
  */
 function updateUserPassword(userId, newPassword) {
   return User.update({ id: userId, hashPassword: newPassword }, { ifExists: true });
@@ -50,17 +49,20 @@ function updateUserPassword(userId, newPassword) {
 
 /**
  *
- * @param {String} userId
- * @param {Object} info
+ * @param {string} userId
+ * @param {object} info
  */
 function updateUserInfo(userId, newInfo) {
-  if (typeof newInfo === 'object') {
-    delete newInfo.image;
+  if (typeof newInfo !== 'object') {
+    newInfo = {};
   }
+
+  delete newInfo.image;
+  newInfo._random_ = Math.random();
+
   const queries = Object.keys(newInfo).map((currentKey) => {
     switch (newInfo[currentKey]) {
       case void 0:
-        break;
       case '':
         return {
           query: 'DELETE info[?] FROM user WHERE id = ? IF EXISTS',
@@ -78,23 +80,23 @@ function updateUserInfo(userId, newInfo) {
 
 /**
  *
- * @param {String} userId
- * @param {String} newUsername
+ * @param {string} userId
+ * @param {string} newUsername
  */
-function updateUserName(userId, newUsername) {
-  return User.update({ id: userId, username: newUsername }, { ifExists: true });
+function updateUserName(userId, newUserName) {
+  return User.update({ id: userId, username: newUserName }, { ifExists: true });
 }
 
 /**
  *
- * @param {String} userId
- * @param {String} newEmail
+ * @param {string} userId
+ * @param {string} newEmail
  */
 function updateEmail(userId, newEmail) {
   return User.update({ id: userId, email: newEmail }, { ifExists: true });
 }
 
-module.export = {
+module.exports = {
   getUserByEmail,
   createUser,
   updateUserPassword,
