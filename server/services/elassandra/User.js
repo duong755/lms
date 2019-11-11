@@ -2,9 +2,7 @@ const cryto = require('crypto');
 
 const User = require('../../models/elassandra/User');
 const { cassandraClient } = require('../../models/elassandra/connector');
-const { cassandraTypes } = require('../../models/elassandra/connector');
 
-const Uuid = cassandraTypes.Uuid;
 const GRAVATAR_URL = 'https://gravatar.com/avatar';
 
 function getUserByEmail() {}
@@ -17,6 +15,7 @@ function getUserByEmail() {}
  * @param {object} user.info
  * @param {string} user.username
  * @param {'student' | 'teacher'} user.type
+ * @param {string} user.userId
  */
 function createUser(user) {
   const md5Email = cryto
@@ -34,7 +33,7 @@ function createUser(user) {
     },
     email: user.email,
     type: user.type,
-    id: Uuid.random()
+    id: user.userId
   });
 }
 
