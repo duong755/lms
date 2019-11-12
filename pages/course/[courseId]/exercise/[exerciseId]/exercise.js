@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 
 import withLayout from '../../../../../components/lib/withLayout';
-import QuillEditor from '../../../../../components/QuillEditor';
+import MuiRte from '../../../../../components/MuiRte';
 
 const exercise = {
   name: 'Exercise1',
@@ -54,7 +54,7 @@ function Exercise() {
                         <strong>Your work</strong>
                       </Typography>
                     </Box>
-                    <QuillEditor />
+                    <MuiRte />
                     <Box pt={2}>
                       <Button variant="contained" color="primary">
                         Submit

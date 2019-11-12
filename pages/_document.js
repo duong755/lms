@@ -40,10 +40,6 @@ class CustomDocument extends Document {
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-          <link rel="stylesheet" type="text/css" href="/css/quill/quill.core.min.css" />
-          <link rel="stylesheet" type="text/css" href="/css/quill/quill.snow.min.css" />
-          <link rel="stylesheet" type="text/css" href="/css/quill/quill.bubble.min.css" />
-          <link rel="stylesheet" type="text/css" href="/css/quill/custom.css" />
         </Head>
         <body>
           <Main />

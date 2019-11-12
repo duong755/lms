@@ -11,7 +11,7 @@ import Link from '@material-ui/core/Link';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
 import withLayout from '../../../../../components/lib/withLayout';
-import QuillEditor from '../../../../../components/QuillEditor';
+import MuiRte from '../../../../../components/MuiRte';
 
 function EditExercise() {
   return (
@@ -56,7 +56,7 @@ function EditExercise() {
                 <Typography title="exercise-detail" noWrap>
                   <strong>Exercise Detail</strong>
                 </Typography>
-                <QuillEditor />
+                <MuiRte />
               </Box>
               <Box display="flex" mb={3}>
                 <Box pb={1.5}>
