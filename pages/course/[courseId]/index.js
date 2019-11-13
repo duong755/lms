@@ -2,21 +2,16 @@ import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import AppBar from '@material-ui/core/AppBar';
 
 import withLayout from '../../../components/lib/withLayout';
+import withCourse from '../../../components/lib/withCourse';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -41,12 +36,12 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired
 };
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`
-  };
-}
+// function a11yProps(index) {
+//   return {
+//     id: `simple-tab-${index}`,
+//     'aria-controls': `simple-tabpanel-${index}`
+//   };
+// }
 
 const useStyle = makeStyles((theme) => ({
   breadCrumbs: {
@@ -88,119 +83,73 @@ const useStyle = makeStyles((theme) => ({
 function CourseDetail() {
   const classes = useStyle();
 
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  // };
 
   return (
     <>
       <Head>
         <title>Course detail</title>
       </Head>
-      <Box p={5}>
-        <Container maxWidth="xl">
-          <Grid container direction="column" className={classes.container}>
-            <Grid item xs={12}>
-              <Breadcrumbs className={classes.breadCrumbs} aria-label="breadcrumb">
-                <Link color="inherit" href="/">
-                  Username
-                </Link>
-                <Typography className={classes.breadCrumbsCur} color="textPrimary">
-                  CourseName
-                </Typography>
-              </Breadcrumbs>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>
-                <Icon>calendar_today</Icon>Created on abcxyz
-              </Typography>
-            </Grid>
-          </Grid>
-          <AppBar position="static">
-            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-              <Tab label="Lesson" {...a11yProps(0)} />
-              <Tab label="Exercise" {...a11yProps(1)} />
-              <Tab label="Exam" {...a11yProps(2)} />
-              <Tab label="Students" {...a11yProps(3)} />
-              <Tab label="Join request" {...a11yProps(4)} />
-            </Tabs>
-          </AppBar>
-          <TabPanel value={value} index={0}>
-            <Grid container justify="flex-end" className={classes.container}>
-              <Button variant="contained" color="primary">
-                <Icon>add</Icon>Create Lesson
-              </Button>
-            </Grid>
-            <Grid container justify="center" direction="column" className={classes.container}>
-              <Grid item>
-                <Paper className={classes.lesson}>
-                  <Typography className={classes.title}>Lesson title</Typography>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat.
-                  </Typography>
-                </Paper>
-              </Grid>
-              <Grid item>
-                <Paper className={classes.lesson}>
-                  <Typography className={classes.title}>Lesson title</Typography>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat.
-                  </Typography>
-                </Paper>
-              </Grid>
-              <Grid item>
-                <Paper className={classes.lesson}>
-                  <Typography className={classes.title}>Lesson title</Typography>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat.
-                  </Typography>
-                </Paper>
-              </Grid>
-            </Grid>
-            <Grid container justify="center">
-              <Grid item>
-                <ButtonGroup variant="outlined" color="primary" size="large">
-                  <Button className={classes.navButton}>
-                    <Icon>keyboard_arrow_left</Icon>
-                  </Button>
-                  <Button variant="contained" className={classes.navButton}>
-                    1
-                  </Button>
-                  <Button className={classes.navButton}>2</Button>
-                  <Button className={classes.navButton}>3</Button>
-                  <Button className={classes.navButton}>...</Button>
-                  <Button className={classes.navButton}>10</Button>
-                  <Button className={classes.navButton}>
-                    <Icon>keyboard_arrow_right</Icon>
-                  </Button>
-                </ButtonGroup>
-              </Grid>
-            </Grid>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            Lesson
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            Exam
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            Students
-          </TabPanel>
-          <TabPanel value={value} index={4}>
-            Join request
-          </TabPanel>
-        </Container>
-      </Box>
+      <Grid container justify="flex-end" className={classes.container}>
+        <Button variant="contained" color="primary">
+          <Icon>add</Icon>Create Lesson
+        </Button>
+      </Grid>
+      <Grid container direction="column" className={classes.container}>
+        <Grid item>
+          <Paper className={classes.lesson}>
+            <Typography className={classes.title}>Lesson title</Typography>
+            <Typography>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+              ea commodo consequat.
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item>
+          <Paper className={classes.lesson}>
+            <Typography className={classes.title}>Lesson title</Typography>
+            <Typography>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+              ea commodo consequat.
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item>
+          <Paper className={classes.lesson}>
+            <Typography className={classes.title}>Lesson title</Typography>
+            <Typography>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+              ea commodo consequat.
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+      <Grid container justify="center">
+        <Grid item>
+          <ButtonGroup variant="outlined" color="primary" size="large">
+            <Button className={classes.navButton}>
+              <Icon>keyboard_arrow_left</Icon>
+            </Button>
+            <Button variant="contained" className={classes.navButton}>
+              1
+            </Button>
+            <Button className={classes.navButton}>2</Button>
+            <Button className={classes.navButton}>3</Button>
+            <Button className={classes.navButton}>...</Button>
+            <Button className={classes.navButton}>10</Button>
+            <Button className={classes.navButton}>
+              <Icon>keyboard_arrow_right</Icon>
+            </Button>
+          </ButtonGroup>
+        </Grid>
+      </Grid>
     </>
   );
 }
 
-export default withLayout(CourseDetail);
+export default withLayout(withCourse(CourseDetail, 'lesson'));
