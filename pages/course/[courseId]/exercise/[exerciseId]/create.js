@@ -11,7 +11,7 @@ import Link from '@material-ui/core/Link';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
 import withLayout from '../../../../../components/lib/withLayout';
-import QuillEditor from '../../../../../components/QuillEditor';
+import MuiRte from '../../../../../components/MuiRte';
 
 function CreateExercise() {
   return (
@@ -52,7 +52,7 @@ function CreateExercise() {
                 <Typography title="excercise-detail" noWrap>
                   Excercise Detail
                 </Typography>
-                <QuillEditor />
+                <MuiRte />
               </Box>
               <Box mb={3}>
                 <Button variant="contained" color="primary">
