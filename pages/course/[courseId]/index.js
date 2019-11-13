@@ -82,6 +82,9 @@ const useStyle = makeStyles((theme) => ({
   },
   navButton: {
     padding: theme.spacing(1)
+  },
+  timeSub: {
+    fontWeight: theme.typography.fontWeightLight
   }
 }));
 
@@ -113,7 +116,7 @@ function CourseDetail() {
               </Breadcrumbs>
             </Grid>
             <Grid item xs={12}>
-              <Typography>
+              <Typography className={classes.timeSub}>
                 <Icon>calendar_today</Icon>Created on abcxyz
               </Typography>
             </Grid>
@@ -186,7 +189,71 @@ function CourseDetail() {
             </Grid>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Lesson
+            <Grid container justify="flex-end" className={classes.container}>
+              <Button variant="contained" color="primary">
+                <Icon>add</Icon>Create Exercise
+              </Button>
+            </Grid>
+            <Grid container justify="center" direction="column" className={classes.container}>
+              <Grid item>
+                <Paper className={classes.lesson}>
+                  <Typography className={classes.title}>Exercise title</Typography>
+                  <Typography className={classes.timeSub}>
+                    <Icon>alarm</Icon>Deadline 2019-10-30 21:00
+                  </Typography>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item>
+                <Paper className={classes.lesson}>
+                  <Typography className={classes.title}>Exercise title</Typography>
+                  <Typography className={classes.timeSub}>
+                    <Icon>alarm</Icon>Deadline 2019-10-30 21:00
+                  </Typography>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item>
+                <Paper className={classes.lesson}>
+                  <Typography className={classes.title}>Exercise title</Typography>
+                  <Typography className={classes.timeSub}>
+                    <Icon>alarm</Icon>Deadline 2019-10-30 21:00
+                  </Typography>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.
+                  </Typography>
+                </Paper>
+              </Grid>
+            </Grid>
+            <Grid container justify="center">
+              <Grid item>
+                <ButtonGroup variant="outlined" color="primary" size="large">
+                  <Button className={classes.navButton}>
+                    <Icon>keyboard_arrow_left</Icon>
+                  </Button>
+                  <Button variant="contained" className={classes.navButton}>
+                    1
+                  </Button>
+                  <Button className={classes.navButton}>2</Button>
+                  <Button className={classes.navButton}>3</Button>
+                  <Button className={classes.navButton}>...</Button>
+                  <Button className={classes.navButton}>10</Button>
+                  <Button className={classes.navButton}>
+                    <Icon>keyboard_arrow_right</Icon>
+                  </Button>
+                </ButtonGroup>
+              </Grid>
+            </Grid>
           </TabPanel>
           <TabPanel value={value} index={2}>
             Exam
