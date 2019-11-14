@@ -23,8 +23,14 @@ describe('Elassandra Connect', () => {
     expect(connect).toBeUndefined();
   });
 
-  it('Elasticsearhc Connect', async () => {
+  it('Elasticsearch Connect', async () => {
     const connect = await elasticsearchClient.cat.health();
     expect(connect.statusCode).toBe(200);
+  });
+
+  afterAll(async (done) => {
+    await cassandraClient.shutdown();
+    await elasticsearchClient.close();
+    done();
   });
 });
