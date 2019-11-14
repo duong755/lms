@@ -7,6 +7,6 @@ const { mapper } = require('./connector');
 //     "star" tinyint,
 //     "content" text,
 //     "created_at" timestamp,
-//     PRIMARY KEY (("course_id", "teacher_id"), "student_id")
+//     PRIMARY KEY (("teacher_id", "course_id"), "student_id")
 // );
-module.exports = mapper(['course_review'], 'Review').forModel('Review');
+module.exports = mapper(['review'], 'Review').forModel('Review');

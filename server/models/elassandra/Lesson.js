@@ -6,6 +6,6 @@ const { mapper } = require('./connector');
 //     "teacher_id" uuid,
 //     "title" text,
 //     "content" text,
-//     PRIMARY KEY (("course_id", "teacher_id"), "id")
+//     PRIMARY KEY (("teacher_id", "course_id"), "id")
 // ) WITH CLUSTERING ORDER BY ("id" DESC);
 module.exports = mapper(['lesson'], 'Lesson').forModel('Lesson');
