@@ -6,7 +6,6 @@ const Exam = require('../../models/elassandra/Exam');
 const { cassandraTypes } = require('../../models/elassandra/connector');
 
 const Uuid = cassandraTypes.Uuid;
-const TimeUuid = cassandraTypes.TimeUuid;
 /**
  *
  * @param {object} course

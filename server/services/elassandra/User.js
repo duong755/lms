@@ -3,6 +3,8 @@ const cryto = require('crypto');
 const _ = require('lodash');
 
 const User = require('../../models/elassandra/User');
+const Commment = require('../../models/elassandra/Comment');
+const JoinRequest = require('../../models/elassandra/JoinRequest');
 const { cassandraClient, cassandraTypes } = require('../../models/elassandra/connector');
 
 const GRAVATAR_URL = 'https://gravatar.com/avatar';
@@ -133,6 +135,63 @@ function updateEmail(userId, newEmail) {
 
   return cassandraClient.execute(query, [newEmail, 'image', `${GRAVATAR_URL}/${md5Email}`, userId], { prepare: true });
 }
+/**
+ *
+ * @param {object} comment
+ * @param {string} comment.lessonId
+ * @param {string} comment.content
+ * @param {string} comment.userId
+ * @param {string} comment.id
+ */
+function createComment(comment) {
+  return Commment.insert(
+    {
+      lessonId: comment.lessonId,
+      id: comment.id,
+      content: comment.content,
+      userId: comment.userId
+    },
+    {
+      ifNotExists: true
+    }
+  );
+}
+
+/**
+ *
+ * @param {string} id
+ * @param {string} lessonId
+ * @param {string} newContent
+ */
+function editComment(id, lessonId, newContent) {
+  return Commment.update(
+    { id: id, lessonId: lessonId, content: newContent },
+    {
+      ifExists: true
+    }
+  );
+}
+/**
+ * @param {string} id
+ * @param {string} lessonId
+ */
+function deleteComment(id, lessonId) {
+  return Commment.remove({ id: id, lessonId: lessonId }, { ifExists: true });
+}
+
+/**
+ *
+ * @param {string} courseId
+ * @param {string} teacherId
+ * @param {string} studentId
+ */
+function cancelJoinRequest(courseId, teacherId, studentId) {
+  return JoinRequest.remove({
+    courseId: courseId,
+    teacherId: teacherId,
+    studentId: studentId
+  });
+}
 
 module.exports = {
   getUserByEmail,
@@ -140,5 +199,9 @@ module.exports = {
   updateUserPassword,
   updateUserInfo,
   updateEmail,
-  updateUserName
+  updateUserName,
+  createComment,
+  editComment,
+  deleteComment,
+  cancelJoinRequest
 };
