@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS "exercise_work" (
    "exercise_id" timeuuid,
    "student_id" uuid,
    "content" text,
-   "points" float,
+   "point" float,
    PRIMARY KEY (("exercise_id"), "id")
 );
 
