@@ -1,5 +1,5 @@
-require('dotenv').config();
 const cassandra = require('cassandra-driver');
+
 const elasticsearch = require('@elastic/elasticsearch');
 
 const CASSANDRA_CONTACT_POINTS = process.env.CASSANDRA_CONTACT_POINTS.split(/,\s+/g);
