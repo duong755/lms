@@ -121,7 +121,10 @@ function Signin() {
             </Grid>
             <Grid item xs={false} sm={6}>
               <Hidden smDown>
-                <img className={classes.image} src="https://lh3.googleusercontent.com/UGQxZMBLsql2ED-_Kx7GHy0c7l3O64uhqeubwu1A-53VIamRM_VsDth_EyKEXnrwIwxUetQmY_3c03gHCMqAG49UJi7Fom1kqwNVdR9Az13WIrgGBBbTKxIZlKy8xdOuXuKJcPeE-1nLQ2qsBzReTYupwLqXr7ie2sxjPa8jafUEK4L7zlyLfjdlAfoz6GzDgoYva2sqJALVYx4Uv_UUemEZRZWmEQGPImpJfVQxamw0xPSuak39lHflrVDQUhzZAkw5Mf1fMUuKMBkD3sb9T8UdnYMRhDp8XUM6ZLBhVfIWASw_pSuPSVHTSWvVrGobxf0pp4BmgjZ6l39lK14OtkHcQO3_R4a9DdO3D7uRk7ad85mWBpGO8EkouV0xCi5MsXFTOuF5vd89SnpZFmLvMW6_TEXYKHf4RpIECUS_8I_MrLEW2aPmY9ir2DkIlnzJUY59g754P9O6AtCyik3FHFWxRYJzfQKnCQUk7JaTMWK15BrW3CW_ka1Ah_rAgmTAjsMXYqMWqnDPjIJx3HQOZWBYSYCIRrHk9hRfOuPlY4M2umzZPKSGKOOKc4mhBFr0P9F5BvD_4xH4b2DlSwZCxDtwbAQtiYcSrloLdCU5caHVWM4IcZSss5jlYDI=w1366-h590" />
+                <img
+                  className={classes.image}
+                  src="https://lh3.googleusercontent.com/UGQxZMBLsql2ED-_Kx7GHy0c7l3O64uhqeubwu1A-53VIamRM_VsDth_EyKEXnrwIwxUetQmY_3c03gHCMqAG49UJi7Fom1kqwNVdR9Az13WIrgGBBbTKxIZlKy8xdOuXuKJcPeE-1nLQ2qsBzReTYupwLqXr7ie2sxjPa8jafUEK4L7zlyLfjdlAfoz6GzDgoYva2sqJALVYx4Uv_UUemEZRZWmEQGPImpJfVQxamw0xPSuak39lHflrVDQUhzZAkw5Mf1fMUuKMBkD3sb9T8UdnYMRhDp8XUM6ZLBhVfIWASw_pSuPSVHTSWvVrGobxf0pp4BmgjZ6l39lK14OtkHcQO3_R4a9DdO3D7uRk7ad85mWBpGO8EkouV0xCi5MsXFTOuF5vd89SnpZFmLvMW6_TEXYKHf4RpIECUS_8I_MrLEW2aPmY9ir2DkIlnzJUY59g754P9O6AtCyik3FHFWxRYJzfQKnCQUk7JaTMWK15BrW3CW_ka1Ah_rAgmTAjsMXYqMWqnDPjIJx3HQOZWBYSYCIRrHk9hRfOuPlY4M2umzZPKSGKOOKc4mhBFr0P9F5BvD_4xH4b2DlSwZCxDtwbAQtiYcSrloLdCU5caHVWM4IcZSss5jlYDI=w1366-h590"
+                />
               </Hidden>
             </Grid>
           </Grid>
