@@ -1,0 +1,134 @@
+/** MongoDB schema
+ *
+ * 4 collections:
+ * - course
+ * - topic
+ * - user
+ * - teacher
+ * - student
+ */
+
+{
+  "topic": [
+    {
+      "name": ""
+    }
+  ],
+  "course": [
+    {
+      "_id": "",
+      "name": "",
+      "topic": ["<topicName>"],
+      "joinRequest": [
+        {
+          "studentId": "",
+          "requestedAt": ""
+        }
+      ],
+      "member": [
+        {
+          "studentId": ""
+        }
+      ],
+      "teacherId": "",
+      "courseReview": [
+        {
+          "studentId": "",
+          "star": 5,
+          "content": "",
+          "lastUpdate": ""
+        }
+      ],
+      "lesson": [
+        {
+          "lessonId": "",
+          "title": "",
+          "content": "",
+          "lastUpdate": "",
+          "comment": [
+            {
+              "studentId": "",
+              "content": "",
+              "lastUpdate": ""
+            }
+          ]
+        }
+      ],
+      "exercise": [
+        {
+          "exerciseId": "",
+          "title": "",
+          "content": "",
+          "lastUpdate": "",
+          "deadline": "",
+          "exerciseWork": [
+            {
+              "studentId": "",
+              "content": "",
+              "lastUpdate": "",
+              "point": 8,
+              "comment": ""
+            }
+          ]
+        }
+      ],
+      "exam": [
+        {
+          "examId": "",
+          "title": "",
+          "duration": "",
+          "startAt": "",
+          "content": [
+            {
+              "questionId": "",
+              "question": "",
+              "choice": ["A", "B", "C", "D"],
+              "answer": "A",
+              "point": 1
+            }
+          ],
+          "examWork": [
+            {
+              "studentId": "",
+              "submitAt": "",
+              "questionId": "",
+              "question": "",
+              "choice": ["A", "B", "C", "D"],
+              "answer": "B",
+              "point": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "user": [
+    {
+      "_id": "",
+      "username": "",
+      "email": "",
+      "hashPassword": "",
+      "info": {
+        "fullName": "",
+        "birthday": "",
+        "description": "",
+        "location": ""
+      },
+      "accountType": "teacher | student"
+    }
+  ],
+  "student": [
+    {
+      "_id": "",
+      "username": "",
+      "joinedCourse": ["<courseId>"]
+    }
+  ],
+  "teacher": [
+    {
+      "_id": "",
+      "username": "",
+      "ownedCourse": ["<courseId>"]
+    }
+  ]
+}

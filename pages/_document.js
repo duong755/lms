@@ -13,7 +13,7 @@ class CustomDocument extends Document {
 
     context.renderPage = () =>
       originalRenderPage({
-        enhanceApp: App => props => sheets.collect(<App {...props} />)
+        enhanceApp: (App) => (props) => sheets.collect(<App {...props} />)
       });
 
     const initialProps = await Document.getInitialProps(context);
@@ -37,12 +37,9 @@ class CustomDocument extends Document {
           <meta charSet="UTF-8" key="charSet" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" key="viewport" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" key="httpEquiv" />
-          <link rel="shortcut icon" href="/static/favicon.ico" />
+          <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-          <link rel="stylesheet" type="text/css" href="/css/quill/quill.core.min.css" />
-          <link rel="stylesheet" type="text/css" href="/css/quill/quill.snow.min.css" />
-          <link rel="stylesheet" type="text/css" href="/css/quill/quill.bubble.min.css" />
         </Head>
         <body>
           <Main />

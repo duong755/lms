@@ -1,21 +1,15 @@
 import React from 'react';
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
 
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
-import NoSsr from '@material-ui/core/NoSsr';
-import withLayout from '../components/lib/withLayout';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-const QuillEditor = dynamic(() => import('react-quill'), {
-  noSsr: false
-});
-
-//import ReactQuill from 'react-quill';
+import withLayout from '../../../components/lib/withLayout';
+import MuiRte from '../../../components/MuiRte';
 
 function CreateLesson() {
   return (
@@ -45,8 +39,8 @@ function CreateLesson() {
 
                   <Box marginBottom="20px">
                     <Box>Lesson Detail</Box>
-                    <Box bgcolor="#ffffff">
-                      <QuillEditor />
+                    <Box>
+                      <MuiRte />
                     </Box>
                   </Box>
 
