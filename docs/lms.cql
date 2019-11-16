@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS "exercise_work" (
    "student_id" uuid,
    "submit_at" timeuuid,
    "content" text,
-   "points" float,
+   "point" float,
    PRIMARY KEY (("teacher_id", "course_id", "exercise_id"), "student_id")
 );
 
