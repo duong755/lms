@@ -5,7 +5,7 @@ module.exports = {
   User: require('./User'),
   Course: require('./Course'),
   Topic: require('./Topic'),
-  CourseMember: require('./CourseMember'),
+  Member: require('./Member'),
   JoinRequest: require('./JoinRequest'),
   Review: require('./Review'),
   Lesson: require('./Lesson'),

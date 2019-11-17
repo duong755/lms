@@ -7,4 +7,4 @@ const { mapper } = require('./connector');
 //     "joined_at" timestamp,
 //     PRIMARY KEY (("teacher_id", "course_id"), "student_id")
 // );
-module.exports = mapper(['member'], 'CourseMember').forModel('CourseMember');
+module.exports = mapper(['member'], 'Member').forModel('Member');

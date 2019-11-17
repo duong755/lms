@@ -1,4 +1,6 @@
-import { cassandraClient, elasticsearchClient } from '../server/models/elassandra';
+import { cassandraClient } from '../server/models/elassandra';
+
+import { closeConnection } from './helpers/close';
 
 describe('Test Cassandra Tables', () => {
   const tables = [
@@ -23,10 +25,6 @@ describe('Test Cassandra Tables', () => {
       expect(result.rows).toBeInstanceOf(Array);
     });
   });
-
-  afterAll(async (done) => {
-    await cassandraClient.shutdown();
-    await elasticsearchClient.close();
-    done();
-  });
 });
+
+afterAll(closeConnection);
