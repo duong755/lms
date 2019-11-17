@@ -6,7 +6,7 @@ describe('Topic Services', () => {
   it('createTopic', async () => {
     const name = randomName();
     const res = await createTopic(name, 30);
-    expect(res.wasApplied()).toBeTruthy();
+    expect(res.wasApplied()).toBe(true);
   });
 
   it('searchTopic', async () => {
