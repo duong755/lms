@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  elassandra:
+    container_name: elassandra
+    image: strapdata/elassandra:6.2.3
+    ports:
+      - "7000:7000"
+      - "7001:7001"
+      - "7199:7199"   # JMX
+      - "9042:9042"   # Native transport
+      - "9142:9142"
+      - "9160:9160"   # Thrift clients
+      - "9200:9200"   # ES clients
+      - "9300:9300"

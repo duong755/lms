@@ -1,9 +1,5 @@
 # **Lược đồ cơ sở dữ liệu**
 
-## Kết quả
-
-[Database Schema in JSON file](./schema.jsonc)
-
 ## Truy vấn
 
 - **Đăng ký**:
@@ -39,11 +35,6 @@
   - Sửa email, username:
     - Kiểm tra tính hợp lệ, tính duy nhất
   - Sửa thông tin khác
-- **Báo cáo vi phạm**
-  - Thêm thông tin về báo cáo, bao gồm:
-    - Người tạo báo cáo
-    - Người vi phạm
-    - Mô tả vi phạm
 - **Tạo khóa học**
   - Thông tin về khóa học mới bao gồm:
     - Tên khóa học
@@ -51,8 +42,7 @@
     - Khóa học công khai hay kín
     - Ngày tạo
 - **Sửa thông tin khóa học**
-  - Sửa tên, chủ đề khóa học
-  - _Chú ý:_ Không thể chuyển khóa học công khai thành kín hoặc ngược lại
+  - Sửa tên, chủ đề, mô tả của khóa học
 - **Đăng bài học**
   - Thông tin về bài học bao gồm:
     - Khóa học
@@ -65,11 +55,7 @@
     - Nội dung, yêu cầu của bài tập
     - Hạn nộp bài (tùy chọn)
 - **Tạo bài kiểm tra**
-  - Một bài kiểm tra(trắc nghiệm) bao gồm
-    - Các câu hỏi
-    - Một câu hỏi thuộc một trong hai loại:
-      - Chọn đáp án
-      - Nhập đáp án
+  - Một bài kiểm tra(trắc nghiệm) bao gồm các câu hỏi, mỗi câu hỏi có nhiều lựa chọn và chỉ 1 đáp án
 - **Thống kê bài tập**
   - Thống kê bài tập bao gồm:
     - Danh sách các học viên
@@ -86,8 +72,7 @@
 - **Xóa học viên**
   - Xóa học viên khỏi danh sách học viên của khóa học
 - **Tham gia khóa học**
-  - Khóa học công khai: Thêm vào danh sách học viên của khóa học
-  - Khóa học kín: Thêm vào danh sách yêu cầu
+  - Gửi yêu cầu tham gia đến khóa học
 - **Bình luận về bài học**
   - Thông tin về bình luận bao gồm:
     - Người bình luận
@@ -104,7 +89,6 @@
     - Câu trả lời
     - Điểm
 - **Rời khóa học**
-
   - Xóa khỏi danh sách học viên của khóa học
 
 - **Profile**
@@ -121,33 +105,28 @@
   - Danh sách học viên
   - Danh sách các bài học
   - Danh sách bài tập
+  - Danh sách yêu cầu tham gia
   - Danh sách bài kiểm tra
 
 ## Xác định thực thể
 
-- Course
-- Teacher
-- Student
-- Lesson
-- Exercise
-- Exam
-- Exercise Assignment
-- Exam Assignment
-- Course Review
-- Join Request
-- Comment on lesson
 - Topic
+- Course
+- User
+- Review
+- Join Request
+- Lesson
+- Comment
+- Exercise
+- Exercise Work
+- Exam
+- Exam Work
 
 ## Quan hệ giữa các thực thể
 
-- Course N - 1 Teacher
-- Course N - N Student
-- Course 1 - N Lesson
-- Course 1 - N Exercise
-- Course 1 - N Exam
-- Course 1 - N Course Review
-- Course N - N Topic
-- Course 1 - N Join Request 1 - 1 Student
-- Lesson 1 - N Comment on lesson
-- Exercise 1 - N Exercise Assignment 1 - 1 Student
-- Exam 1 - N Exam Assignment 1 - 1 Student
+![Sơ đồ thực thể](./lms.png)
+
+## Lược đồ cơ sở dữ liệu
+
+[CQL script](./lms.cql)
+
