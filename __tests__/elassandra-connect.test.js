@@ -1,8 +1,4 @@
-import dotenv from 'dotenv';
-
 import { cassandraClient, elasticsearchClient } from '../server/models/elassandra/connector';
-
-dotenv.config();
 
 describe('Elassandra Connect', () => {
   it('Environment Variables', () => {

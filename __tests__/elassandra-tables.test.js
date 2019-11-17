@@ -1,8 +1,4 @@
-import dotenv from 'dotenv';
-
 import { cassandraClient, elasticsearchClient } from '../server/models/elassandra';
-
-dotenv.config();
 
 describe('Test Cassandra Tables', () => {
   const tables = [
