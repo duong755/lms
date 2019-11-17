@@ -5,7 +5,7 @@ import { closeConnection } from '../helpers/close';
 describe('Topic Services', () => {
   it('createTopic', async () => {
     const name = randomName();
-    const res = await createTopic(name);
+    const res = await createTopic(name, 30);
     expect(res.wasApplied()).toBeTruthy();
   });
 

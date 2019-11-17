@@ -5,15 +5,17 @@ const { Topic, elasticsearchClient } = require('../../models/elassandra');
 /**
  *
  * @param {string} topicName
+ * @param {number} [ttl]
  */
-function createTopic(topicName) {
+function createTopic(topicName, ttl) {
   topicName = topicName.replace(/[^\w\s-]/g, '');
   return Topic.insert(
     {
       name: topicName
     },
     {
-      ifNotExists: true
+      ifNotExists: true,
+      ttl: ttl
     }
   );
 }
