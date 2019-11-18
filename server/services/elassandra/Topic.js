@@ -1,23 +1,20 @@
 const _ = require('lodash');
 
-const { Topic, elasticsearchClient } = require('../../models/elassandra');
+const { Topic, elasticsearchClient, mapperCreator } = require('../../models/elassandra');
 
 /**
  *
- * @param {string} topicName
+ * @param {string | string[]} topicNames
  * @param {number} [ttl]
  */
-function createTopic(topicName, ttl) {
-  topicName = topicName.replace(/[^\w\s-]/g, '');
-  return Topic.insert(
-    {
-      name: topicName
-    },
-    {
-      ifNotExists: true,
-      ttl: ttl
-    }
+function createTopic(topicNames, ttl) {
+  if (!(topicNames instanceof Array)) {
+    topicNames = [topicNames];
+  }
+  const newTopics = topicNames.map((currentTopicName) =>
+    Topic.batching.insert({ name: currentTopicName }, { ttl: ttl })
   );
+  return mapperCreator(['topic'], 'Topic').batch(newTopics);
 }
 
 /**

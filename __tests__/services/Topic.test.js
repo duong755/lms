@@ -1,11 +1,15 @@
 import { createTopic, searchTopic } from '../../server/services/elassandra/Topic';
-import { randomName } from '../helpers/random';
+import { randomName, randomNumber } from '../helpers/random';
 import { closeConnection } from '../helpers/close';
 
 describe('Topic Services', () => {
   it('createTopic', async () => {
-    const name = randomName();
-    const res = await createTopic(name, 30);
+    const randomTopicsNumber = randomNumber(1, 20);
+    const randomTopicNames = '.'
+      .repeat(randomTopicsNumber)
+      .split('')
+      .map(randomName);
+    const res = await createTopic(randomTopicNames, 30);
     expect(res.wasApplied()).toBe(true);
   });
 

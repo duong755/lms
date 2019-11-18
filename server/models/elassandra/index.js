@@ -2,6 +2,7 @@ module.exports = {
   cassandraClient: require('./connector').cassandraClient,
   elasticsearchClient: require('./connector').elasticsearchClient,
   cassandraTypes: require('./connector').cassandraTypes,
+  mapperCreator: require('./connector').mapper,
 
   User: require('./User'),
   Course: require('./Course'),
