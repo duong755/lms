@@ -1,6 +1,6 @@
 import { types } from 'cassandra-driver';
 
-import { createJoinRequest, deleteJoinRequest } from '../../server/services/elassandra/JoinRequest';
+import { createJoinRequest, acceptJoinRequest, declineJoinRequest } from '../../server/services/elassandra/JoinRequest';
 
 import { closeConnection } from '../helpers/close';
 
@@ -14,10 +14,27 @@ describe('JoinRequest Services', () => {
     expect(res.wasApplied()).toBe(true);
   });
 
-  it('deleteJoinRequest', async () => {
-    const res = await deleteJoinRequest(teacherId, courseId, studentId, 30);
-    expect(res.wasApplied()).toBe(true);
-  }, 30000);
+  describe('acceptJoinRequest', () => {
+    it('createJoinRequest', async () => {
+      const res = await createJoinRequest(teacherId, courseId, studentId, 30);
+      expect(res.wasApplied()).toBe(true);
+    });
+    it('acceptJoinRequest', async () => {
+      const res = await acceptJoinRequest(teacherId, courseId, studentId, 30);
+      expect(res.wasApplied()).toBe(true);
+    });
+  });
+
+  describe('declineJoinRequest', () => {
+    it('createJoinRequest', async () => {
+      const res = await createJoinRequest(teacherId, courseId, studentId, 30);
+      expect(res.wasApplied()).toBe(true);
+    });
+    it('declineJoinRequest', async () => {
+      const res = await declineJoinRequest(teacherId, courseId, studentId, 30);
+      expect(res.wasApplied()).toBe(true);
+    }, 30000);
+  });
 });
 
 afterAll(closeConnection);

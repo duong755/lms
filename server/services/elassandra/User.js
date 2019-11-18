@@ -2,10 +2,8 @@ const cryto = require('crypto');
 
 const _ = require('lodash');
 
-const User = require('../../models/elassandra/User');
-const Commment = require('../../models/elassandra/Comment');
-const JoinRequest = require('../../models/elassandra/JoinRequest');
-const { cassandraClient, cassandraTypes } = require('../../models/elassandra/connector');
+const { User } = require('../../models/elassandra');
+const { cassandraClient } = require('../../models/elassandra');
 
 const GRAVATAR_URL = 'https://gravatar.com/avatar';
 
@@ -13,7 +11,7 @@ function getUserByEmail() {}
 
 /**
  * @param {object} user
- * @param {string} user.userId
+ * @param {import('cassandra-driver').types.Uuid} user.userId
  * @param {string} user.email
  * @param {string} user.hashPassword
  * @param {object} user.info
@@ -43,7 +41,7 @@ function createUser(user) {
 
 /**
  *
- * @param {string} userId
+ * @param {import('cassandra-driver').types.Uuid} userId
  * @param {string} newPassword
  */
 function updateUserPassword(userId, newPassword) {
@@ -52,7 +50,7 @@ function updateUserPassword(userId, newPassword) {
 
 /**
  *
- * @param {string} userId
+ * @param {import('cassandra-driver').types.Uuid} userId
  * @param {Object<string, string>} newInfo
  */
 function updateUserInfo(userId, newInfo) {
@@ -76,8 +74,6 @@ function updateUserInfo(userId, newInfo) {
     }
   });
 
-  const userUUID = cassandraTypes.Uuid.fromString(userId).toString();
-
   const pairs = _.toPairs(newInfo);
   const twoGroups = _.groupBy(pairs, (pair) => {
     switch (pair[1]) {
@@ -91,21 +87,19 @@ function updateUserInfo(userId, newInfo) {
   });
 
   const deleteKeys = twoGroups.delete.map((currentPair) => currentPair[0]);
-  const deleteQuery = `DELETE ${deleteKeys.map(() => 'info[?]').join(', ')} FROM user WHERE id = ${userUUID} IF EXISTS`;
+  const deleteQuery = `DELETE ${deleteKeys.map(() => 'info[?]').join(', ')} FROM user WHERE id = ? IF EXISTS`;
 
   const updateKeys = twoGroups.update.map((currentPair) => currentPair[0]);
-  const updateQuery = `UPDATE user SET ${updateKeys
-    .map(() => 'info[?] = ?')
-    .join(', ')} WHERE id = ${userUUID} IF EXISTS`;
+  const updateQuery = `UPDATE user SET ${updateKeys.map(() => 'info[?] = ?').join(', ')} WHERE id = ? IF EXISTS`;
 
   const queries = [
     {
       query: updateQuery,
-      params: [..._.flatten(twoGroups.update)]
+      params: [..._.flatten(twoGroups.update), userId]
     },
     {
       query: deleteQuery,
-      params: [...deleteKeys]
+      params: [...deleteKeys, userId]
     }
   ];
 
@@ -114,7 +108,7 @@ function updateUserInfo(userId, newInfo) {
 
 /**
  *
- * @param {string} userId
+ * @param {import('cassandra-driver').types.Uuid} userId
  * @param {string} newUsername
  */
 function updateUserName(userId, newUserName) {
@@ -123,7 +117,7 @@ function updateUserName(userId, newUserName) {
 
 /**
  *
- * @param {string} userId
+ * @param {import('cassandra-driver').types.Uuid} userId
  * @param {string} newEmail
  */
 function updateEmail(userId, newEmail) {
@@ -135,63 +129,6 @@ function updateEmail(userId, newEmail) {
 
   return cassandraClient.execute(query, [newEmail, 'image', `${GRAVATAR_URL}/${md5Email}`, userId], { prepare: true });
 }
-/**
- *
- * @param {object} comment
- * @param {string} comment.lessonId
- * @param {string} comment.content
- * @param {string} comment.userId
- * @param {string} comment.id
- */
-function createComment(comment) {
-  return Commment.insert(
-    {
-      lessonId: comment.lessonId,
-      id: comment.id,
-      content: comment.content,
-      userId: comment.userId
-    },
-    {
-      ifNotExists: true
-    }
-  );
-}
-
-/**
- *
- * @param {string} id
- * @param {string} lessonId
- * @param {string} newContent
- */
-function editComment(id, lessonId, newContent) {
-  return Commment.update(
-    { id: id, lessonId: lessonId, content: newContent },
-    {
-      ifExists: true
-    }
-  );
-}
-/**
- * @param {string} id
- * @param {string} lessonId
- */
-function deleteComment(id, lessonId) {
-  return Commment.remove({ id: id, lessonId: lessonId }, { ifExists: true });
-}
-
-/**
- *
- * @param {string} courseId
- * @param {string} teacherId
- * @param {string} studentId
- */
-function cancelJoinRequest(courseId, teacherId, studentId) {
-  return JoinRequest.remove({
-    courseId: courseId,
-    teacherId: teacherId,
-    studentId: studentId
-  });
-}
 
 module.exports = {
   getUserByEmail,
@@ -199,9 +136,5 @@ module.exports = {
   updateUserPassword,
   updateUserInfo,
   updateEmail,
-  updateUserName,
-  createComment,
-  editComment,
-  deleteComment,
-  cancelJoinRequest
+  updateUserName
 };
