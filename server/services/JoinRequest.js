@@ -1,4 +1,4 @@
-const { JoinRequest, cassandraClient } = require('../../models/elassandra');
+const { JoinRequest, cassandraClient } = require('../models');
 
 /**
  *

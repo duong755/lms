@@ -1,4 +1,4 @@
-import { elasticsearchClient, cassandraClient } from '../../server/models/elassandra';
+import { elasticsearchClient, cassandraClient } from '../../server/models';
 
 /**
  *

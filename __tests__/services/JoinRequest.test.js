@@ -1,6 +1,6 @@
 import { types } from 'cassandra-driver';
 
-import { createJoinRequest, acceptJoinRequest, declineJoinRequest } from '../../server/services/elassandra/JoinRequest';
+import { createJoinRequest, acceptJoinRequest, declineJoinRequest } from '../../server/services/JoinRequest';
 
 import { closeConnection } from '../helpers/close';
 

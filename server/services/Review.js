@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const { Review, elasticsearchClient } = require('../../models/elassandra');
+const { Review, elasticsearchClient } = require('../models');
 
 /**
  *

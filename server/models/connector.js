@@ -3,8 +3,8 @@ const cassandra = require('cassandra-driver');
 const elasticsearch = require('@elastic/elasticsearch');
 
 const CASSANDRA_CONTACT_POINTS = process.env.CASSANDRA_CONTACT_POINTS.split(/,\s+/g);
-const KEYSPACE = process.env.KEYSPACE;
-const LOCAL_DATA_CENTER = process.env.LOCAL_DATA_CENTER;
+const KEYSPACE = process.env.KEYSPACE || 'lms';
+const LOCAL_DATA_CENTER = process.env.LOCAL_DATA_CENTER || 'DC1';
 
 const cassandraClient = new cassandra.Client({
   contactPoints: CASSANDRA_CONTACT_POINTS,
@@ -24,22 +24,6 @@ const cassandraClient = new cassandra.Client({
   }
 });
 
-/**
- *
- * @param {string[] | import('cassandra-driver').mapping.ModelTables[]} tableNames
- * @param {string} modelName
- */
-const mapper = (tableNames, modelName) =>
-  new cassandra.mapping.Mapper(cassandraClient, {
-    models: {
-      [modelName]: {
-        keyspace: KEYSPACE,
-        tables: tableNames,
-        mappings: new cassandra.mapping.UnderscoreCqlToCamelCaseMappings()
-      }
-    }
-  });
-
 const elasticsearchClient = new elasticsearch.Client({
   node: process.env.ELASTICSEARCH_URL.split(/,\s+/g)
 });
@@ -47,6 +31,5 @@ const elasticsearchClient = new elasticsearch.Client({
 module.exports = {
   cassandraClient: cassandraClient,
   cassandraTypes: cassandra.types,
-  mapper: mapper,
   elasticsearchClient: elasticsearchClient
 };

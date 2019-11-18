@@ -1,4 +1,4 @@
-import { createTopic, searchTopic } from '../../server/services/elassandra/Topic';
+import { createTopic, searchTopic } from '../../server/services/Topic';
 import { randomName, randomNumber } from '../helpers/random';
 import { closeConnection } from '../helpers/close';
 

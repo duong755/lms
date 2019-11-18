@@ -1,7 +1,7 @@
-const Review = require('../../models/elassandra/Review');
-const ExerciseWork = require('../../models/elassandra/ExerciseWork');
-const ExamWork = require('../../models/elassandra/ExamWork');
-const JoinRequest = require('../../models/elassandra/JoinRequest');
+const Review = require('../models/elassandra/Review');
+const ExerciseWork = require('../models/elassandra/ExerciseWork');
+const ExamWork = require('../models/elassandra/ExamWork');
+const JoinRequest = require('../models/elassandra/JoinRequest');
 /**
  *
  * @param {object} review

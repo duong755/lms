@@ -2,8 +2,8 @@ const cryto = require('crypto');
 
 const _ = require('lodash');
 
-const { User } = require('../../models/elassandra');
-const { cassandraClient } = require('../../models/elassandra');
+const { User } = require('../models');
+const { cassandraClient } = require('../models');
 
 const GRAVATAR_URL = 'https://gravatar.com/avatar';
 

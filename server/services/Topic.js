@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const { Topic, elasticsearchClient, mapperCreator } = require('../../models/elassandra');
+const { Topic, elasticsearchClient, mapper } = require('../models');
 
 /**
  *
@@ -14,7 +14,7 @@ function createTopic(topicNames, ttl) {
   const newTopics = topicNames.map((currentTopicName) =>
     Topic.batching.insert({ name: currentTopicName }, { ttl: ttl })
   );
-  return mapperCreator(['topic'], 'Topic').batch(newTopics);
+  return mapper.batch(newTopics);
 }
 
 /**

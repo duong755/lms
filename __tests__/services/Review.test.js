@@ -1,6 +1,6 @@
 import { types } from 'cassandra-driver';
 
-import { getReviews, upsertReview, deleteReview } from '../../server/services/elassandra/Review';
+import { getReviews, upsertReview, deleteReview } from '../../server/services/Review';
 
 import { closeConnection } from '../helpers/close';
 import { randomName, randomNumber } from '../helpers/random';

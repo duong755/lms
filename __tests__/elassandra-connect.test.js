@@ -1,4 +1,4 @@
-import { cassandraClient, elasticsearchClient } from '../server/models/elassandra/connector';
+import { cassandraClient, elasticsearchClient } from '../server/models';
 
 import { closeConnection } from './helpers/close';
 

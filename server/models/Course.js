@@ -1,4 +1,4 @@
-const { mapper } = require('./connector');
+const mapper = require('./mapper');
 
 // CREATE TABLE IF NOT EXISTS "course" (
 //     "id" uuid,
@@ -12,4 +12,4 @@ const { mapper } = require('./connector');
 //     "members" set<uuid>,
 //     PRIMARY KEY (("teacher_id"), "id")
 // );
-module.exports = mapper(['course'], 'Course').forModel('Course');
+module.exports = mapper.forModel('course');

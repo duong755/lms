@@ -1,4 +1,4 @@
-const { mapper } = require('./connector');
+const mapper = require('./mapper');
 
 // CREATE TABLE IF NOT EXISTS "comment" (
 //     "id" timeuuid,
@@ -9,4 +9,4 @@ const { mapper } = require('./connector');
 //     "content" text,
 //   PRIMARY KEY (("teacher_id", "course_id", "lesson_id"), "id")
 // ) WITH CLUSTERING ORDER BY ("id" DESC);
-module.exports = mapper(['comment'], 'Comment').forModel('Comment');
+module.exports = mapper.forModel('comment');
