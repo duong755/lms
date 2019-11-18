@@ -36,8 +36,6 @@ function acceptJoinRequest(teacherId, courseId, studentId, ttl) {
   const insertMemberTable = `INSERT INTO member(teacher_id, course_id, student_id, joined_at) VALUES (?, ?, ?, ?) ${timeToLive}`;
   const editCourseMember = `UPDATE course ${timeToLive} SET members = members + {${studentId.toString()}} WHERE teacher_id = ? AND id = ?`;
 
-  console.log(deleteJoinRequest, insertMemberTable, editCourseMember);
-
   return cassandraClient.batch(
     [
       {

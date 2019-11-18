@@ -14,27 +14,17 @@ describe('JoinRequest Services', () => {
     expect(res.wasApplied()).toBe(true);
   });
 
-  describe('acceptJoinRequest', () => {
-    it('createJoinRequest', async () => {
-      const res = await createJoinRequest(teacherId, courseId, studentId, 30);
-      expect(res.wasApplied()).toBe(true);
-    });
-    it('acceptJoinRequest', async () => {
-      const res = await acceptJoinRequest(teacherId, courseId, studentId, 30);
-      expect(res.wasApplied()).toBe(true);
-    });
+  it('acceptJoinRequest', async () => {
+    await createJoinRequest(teacherId, courseId, studentId, 30);
+    const res = await acceptJoinRequest(teacherId, courseId, studentId, 30);
+    expect(res.wasApplied()).toBe(true);
   });
 
-  describe('declineJoinRequest', () => {
-    it('createJoinRequest', async () => {
-      const res = await createJoinRequest(teacherId, courseId, studentId, 30);
-      expect(res.wasApplied()).toBe(true);
-    });
-    it('declineJoinRequest', async () => {
-      const res = await declineJoinRequest(teacherId, courseId, studentId, 30);
-      expect(res.wasApplied()).toBe(true);
-    }, 30000);
-  });
+  it('declineJoinRequest', async () => {
+    await createJoinRequest(teacherId, courseId, studentId, 30);
+    const res = await declineJoinRequest(teacherId, courseId, studentId, 30);
+    expect(res.wasApplied()).toBe(true);
+  }, 30000);
 });
 
 afterAll(closeConnection);
