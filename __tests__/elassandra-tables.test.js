@@ -1,23 +1,9 @@
 import { cassandraClient } from '../server/models';
 
 import { closeConnection } from './helpers/close';
+import tables from './helpers/tables';
 
 describe('Test Cassandra Tables', () => {
-  const tables = [
-    'course',
-    'topic',
-    'user',
-    'member',
-    'review',
-    'join_request',
-    'lesson',
-    'comment',
-    'exercise',
-    'exercise_work',
-    'exam',
-    'exam_work'
-  ];
-
   tables.forEach((currentTableName) => {
     const query = `SELECT * FROM ${currentTableName}`;
     it(query, async () => {
