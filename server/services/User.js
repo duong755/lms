@@ -2,12 +2,59 @@ const cryto = require('crypto');
 
 const _ = require('lodash');
 
-const { User } = require('../models');
-const { cassandraClient } = require('../models');
+const { User, cassandraClient, elasticsearchClient } = require('../models');
 
 const GRAVATAR_URL = 'https://gravatar.com/avatar';
 
-function getUserByEmail() {}
+/**
+ *
+ * @param {string} userId
+ */
+function getUserById(userId) {
+  return elasticsearchClient.get({
+    index: 'lms.user',
+    type: 'user',
+    id: userId
+  });
+}
+
+/**
+ *
+ * @param {string} username
+ */
+function getUserByUsername(username) {
+  return elasticsearchClient.search({
+    index: 'lms.user',
+    type: 'user',
+    size: 1,
+    body: {
+      query: {
+        match: {
+          username: username
+        }
+      }
+    }
+  });
+}
+
+/**
+ *
+ * @param {string} email
+ */
+function getUserByEmail(email) {
+  return elasticsearchClient.search({
+    index: 'lms.user',
+    type: 'user',
+    size: 1,
+    body: {
+      query: {
+        match: {
+          email: email
+        }
+      }
+    }
+  });
+}
 
 /**
  * @param {object} user
@@ -18,42 +65,51 @@ function getUserByEmail() {}
  * @param {string} user.username
  * @param {'student' | 'teacher'} user.type
  * @param {string} user.userId
+ * @param {number} [ttl]
  */
-function createUser(user) {
+function createUser(user, ttl) {
   const md5Email = cryto
     .createHash('md5')
     .update(String(user.email))
     .digest('hex');
 
-  return User.insert({
-    username: user.username,
-    hashPassword: user.hashPassword,
-    info: {
-      fullName: '',
-      birthday: '',
-      image: `${GRAVATAR_URL}/${md5Email}`
+  return User.insert(
+    {
+      username: user.username,
+      hashPassword: user.hashPassword,
+      info: {
+        fullName: '',
+        birthday: '',
+        image: `${GRAVATAR_URL}/${md5Email}`
+      },
+      email: user.email,
+      type: user.type,
+      id: user.userId
     },
-    email: user.email,
-    type: user.type,
-    id: user.userId
-  });
+    {
+      ifNotExists: true,
+      ttl: ttl
+    }
+  );
 }
 
 /**
  *
  * @param {import('cassandra-driver').types.Uuid} userId
  * @param {string} newPassword
+ * @param {number} [ttl]
  */
-function updateUserPassword(userId, newPassword) {
-  return User.update({ id: userId, hashPassword: newPassword }, { ifExists: true });
+function updateUserPassword(userId, newPassword, ttl) {
+  return User.update({ id: userId, hashPassword: newPassword }, { ifExists: true, ttl: ttl });
 }
 
 /**
  *
  * @param {import('cassandra-driver').types.Uuid} userId
  * @param {Object<string, string>} newInfo
+ * @param {number} [ttl]
  */
-function updateUserInfo(userId, newInfo) {
+function updateUserInfo(userId, newInfo, ttl) {
   if (typeof newInfo !== 'object') {
     newInfo = {};
   }
@@ -89,8 +145,11 @@ function updateUserInfo(userId, newInfo) {
   const deleteKeys = twoGroups.delete.map((currentPair) => currentPair[0]);
   const deleteQuery = `DELETE ${deleteKeys.map(() => 'info[?]').join(', ')} FROM user WHERE id = ? IF EXISTS`;
 
+  const timeToLive = typeof ttl === 'number' ? `USING TTL ${ttl}` : '';
   const updateKeys = twoGroups.update.map((currentPair) => currentPair[0]);
-  const updateQuery = `UPDATE user SET ${updateKeys.map(() => 'info[?] = ?').join(', ')} WHERE id = ? IF EXISTS`;
+  const updateQuery = `UPDATE user ${timeToLive} SET ${updateKeys
+    .map(() => 'info[?] = ?')
+    .join(', ')} WHERE id = ? IF EXISTS`;
 
   const queries = [
     {
@@ -110,31 +169,41 @@ function updateUserInfo(userId, newInfo) {
  *
  * @param {import('cassandra-driver').types.Uuid} userId
  * @param {string} newUsername
+ * @param {number} [ttl]
  */
-function updateUserName(userId, newUserName) {
-  return User.update({ id: userId, username: newUserName }, { ifExists: true });
+function updateUserName(userId, newUserName, ttl) {
+  return User.update({ id: userId, username: newUserName }, { ifExists: true, ttl: ttl });
 }
 
 /**
  *
  * @param {import('cassandra-driver').types.Uuid} userId
  * @param {string} newEmail
+ * @param {number} [ttl]
  */
-function updateEmail(userId, newEmail) {
+function updateEmail(userId, newEmail, ttl) {
   const md5Email = cryto
     .createHash('md5')
     .update(String(newEmail))
     .digest('hex');
-  const query = 'UPDATE user SET email = ?, info[?] = ? WHERE id = ?';
+  const timeToLive = typeof ttl === 'number' ? `USING TTL ${ttl}` : '';
+  const query = `UPDATE user ${timeToLive} SET email = ?, info[?] = ? WHERE id = ?`;
 
   return cassandraClient.execute(query, [newEmail, 'image', `${GRAVATAR_URL}/${md5Email}`, userId], { prepare: true });
 }
 
 module.exports = {
-  getUserByEmail,
-  createUser,
-  updateUserPassword,
-  updateUserInfo,
-  updateEmail,
-  updateUserName
+  getUserById: getUserById,
+  getUserByUsername: getUserByUsername,
+  getUserByEmail: getUserByEmail,
+  createUser: createUser,
+  updateUserPassword: updateUserPassword,
+  updateUserInfo: updateUserInfo,
+  updateEmail: updateEmail,
+  updateUserName: updateUserName
 };
+
+module.exports
+  .getUserByUsername('ngoquangduong')
+  .then(console.log)
+  .catch(console.error);

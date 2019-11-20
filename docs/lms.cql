@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS "topic" (
 CREATE TABLE IF NOT EXISTS "course" (
   "id" uuid,
   "teacher_id" uuid,
-  "teacher_name" text,
   "course_name" text,
   "created_at" timestamp,
   "description" text,
