@@ -1,4 +1,41 @@
-const { JoinRequest, cassandraClient } = require('../models');
+const _ = require('lodash');
+
+const { JoinRequest, cassandraClient, elasticsearchClient } = require('../models');
+
+/**
+ *
+ * @param {string} teacherId
+ * @param {string} courseId
+ * @param {number} [page=1]
+ */
+function getJoinRequests(teacherId, courseId, page = 1) {
+  page = _.toInteger(page);
+  page = page < 1 ? 1 : page;
+
+  teacherId = String(teacherId);
+  courseId = String(courseId);
+
+  return elasticsearchClient.search({
+    index: 'lms.join_request',
+    type: 'join_request',
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: { teacher_id: teacherId }
+            },
+            {
+              match: { course_id: courseId }
+            }
+          ]
+        }
+      },
+      from: 10 * (page - 1),
+      size: 10
+    }
+  });
+}
 
 /**
  *
@@ -77,6 +114,7 @@ function declineJoinRequest(teacherId, courseId, studentId, ttl) {
 }
 
 module.exports = {
+  getJoinRequests: getJoinRequests,
   createJoinRequest: createJoinRequest,
   acceptJoinRequest: acceptJoinRequest,
   declineJoinRequest: declineJoinRequest

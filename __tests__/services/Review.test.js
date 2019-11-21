@@ -5,6 +5,7 @@ import { getReviews, upsertReview, deleteReview } from '../../server/services/Re
 import { closeConnection } from '../helpers/close';
 import { randomName, randomNumber } from '../helpers/random';
 
+const TTL = Number(process.env.TTL) || 30;
 describe('Review Services', () => {
   const teacherId = types.Uuid.random();
   const courseId = types.Uuid.random();
@@ -23,7 +24,7 @@ describe('Review Services', () => {
   });
 
   it('upsertReview', async () => {
-    const res = await upsertReview(teacherId, courseId, studentId, content, star, 30);
+    const res = await upsertReview(teacherId, courseId, studentId, content, star, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 

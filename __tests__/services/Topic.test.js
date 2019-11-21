@@ -2,6 +2,7 @@ import { createTopic, searchTopic } from '../../server/services/Topic';
 import { randomName, randomNumber } from '../helpers/random';
 import { closeConnection } from '../helpers/close';
 
+const TTL = Number(process.env.TTL) || 30;
 describe('Topic Services', () => {
   it('createTopic', async () => {
     const randomTopicsNumber = randomNumber(1, 20);
@@ -9,7 +10,7 @@ describe('Topic Services', () => {
       .repeat(randomTopicsNumber)
       .split('')
       .map(randomName);
-    const res = await createTopic(randomTopicNames, 30);
+    const res = await createTopic(randomTopicNames, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 
