@@ -8,13 +8,24 @@ const GRAVATAR_URL = 'https://gravatar.com/avatar';
 
 /**
  *
- * @param {string} userId
+ * @param {string | string[]} userId
  */
-function getUserById(userId) {
-  return elasticsearchClient.get({
+function getUsersById(userId) {
+  if (!(userId instanceof Array)) {
+    userId = [userId];
+  }
+
+  return elasticsearchClient.search({
     index: 'lms.user',
     type: 'user',
-    id: userId
+    body: {
+      query: {
+        ids: {
+          type: 'user',
+          values: userId
+        }
+      }
+    }
   });
 }
 
@@ -193,7 +204,7 @@ function updateEmail(userId, newEmail, ttl) {
 }
 
 module.exports = {
-  getUserById: getUserById,
+  getUsersById: getUsersById,
   getUserByUsername: getUserByUsername,
   getUserByEmail: getUserByEmail,
   createUser: createUser,
@@ -202,8 +213,3 @@ module.exports = {
   updateEmail: updateEmail,
   updateUserName: updateUserName
 };
-
-module.exports
-  .getUserByUsername('ngoquangduong')
-  .then(console.log)
-  .catch(console.error);

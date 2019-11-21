@@ -6,10 +6,14 @@ import {
   updateUserName,
   updateUserPassword,
   updateUserInfo,
-  getUserById
+  getUsersById,
+  getUserByEmail,
+  getUserByUsername
 } from '../../server/services/User';
 import { randomName } from '../helpers/random';
 import { closeConnection } from '../helpers/close';
+
+const TTL = Number(process.env.TTL) || 30;
 
 describe('User Services', () => {
   const randomUserId = types.Uuid.random();
@@ -40,40 +44,87 @@ describe('User Services', () => {
   };
 
   it('createUser', async () => {
-    const res = await createUser({
-      userId: randomUserId,
-      username: randomUsername,
-      hashPassword: randomHashPassword,
-      email: randomEmail,
-      info: randomInfo,
-      type: randomType
-    });
+    const res = await createUser(
+      {
+        userId: randomUserId,
+        username: randomUsername,
+        hashPassword: randomHashPassword,
+        email: randomEmail,
+        info: randomInfo,
+        type: randomType
+      },
+      TTL
+    );
     expect(res.wasApplied()).toBe(true);
   });
 
+  it('getUsersById', async () => {
+    await new Promise((done) => {
+      setTimeout(async () => {
+        const { body } = await getUsersById([randomUserId.toString()]);
+        expect(body.hits.total).toBe(1);
+        done();
+      }, 1000);
+    });
+  });
+
+  it('getUserByEmail before update', async () => {
+    await new Promise((done) => {
+      setTimeout(async () => {
+        const { body } = await getUserByEmail(randomEmail);
+        expect(body.hits.total).toBe(1);
+        done();
+      }, 1000);
+    });
+  });
+
+  it('getUserByUsername before update', async () => {
+    await new Promise((done) => {
+      setTimeout(async () => {
+        const { body } = await getUserByUsername(randomUsername);
+        expect(body.hits.total).toBe(1);
+        done();
+      }, 1000);
+    });
+  });
+
   it('updateEmail', async () => {
-    const res = await updateEmail(randomUserId, randomNewEmail);
+    const res = await updateEmail(randomUserId, randomNewEmail, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 
   it('updateUsername', async () => {
-    const res = await updateUserName(randomUserId, randomNewUsername);
+    const res = await updateUserName(randomUserId, randomNewUsername, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 
   it('updateUserPassword', async () => {
-    const res = await updateUserPassword(randomUserId, randomNewHashPassword);
+    const res = await updateUserPassword(randomUserId, randomNewHashPassword, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 
   it('updateUserInfo', async () => {
-    const res = await updateUserInfo(randomUserId, randomNewInfo);
+    const res = await updateUserInfo(randomUserId, randomNewInfo, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 
-  it('getUserById', async () => {
-    const { body } = await getUserById(randomUserId.toString());
-    expect(body._id).toMatch(randomUserId.toString());
+  it('getUserByEmail after update', async () => {
+    await new Promise((done) => {
+      setTimeout(async () => {
+        const { body } = await getUserByEmail(randomNewEmail);
+        expect(body.hits.total).toBe(1);
+        done();
+      }, 1000);
+    });
+  });
+  it('getUserByUsername after update', () => {
+    return new Promise((done) => {
+      setTimeout(async () => {
+        const { body } = await getUserByUsername(randomNewUsername);
+        expect(body.hits.total).toBe(1);
+        done();
+      }, 1000);
+    });
   });
 });
 

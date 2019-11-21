@@ -21,7 +21,7 @@
           "cql_collection": "singleton"
         },
         "email": {
-          "type": "text",
+          "type": "keyword",
           "cql_collection": "singleton"
         },
         "hash_password": {
