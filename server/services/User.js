@@ -8,9 +8,21 @@ const GRAVATAR_URL = 'https://gravatar.com/avatar';
 
 /**
  *
+ * @param {string} userId
+ */
+function getUserById(userId) {
+  return elasticsearchClient.get({
+    index: 'lms.user',
+    type: 'user',
+    id: userId
+  });
+}
+
+/**
+ *
  * @param {string | string[]} userId
  */
-function getUsersById(userId) {
+function getMultipleUsersById(userId) {
   if (!(userId instanceof Array)) {
     userId = [userId];
   }
@@ -204,7 +216,8 @@ function updateEmail(userId, newEmail, ttl) {
 }
 
 module.exports = {
-  getUsersById: getUsersById,
+  getUserById: getUserById,
+  getMultipleUsersById: getMultipleUsersById,
   getUserByUsername: getUserByUsername,
   getUserByEmail: getUserByEmail,
   createUser: createUser,

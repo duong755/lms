@@ -6,7 +6,8 @@ import {
   updateUserName,
   updateUserPassword,
   updateUserInfo,
-  getUsersById,
+  getUserById,
+  getMultipleUsersById,
   getUserByEmail,
   getUserByUsername
 } from '../../server/services/User';
@@ -58,10 +59,15 @@ describe('User Services', () => {
     expect(res.wasApplied()).toBe(true);
   });
 
-  it('getUsersById', async () => {
+  it('getUserById', async () => {
+    const { body } = await getUserById(randomUserId.toString());
+    expect(body._id).toBe(randomUserId.toString());
+  });
+
+  it('getMultipleUsersById', async () => {
     await new Promise((done) => {
       setTimeout(async () => {
-        const { body } = await getUsersById([randomUserId.toString()]);
+        const { body } = await getMultipleUsersById([randomUserId.toString()]);
         expect(body.hits.total).toBe(1);
         done();
       }, 1000);
