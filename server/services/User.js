@@ -80,6 +80,38 @@ function getUserByEmail(email) {
 }
 
 /**
+ *
+ * @param {string} text
+ * Email or Username
+ */
+function getUserByEmailOrUsername(text) {
+  text = String(text);
+  return elasticsearchClient.search({
+    index: 'lms.user',
+    type: 'user',
+    size: 1,
+    body: {
+      query: {
+        bool: {
+          should: [
+            {
+              term: {
+                email: text
+              }
+            },
+            {
+              term: {
+                username: text
+              }
+            }
+          ]
+        }
+      }
+    }
+  });
+}
+
+/**
  * @param {object} user
  * @param {import('cassandra-driver').types.Uuid} user.userId
  * @param {string} user.email
@@ -220,6 +252,7 @@ module.exports = {
   getMultipleUsersById: getMultipleUsersById,
   getUserByUsername: getUserByUsername,
   getUserByEmail: getUserByEmail,
+  getUserByEmailOrUsername: getUserByEmailOrUsername,
   createUser: createUser,
   updateUserPassword: updateUserPassword,
   updateUserInfo: updateUserInfo,

@@ -9,7 +9,8 @@ import {
   getUserById,
   getMultipleUsersById,
   getUserByEmail,
-  getUserByUsername
+  getUserByUsername,
+  getUserByEmailOrUsername
 } from '../../server/services/User';
 import { randomName } from '../helpers/random';
 import { closeConnection } from '../helpers/close';
@@ -127,6 +128,17 @@ describe('User Services', () => {
     return new Promise((done) => {
       setTimeout(async () => {
         const { body } = await getUserByUsername(randomNewUsername);
+        expect(body.hits.total).toBe(1);
+        done();
+      }, 1000);
+    });
+  });
+
+  it('getUserByEmailOrUsername', async () => {
+    await new Promise((done) => {
+      const usernameOrEmail = Math.random() > 0.5 ? randomNewUsername : randomNewEmail;
+      setTimeout(async () => {
+        const { body } = await getUserByEmailOrUsername(usernameOrEmail);
         expect(body.hits.total).toBe(1);
         done();
       }, 1000);
