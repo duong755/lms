@@ -2,5 +2,6 @@ module.exports = {
   ReviewServices: require('./Review'),
   JoinRequestServices: require('./JoinRequest'),
   TopicServices: require('./Topic'),
-  UserServices: require('./User')
+  UserServices: require('./User'),
+  LessonServices: require('./Lesson')
 };

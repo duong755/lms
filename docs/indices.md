@@ -326,7 +326,7 @@
           "cql_primary_key_order": 2
         },
         "id": {
-          "type": "date",
+          "type": "keyword",
           "cql_collection": "singleton",
           "cql_partition_key": false,
           "cql_primary_key_order": 3
