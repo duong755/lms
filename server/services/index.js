@@ -3,5 +3,6 @@ module.exports = {
   JoinRequestServices: require('./JoinRequest'),
   TopicServices: require('./Topic'),
   UserServices: require('./User'),
-  LessonServices: require('./Lesson')
+  LessonServices: require('./Lesson'),
+  CommentServices: require('./Comment')
 };
