@@ -5,7 +5,6 @@ WITH replication = {'class': 'NetworkTopologyStrategy', 'DC1' : 1};
 USE "lms";
 
 CREATE TYPE IF NOT EXISTS "quiz" (
-   "id" uuid,
    "question" text,
    "choices" set<text>,
    "answer" tinyint,

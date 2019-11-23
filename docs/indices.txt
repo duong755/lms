@@ -1,10 +1,21 @@
 # Elasticsearch indices
 
-### [Raw](./indices.txt)
+DELETE /lms.user
+DELETE /lms.topic
+DELETE /lms.course
+DELETE /lms.review
+DELETE /lms.join_request
+DELETE /lms.lesson
+DELETE /lms.member
+DELETE /lms.lesson
+DELETE /lms.comment
+DELETE /lms.exercise
+DELETE /lms.exercise_work
+DELETE /lms.exam
+DELETE /lms.exam_work
 
 ### index user
-`PUT /lms.user`
-```json
+PUT /lms.user
 {
   "settings": {
     "keyspace": "lms"
@@ -49,10 +60,9 @@
     }
   }
 }
-```
+
 ### topic index
-`PUT /lms.topic`
-```json
+PUT /lms.topic
 {
   "settings": {
     "keyspace": "lms"
@@ -71,11 +81,10 @@
     }
   }
 }
-```
+
 
 ### course index
-`PUT /lms.course`
-```json
+PUT /lms.course
 {
   "settings": {
     "keyspace": "lms"
@@ -128,11 +137,10 @@
     }
   }
 }
-```
+
 
 ### review index
-`PUT /lms.review`
-```json
+PUT /lms.review
 {
   "settings": {
     "keyspace": "lms"
@@ -175,11 +183,10 @@
     }
   }
 }
-```
+
 
 ### index join_request
-`PUT /lms.join_request`
-```json
+PUT /lms.join_request
 {
   "settings": {
     "keyspace": "lms"
@@ -214,11 +221,10 @@
     }
   }
 }
-```
+
 
 ### member index
-`PUT /lms.member`
-```json
+PUT /lms.member
 {
   "settings": {
     "keyspace": "lms"
@@ -253,11 +259,10 @@
     }
   }
 }
-```
+
 
 ### lesson index
-`PUT /lms.lesson`
-```json
+PUT /lms.lesson
 {
   "settings": {
     "keyspace": "lms"
@@ -296,11 +301,10 @@
     }
   }
 }
-```
+
 
 ### comment index
-`PUT /lms.comment`
-```json
+PUT /lms.comment
 {
   "settings": {
     "keyspace": "lms"
@@ -345,11 +349,10 @@
     }
   }
 }
-```
+
 
 ### exercise index
-`PUT /lms.exercise`
-```json
+PUT /lms.exercise
 {
   "settings": {
     "keyspace": "lms"
@@ -392,11 +395,10 @@
     }
   }
 }
-```
+
 
 ### exercise_work index
-`PUT /lms.exercise_work`
-```json
+PUT /lms.exercise_work
 {
   "settings": {
     "keyspace": "lms"
@@ -445,11 +447,10 @@
     }
   }
 }
-```
+
 
 ### exam index
-`PUT /lms.exam`
-```json
+PUT /lms.exam
 {
   "settings": {
     "keyspace": "lms"
@@ -520,11 +521,10 @@
     }
   }
 }
-```
+
 
 ### exam_work index
-`PUT /lms.exam_work`
-```json
+PUT /lms.exam_work
 {
   "settings": {
     "keyspace": "lms"
@@ -597,4 +597,3 @@
     }
   }
 }
-```
