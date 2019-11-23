@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS "exercise_work" (
    "teacher_id" uuid,
    "exercise_id" timeuuid,
    "student_id" uuid,
-   "submit_at" timeuuid,
+   "submit_at" timestamp,
    "content" text,
    "point" float,
    PRIMARY KEY (("teacher_id", "course_id", "exercise_id"), "student_id")
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS "exam_work" (
    "exam_id" timeuuid,
    "student_id" uuid,
    "content" set<frozen<quiz>>,
-   "submit" timeuuid,
+   "submit" timestamp,
    "point" float,
    PRIMARY KEY (("teacher_id", "course_id", "exam_id"), "student_id")
 );
