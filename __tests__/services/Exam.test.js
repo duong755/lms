@@ -46,6 +46,7 @@ describe('Exam Services', () => {
         startAt: randomExamStartAt,
         duration: randomExamDuration
       },
+      void 0,
       true,
       TTL
     );
@@ -78,6 +79,7 @@ describe('Exam Services', () => {
         startAt: randomExamStartAt,
         duration: randomExamDuration
       },
+      void 0,
       false,
       TTL
     );

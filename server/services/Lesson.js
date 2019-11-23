@@ -1,3 +1,8 @@
+/**
+ * @typedef {import('cassandra-driver').types.Uuid} Uuid
+ * @typedef {import('cassandra-driver').types.TimeUuid} TimeUuid
+ */
+
 const _ = require('lodash');
 
 const { Lesson, elasticsearchClient } = require('../models');
@@ -43,9 +48,9 @@ function getLessonsByTeacherAndCourse(teacherId, courseId, page = 1) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.TimeUuid} lessonId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {TimeUuid} lessonId
  */
 function getLessonById(teacherId, courseId, lessonId) {
   teacherId = String(teacherId);
@@ -64,15 +69,16 @@ function getLessonById(teacherId, courseId, lessonId) {
 /**
  *
  * @param {object} lessonData
- * @param {import('cassandra-driver').types.Uuid} lessonData.teacherId
- * @param {import('cassandra-driver').types.Uuid} lessonData.courseId
- * @param {import('cassandra-driver').types.TimeUuid} lessonData.id
+ * @param {Uuid} lessonData.teacherId
+ * @param {Uuid} lessonData.courseId
+ * @param {TimeUuid} lessonData.id
  * @param {string} lessonData.title
  * @param {string} lessonData.content
+ * @param {string[]} [fields]
  * @param {boolean} [insert=true]
  * @param {number} [ttl]
  */
-function upsertLesson(lessonData, insert = true, ttl) {
+function upsertLesson(lessonData, fields, insert = true, ttl) {
   return Lesson.insert(
     {
       teacher_id: lessonData.teacherId,
@@ -83,16 +89,17 @@ function upsertLesson(lessonData, insert = true, ttl) {
     },
     {
       ifNotExists: insert,
-      ttl: ttl
+      ttl: ttl,
+      fields: fields
     }
   );
 }
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.TimeUuid} id
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {TimeUuid} id
  * @param {number} [ttl]
  */
 function removeLesson(teacherId, courseId, id, ttl) {
@@ -114,4 +121,4 @@ module.exports = {
   getLessonById: getLessonById,
   upsertLesson: upsertLesson,
   removeLesson: removeLesson
-}
+};

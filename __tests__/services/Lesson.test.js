@@ -25,6 +25,7 @@ describe('Lesson Services', () => {
         title: randomLessonTitle,
         content: randomLessonContent
       },
+      void 0,
       true,
       TTL
     );
@@ -40,6 +41,7 @@ describe('Lesson Services', () => {
         title: randomNewLessonTitle,
         content: randomNewLessonContent
       },
+      void 0,
       false,
       TTL
     );

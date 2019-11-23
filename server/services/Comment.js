@@ -1,12 +1,17 @@
+/**
+ * @typedef {import('cassandra-driver').types.Uuid} Uuid
+ * @typedef {import('cassandra-driver').types.TimeUuid} TimeUuid
+ */
+
 const _ = require('lodash');
 
 const { Comment, elasticsearchClient } = require('../models');
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.TimeUuid} lessonId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {TimeUuid} lessonId
  * @param {number} [page=1]
  */
 function getCommentsByLesson(teacherId, courseId, lessonId, page = 1) {
@@ -51,16 +56,17 @@ function getCommentsByLesson(teacherId, courseId, lessonId, page = 1) {
 
 /**
  * @param {object} commentData,
- * @param {import('cassandra-driver').types.Uuid} commentData.teacherId
- * @param {import('cassandra-driver').types.Uuid} commentData.courseId
- * @param {import('cassandra-driver').types.TimeUuid} commentData.lessonId
- * @param {import('cassandra-driver').types.TimeUuid} commentData.commentId
- * @param {import('cassandra-driver').types.Uuid} commentData.userId
+ * @param {Uuid} commentData.teacherId
+ * @param {Uuid} commentData.courseId
+ * @param {TimeUuid} commentData.lessonId
+ * @param {TimeUuid} commentData.commentId
+ * @param {Uuid} commentData.userId
  * @param {string} commentData.content
+ * @param {string[]} [fields]
  * @param {boolean} [insert=true]
  * @param {number} [ttl]
  */
-function upsertComment(commentData, insert, ttl) {
+function upsertComment(commentData, fields, insert, ttl) {
   return Comment.insert(
     {
       teacher_id: commentData.teacherId,
@@ -72,17 +78,18 @@ function upsertComment(commentData, insert, ttl) {
     },
     {
       ifNotExists: insert,
-      ttl: ttl
+      ttl: ttl,
+      fields: fields
     }
   );
 }
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.TimeUuid} lessonId
- * @param {import('cassandra-driver').types.TimeUuid} commentId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {TimeUuid} lessonId
+ * @param {TimeUuid} commentId
  * @param {number} [ttl]
  */
 function removeComment(teacherId, courseId, lessonId, commentId, ttl) {

@@ -47,6 +47,7 @@ function getExamsByCourse(teacherId, courseId, page = 1) {
       }
     }
   });
+}
 
 /**
  *
@@ -80,10 +81,11 @@ function getExamById(teacherId, courseId, examId, sourceExcludes) {
  * @param {string} examData.duration
  * @param {number} examData.startAt
  * @param {Quiz[]} examData.content
+ * @param {string[]} [fields]
  * @param {boolean} [insert=true]
  * @param {number} [ttl]
  */
-function upsertExam(examData, insert = true, ttl) {
+function upsertExam(examData, fields, insert = true, ttl) {
   return Exam.insert(
     {
       teacher_id: examData.teacherId,
@@ -96,7 +98,8 @@ function upsertExam(examData, insert = true, ttl) {
     },
     {
       ifNotExists: insert,
-      ttl: ttl
+      ttl: ttl,
+      fields: fields
     }
   );
 }

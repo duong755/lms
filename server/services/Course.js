@@ -1,127 +1,117 @@
-const Course = require('../models/Course');
+/**
+ * @typedef {import('cassandra-driver').types.Uuid} Uuid
+ * @typedef {import('cassandra-driver').types.TimeUuid} TimeUuid
+ */
+
+const _ = require('lodash');
+
+const { Course } = require('../models');
 const { elasticsearchClient } = require('../models');
 /**
  *
  * @param {object} course
- * @param {string} course.teacherId
- * @param {string} course.id
+ * @param {Uuid} course.teacherId
+ * @param {TimeUuid} course.id
  * @param {string} course.description
- * @param {string} course.teacherName
- * @param {Array} course.topics
+ * @param {string[]} course.topics
  * @param {string} course.courseName
- * @param {string} course.createdAt
- * @param {Array} course.members
- * @param {boolean} course.archive
+ * @param {string[]} [fields]
+ * @param {boolean} [insert=true]
+ * @param {number} [ttl]
  */
-function createCourse(course) {
-  return Course.insert({
-    id: course.id,
-    teacherId: course.teacherId,
-    description: course.description,
-    courseName: course.courseName,
-    createdAt: Date.now(),
-    topics: course.topics,
-    archive: course.archive,
-    members: course.members,
-    teacherName: course.teacherName
-  });
-}
-
-/**
- *
- * @param {object} content
- * @param {string} content.description
- * @param {string} content.courseName
- * @param {boolean} content.archive
- * @param {string} courseId
- * @param {string} teacherId
- */
-function editCourse(courseId, teacherId, content) {
-  return Course.update(
+function upsertCourse(course, fields, insert, ttl) {
+  return Course.insert(
     {
-      id: courseId,
-      teacherId: teacherId,
-      description: content.description,
-      courseName: content.courseName,
-      archive: content.archive
+      id: course.id,
+      teacherId: course.teacherId,
+      description: course.description,
+      courseName: course.courseName,
+      createdAt: Date.now(),
+      topics: course.topics,
+      archive: false,
+      members: []
     },
-    { ifExists: true }
+    {
+      ifNotExists: insert,
+      ttl: ttl,
+      fields: fields
+    }
   );
 }
+
 /**
  *
- * @param {string} studentId
+ * @param {Uuid} studentId
  * @param {number} page
  */
-function getCourseByStudentId(studentId, page = 1) {
+function getCoursesByStudent(studentId, page = 1) {
+  page = _.toInteger(page);
   page = page < 1 ? 1 : page;
+
+  studentId = String(studentId);
+
   return elasticsearchClient.get({
     index: 'lms.course',
+    type: 'course',
+    from: 10 * (page - 1),
+    size: 10,
     body: {
       query: {
         bool: {
-          must: [{ match: { members: studentId } }]
-        }
-      }
-    },
-    from: (page - 1) * 10,
-    size: 10
-  });
-}
-
-// getCourseByStudentId('810c1f16-7bc1-4245-9121-0a93c3901517')
-//   .then((result) => console.log(result))
-//   .catch(console.error);
-/**
- *
- * @param {string} teacherId
- * @param {number} page
- */
-function getCourseByTeacherId(teacherId, page = 1) {
-  page = page < 1 ? 1 : page;
-  return elasticsearchClient.search({
-    index: 'lms.course',
-    body: {
-      query: {
-        bool: {
-          must: [{ match: { teacher_id: teacherId } }]
-        }
-      }
-    },
-    from: (page - 1) * 10,
-    size: 10
-  });
-}
-
-// getCourseByTeacherId('47aaa4c9-2a78-4c9f-a8b9-342822515978')
-//   .then((result) => console.log(result.body.hits.hits))
-//   .catch(console.error);
-/**
- *
- * @param {string} courseId
- */
-function getCourseByCourseId(courseId) {
-  courseId = courseId.toString();
-  return elasticsearchClient.search({
-    index: 'lms.course',
-    body: {
-      query: {
-        bool: {
-          must: [{ match: { id: courseId } }]
+          must: [{ term: { members: studentId } }]
         }
       }
     }
   });
 }
 
-// getCourseByCourseId('568d0fc6-5598-4a3c-ad55-283a678f0a35')
-//   .then((result) => console.log(result.body.hits.hits))
-//   .catch(console.error);
+/**
+ *
+ * @param {Uuid} teacherId
+ * @param {number} [page=1]
+ */
+function getCoursesByTeacher(teacherId, page = 1) {
+  page = _.toInteger(page);
+  page = page < 1 ? 1 : page;
+
+  teacherId = String(teacherId);
+
+  return elasticsearchClient.search({
+    index: 'lms.course',
+    type: 'course',
+    from: 10 * (page - 1),
+    size: 10,
+    body: {
+      query: {
+        bool: {
+          must: [{ match: { teacher_id: teacherId } }]
+        }
+      }
+    }
+  });
+}
+
+/**
+ *
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ */
+function getCourseById(teacherId, courseId) {
+  teacherId = String(teacherId);
+  courseId = String(courseId);
+
+  const coursePrimaryKey = JSON.stringify(teacherId, courseId);
+
+  return elasticsearchClient.get({
+    index: 'lms.course',
+    type: 'course',
+    id: coursePrimaryKey
+  });
+}
 
 module.exports = {
-  createCourse,
-  editCourse,
-  getCourseByStudentId,
-  getCourseByTeacherId,
-  getCourseByCourseId
+  upsertCourse: upsertCourse,
+  getCoursesByStudent: getCoursesByStudent,
+  getCoursesByTeacher: getCoursesByTeacher,
+  getCourseById: getCourseById
 };

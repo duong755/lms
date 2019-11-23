@@ -1,19 +1,23 @@
+/**
+ * @typedef {import('cassandra-driver').types.Uuid} Uuid
+ */
+
 const _ = require('lodash');
 
 const { Review, elasticsearchClient } = require('../models');
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid | string} teacherId
- * @param {import('cassandra-driver').types.Uuid | string} courseId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
  * @param {number} page
  */
 function getReviews(teacherId, courseId, page = 1) {
   page = _.toInteger(page);
   page = page < 1 ? 1 : page;
 
-  teacherId = teacherId.toString();
-  courseId = courseId.toString();
+  teacherId = String(teacherId);
+  courseId = String(courseId);
 
   return elasticsearchClient.search({
     index: 'lms.review',
@@ -38,9 +42,9 @@ function getReviews(teacherId, courseId, page = 1) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.Uuid} studentId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {Uuid} studentId
  * @param {string} content
  * @param {number} [star]
  * @param {number} [ttl]
@@ -69,9 +73,9 @@ function upsertReview(teacherId, courseId, studentId, content, star = 4, ttl) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.Uuid} studentId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {Uuid} studentId
  *
  */
 function deleteReview(teacherId, courseId, studentId) {

@@ -27,6 +27,7 @@ describe('Comment Services', () => {
         commentId: randomCommentId,
         content: randomContent
       },
+      void 0,
       true,
       TTL
     );
@@ -53,6 +54,7 @@ describe('Comment Services', () => {
         commentId: randomCommentId,
         content: randomNewContent
       },
+      void 0,
       false,
       TTL
     );

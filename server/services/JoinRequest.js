@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('cassandra-driver').types.Uuid} Uuid
+ */
+
 const _ = require('lodash');
 
 const { JoinRequest, cassandraClient, elasticsearchClient } = require('../models');
@@ -39,9 +43,9 @@ function getJoinRequests(teacherId, courseId, page = 1) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.Uuid} studentId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {Uuid} studentId
  * @param {number} [ttl]
  */
 function createJoinRequest(teacherId, courseId, studentId, ttl) {
@@ -61,9 +65,9 @@ function createJoinRequest(teacherId, courseId, studentId, ttl) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.Uuid} studentId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {Uuid} studentId
  * @param {number} [ttl]
  */
 function acceptJoinRequest(teacherId, courseId, studentId, ttl) {
@@ -94,9 +98,9 @@ function acceptJoinRequest(teacherId, courseId, studentId, ttl) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
- * @param {import('cassandra-driver').types.Uuid} studentId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {Uuid} studentId
  * @param {number} [ttl]
  */
 function declineJoinRequest(teacherId, courseId, studentId, ttl) {
