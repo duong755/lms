@@ -9,8 +9,8 @@ const { Lesson, elasticsearchClient } = require('../models');
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} teacherId
- * @param {import('cassandra-driver').types.Uuid} courseId
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
  * @param {number} [page=1]
  */
 function getLessonsByTeacherAndCourse(teacherId, courseId, page = 1) {
@@ -30,12 +30,12 @@ function getLessonsByTeacherAndCourse(teacherId, courseId, page = 1) {
         bool: {
           must: [
             {
-              match: {
+              term: {
                 teacher_id: teacherId
               }
             },
             {
-              match: {
+              term: {
                 course_id: courseId
               }
             }

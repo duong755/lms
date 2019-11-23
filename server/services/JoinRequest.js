@@ -22,6 +22,8 @@ function getJoinRequests(teacherId, courseId, page = 1) {
   return elasticsearchClient.search({
     index: 'lms.join_request',
     type: 'join_request',
+    from: 10 * (page - 1),
+    size: 10,
     body: {
       query: {
         bool: {
@@ -34,9 +36,7 @@ function getJoinRequests(teacherId, courseId, page = 1) {
             }
           ]
         }
-      },
-      from: 10 * (page - 1),
-      size: 10
+      }
     }
   });
 }

@@ -96,10 +96,6 @@
           "cql_partition_key": false,
           "cql_primary_key_order": 1
         },
-        "teacher_name": {
-          "type": "text",
-          "cql_collection": "singleton"
-        },
         "course_name": {
           "type": "text",
           "cql_collection": "singleton"

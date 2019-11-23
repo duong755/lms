@@ -24,7 +24,12 @@ describe('Review Services', () => {
   });
 
   it('upsertReview', async () => {
-    const res = await upsertReview({ teacherId, courseId, studentId, content, star }, void 0, false, TTL);
+    const res = await upsertReview(
+      { teacherId, courseId, studentId, content, star },
+      ['teacher_id', 'course_id', 'student_id', 'content', 'star'],
+      false,
+      TTL
+    );
     expect(res.wasApplied()).toBe(true);
   });
 

@@ -79,7 +79,7 @@ describe('Exam Services', () => {
         startAt: randomExamStartAt,
         duration: randomExamDuration
       },
-      void 0,
+      ['teacher_id', 'course_id', 'id', 'title', 'content'],
       false,
       TTL
     );

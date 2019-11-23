@@ -5,16 +5,18 @@
 
 const _ = require('lodash');
 
-const { Course } = require('../models');
-const { elasticsearchClient } = require('../models');
+const { Course, elasticsearchClient } = require('../models');
+
 /**
  *
  * @param {object} course
  * @param {Uuid} course.teacherId
- * @param {TimeUuid} course.id
+ * @param {Uuid} course.courseId
  * @param {string} course.description
  * @param {string[]} course.topics
  * @param {string} course.courseName
+ * @param {boolean} [course.archive=false]
+ * @param {string[]} [course.members=[]]
  * @param {string[]} [fields]
  * @param {boolean} [insert=true]
  * @param {number} [ttl]
@@ -22,14 +24,14 @@ const { elasticsearchClient } = require('../models');
 function upsertCourse(course, fields, insert, ttl) {
   return Course.insert(
     {
-      id: course.id,
+      id: course.courseId,
       teacherId: course.teacherId,
       description: course.description,
       courseName: course.courseName,
       createdAt: Date.now(),
       topics: course.topics,
-      archive: false,
-      members: []
+      archive: course.archive,
+      members: course.members
     },
     {
       ifNotExists: insert,
@@ -42,7 +44,7 @@ function upsertCourse(course, fields, insert, ttl) {
 /**
  *
  * @param {Uuid} studentId
- * @param {number} page
+ * @param {number} [page=1]
  */
 function getCoursesByStudent(studentId, page = 1) {
   page = _.toInteger(page);
@@ -50,7 +52,7 @@ function getCoursesByStudent(studentId, page = 1) {
 
   studentId = String(studentId);
 
-  return elasticsearchClient.get({
+  return elasticsearchClient.search({
     index: 'lms.course',
     type: 'course',
     from: 10 * (page - 1),
@@ -84,7 +86,7 @@ function getCoursesByTeacher(teacherId, page = 1) {
     body: {
       query: {
         bool: {
-          must: [{ match: { teacher_id: teacherId } }]
+          must: [{ term: { teacher_id: teacherId } }]
         }
       }
     }
@@ -100,7 +102,7 @@ function getCourseById(teacherId, courseId) {
   teacherId = String(teacherId);
   courseId = String(courseId);
 
-  const coursePrimaryKey = JSON.stringify(teacherId, courseId);
+  const coursePrimaryKey = JSON.stringify([teacherId, courseId]);
 
   return elasticsearchClient.get({
     index: 'lms.course',

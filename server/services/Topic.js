@@ -28,6 +28,9 @@ function searchTopic(prefix = '', page = 1) {
 
   return elasticsearchClient.search({
     index: 'lms.topic',
+    type: 'topic',
+    from: (page - 1) * 10,
+    size: 10,
     body: {
       query: {
         prefix: {
@@ -35,9 +38,7 @@ function searchTopic(prefix = '', page = 1) {
             value: prefix
           }
         }
-      },
-      from: (page - 1) * 10,
-      size: 10
+      }
     }
   });
 }
