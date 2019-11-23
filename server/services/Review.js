@@ -42,31 +42,35 @@ function getReviews(teacherId, courseId, page = 1) {
 
 /**
  *
- * @param {Uuid} teacherId
- * @param {Uuid} courseId
- * @param {Uuid} studentId
- * @param {string} content
- * @param {number} [star]
+ * @param {object} reviewData
+ * @param {Uuid} reviewData.teacherId
+ * @param {Uuid} reviewData.courseId
+ * @param {Uuid} reviewData.studentId
+ * @param {string} reviewData.content
+ * @param {number} [reviewData.star]
+ * @param {string[]} [fields]
+ * @param {boolean} [insert=true]
  * @param {number} [ttl]
  */
-function upsertReview(teacherId, courseId, studentId, content, star = 4, ttl) {
-  star = _.toInteger(star);
-  if (star < 1 || star > 5) {
-    star = 4;
+function upsertReview(reviewData, fields, insert = false, ttl) {
+  reviewData.star = _.toInteger(reviewData.star);
+  if (reviewData.star < 1 || reviewData.star > 5) {
+    reviewData.star = 4;
   }
 
   return Review.insert(
     {
-      teacherId: teacherId,
-      courseId: courseId,
-      studentId: studentId,
-      createdAt: Date.now(),
-      content: content,
-      star: star
+      teacher_id: reviewData.teacherId,
+      course_id: reviewData.courseId,
+      student_id: reviewData.studentId,
+      created_at: Date.now(),
+      content: reviewData.content,
+      star: reviewData.star
     },
     {
-      ifNotExists: false,
-      ttl: ttl
+      ifNotExists: insert,
+      ttl: ttl,
+      fields: fields
     }
   );
 }
