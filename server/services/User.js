@@ -1,4 +1,8 @@
-const cryto = require('crypto');
+/**
+ * @typedef {import('cassandra-driver').types.Uuid} Uuid
+ */
+
+const crypto = require('crypto');
 
 const _ = require('lodash');
 
@@ -113,7 +117,7 @@ function getUserByEmailOrUsername(text) {
 
 /**
  * @param {object} user
- * @param {import('cassandra-driver').types.Uuid} user.userId
+ * @param {Uuid} user.userId
  * @param {string} user.email
  * @param {string} user.hashPassword
  * @param {object} user.info
@@ -123,7 +127,7 @@ function getUserByEmailOrUsername(text) {
  * @param {number} [ttl]
  */
 function createUser(user, ttl) {
-  const md5Email = cryto
+  const md5Email = crypto
     .createHash('md5')
     .update(String(user.email))
     .digest('hex');
@@ -150,7 +154,7 @@ function createUser(user, ttl) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} userId
+ * @param {Uuid} userId
  * @param {string} newPassword
  * @param {number} [ttl]
  */
@@ -160,7 +164,7 @@ function updateUserPassword(userId, newPassword, ttl) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} userId
+ * @param {Uuid} userId
  * @param {Object<string, string>} newInfo
  * @param {number} [ttl]
  */
@@ -222,7 +226,7 @@ function updateUserInfo(userId, newInfo, ttl) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} userId
+ * @param {Uuid} userId
  * @param {string} newUsername
  * @param {number} [ttl]
  */
@@ -232,12 +236,12 @@ function updateUserName(userId, newUserName, ttl) {
 
 /**
  *
- * @param {import('cassandra-driver').types.Uuid} userId
+ * @param {Uuid} userId
  * @param {string} newEmail
  * @param {number} [ttl]
  */
 function updateEmail(userId, newEmail, ttl) {
-  const md5Email = cryto
+  const md5Email = crypto
     .createHash('md5')
     .update(String(newEmail))
     .digest('hex');

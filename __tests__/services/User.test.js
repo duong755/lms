@@ -63,6 +63,8 @@ describe('User Services', () => {
   it('getUserById', async () => {
     const { body } = await getUserById(randomUserId.toString());
     expect(body._id).toBe(randomUserId.toString());
+    expect(body._source.username).toBe(randomUsername);
+    expect(body._source.email).toBe(randomEmail);
   });
 
   it('getMultipleUsersById', async () => {

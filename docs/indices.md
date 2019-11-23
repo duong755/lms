@@ -19,7 +19,7 @@
           "cql_primary_key_order": 0
         },
         "username": {
-          "type": "text",
+          "type": "keyword",
           "cql_collection": "singleton"
         },
         "email": {

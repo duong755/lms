@@ -4,5 +4,8 @@ module.exports = {
   TopicServices: require('./Topic'),
   UserServices: require('./User'),
   LessonServices: require('./Lesson'),
-  CommentServices: require('./Comment')
+  CommentServices: require('./Comment'),
+  ExamServices: require('./Exam'),
+  ExerciseServices: require('./Exercise'),
+  CourseServices: require('./Course')
 };
