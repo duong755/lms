@@ -47,7 +47,6 @@ function getExamsByCourse(teacherId, courseId, page = 1) {
       }
     }
   });
-}
 
 /**
  *

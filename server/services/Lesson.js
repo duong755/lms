@@ -114,4 +114,4 @@ module.exports = {
   getLessonById: getLessonById,
   upsertLesson: upsertLesson,
   removeLesson: removeLesson
-};
+}
