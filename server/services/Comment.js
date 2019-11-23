@@ -1,6 +1,6 @@
-import _ from 'lodash';
+const _ = require('lodash');
 
-import { Comment, elasticsearchClient } from '../models';
+const { Comment, elasticsearchClient } = require('../models');
 
 /**
  *
@@ -100,8 +100,8 @@ function removeComment(teacherId, courseId, lessonId, commentId, ttl) {
   );
 }
 
-module.exports = {
-  getCommentsByLesson: getCommentsByLesson,
-  upsertComment: upsertComment,
-  removeComment: removeComment
-};
+exports.upsertComment = upsertComment;
+
+module.exports.removeComment = removeComment;
+module.exports.upsertComment = upsertComment;
+module.exports.getCommentsByLesson = getCommentsByLesson;
