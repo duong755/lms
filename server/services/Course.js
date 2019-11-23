@@ -25,10 +25,10 @@ function upsertCourse(course, fields, insert, ttl) {
   return Course.insert(
     {
       id: course.courseId,
-      teacherId: course.teacherId,
+      teacher_id: course.teacherId,
       description: course.description,
-      courseName: course.courseName,
-      createdAt: Date.now(),
+      course_name: course.courseName,
+      created_at: Date.now(),
       topics: course.topics,
       archive: course.archive,
       members: course.members

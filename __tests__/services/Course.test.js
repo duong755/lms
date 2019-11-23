@@ -74,11 +74,10 @@ describe('Course Services', () => {
         courseId: randomCourseId,
         courseName: randomNewCourseName,
         archive: true,
-        members: [],
         description: randomNewCourseDescription,
         topics: randomNewCourseTopics
       },
-      ['teacher_id', 'id', 'course_name', 'description', 'topics', 'archive'],
+      ['teacher_id', 'id', 'course_name', 'archive', 'description', 'topics'],
       false,
       TTL
     );
