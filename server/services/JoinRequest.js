@@ -23,10 +23,10 @@ function getJoinRequests(teacherId, courseId, page = 1) {
         bool: {
           must: [
             {
-              match: { teacher_id: teacherId }
+              term: { teacher_id: teacherId }
             },
             {
-              match: { course_id: courseId }
+              term: { course_id: courseId }
             }
           ]
         }

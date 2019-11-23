@@ -52,7 +52,7 @@ function getUserByUsername(username) {
     size: 1,
     body: {
       query: {
-        match: {
+        term: {
           username: username
         }
       }
@@ -71,7 +71,7 @@ function getUserByEmail(email) {
     size: 1,
     body: {
       query: {
-        match: {
+        term: {
           email: email
         }
       }
