@@ -85,9 +85,9 @@ function upsertReview(reviewData, fields, insert = false, ttl) {
 function deleteReview(teacherId, courseId, studentId) {
   return Review.remove(
     {
-      teacherId: teacherId,
-      courseId: courseId,
-      studentId: studentId
+      teacher_id: teacherId,
+      course_id: courseId,
+      student_id: studentId
     },
     {
       ifExists: true

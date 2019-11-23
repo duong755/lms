@@ -51,10 +51,10 @@ function getJoinRequests(teacherId, courseId, page = 1) {
 function createJoinRequest(teacherId, courseId, studentId, ttl) {
   return JoinRequest.insert(
     {
-      teacherId: teacherId,
-      courseId: courseId,
-      studentId: studentId,
-      requestAt: Date.now()
+      teacher_id: teacherId,
+      course_id: courseId,
+      student_id: studentId,
+      request_at: Date.now()
     },
     {
       ifNotExists: false,
@@ -106,9 +106,9 @@ function acceptJoinRequest(teacherId, courseId, studentId, ttl) {
 function declineJoinRequest(teacherId, courseId, studentId, ttl) {
   return JoinRequest.remove(
     {
-      teacherId: teacherId,
-      courseId: courseId,
-      studentId: studentId
+      teacher_id: teacherId,
+      course_id: courseId,
+      student_id: studentId
     },
     {
       ifExists: true,

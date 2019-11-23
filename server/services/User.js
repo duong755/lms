@@ -135,7 +135,7 @@ function createUser(user, ttl) {
   return User.insert(
     {
       username: user.username,
-      hashPassword: user.hashPassword,
+      hash_password: user.hashPassword,
       info: {
         fullName: '',
         birthday: '',
@@ -159,7 +159,7 @@ function createUser(user, ttl) {
  * @param {number} [ttl]
  */
 function updateUserPassword(userId, newPassword, ttl) {
-  return User.update({ id: userId, hashPassword: newPassword }, { ifExists: true, ttl: ttl });
+  return User.update({ id: userId, hash_password: newPassword }, { ifExists: true, ttl: ttl });
 }
 
 /**
