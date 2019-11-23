@@ -553,7 +553,7 @@
           "cql_partition_key": false,
           "cql_primary_key_order": 3
         },
-        "submit": {
+        "submit_at": {
           "type": "date",
           "cql_collection": "singleton"
         },
@@ -567,10 +567,6 @@
           "cql_collection": "set",
           "cql_struct" : "map",
           "properties": {
-            "id": {
-              "type": "keyword",
-              "cql_collection": "singleton"
-            },
             "question": {
               "type": "text",
               "cql_collection": "singleton"
