@@ -8,5 +8,6 @@ module.exports = {
   ExamServices: require('./Exam'),
   ExerciseServices: require('./Exercise'),
   ExerciseWorkServices: require('./ExerciseWork'),
-  CourseServices: require('./Course')
+  CourseServices: require('./Course'),
+  Member: require('./Member')
 };

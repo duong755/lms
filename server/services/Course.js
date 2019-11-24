@@ -12,8 +12,8 @@ const { Course, elasticsearchClient } = require('../models');
  * @param {object} course
  * @param {Uuid} course.teacherId
  * @param {Uuid} course.courseId
- * @param {string} course.description
- * @param {string[]} course.topics
+ * @param {string} [course.description='']
+ * @param {string[]} [course.topics=undefined]
  * @param {string} course.courseName
  * @param {boolean} [course.archive=false]
  * @param {string[]} [course.members=[]]
