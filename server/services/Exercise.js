@@ -71,7 +71,7 @@ function getExerciseById(teacherId, courseId, exerciseId) {
  * @param {Uuid} exercise.teacherId
  * @param {TimeUuid} exercise.exerciseId
  * @param {string} exercise.content
- * @param {string} exercise.deadline,
+ * @param {number} exercise.deadline,
  * @param {title} exercise.title
  * @param {string[]} [fields]
  * @param {boolean} [insert=true]
@@ -87,20 +87,24 @@ function upsertExercise(exercise, fields, insert, ttl) {
       title: exercise.title,
       deadline: exercise.deadline
     },
-    { ifNotExists: insert, ttl: ttl, fields: fields }
+    {
+      ifNotExists: insert,
+      ttl: ttl,
+      fields: fields
+    }
   );
 }
 
 /**
  *
- * @param {TimeUuid} id
+ * @param {TimeUuid} exerciseId
  * @param {Uuid} courseId
  * @param {Uuid} teacherId
  */
-function removeExercise(teacherId, courseId, id) {
+function removeExercise(teacherId, courseId, exerciseId) {
   return Exercise.remove(
     {
-      id: id,
+      id: exerciseId,
       course_id: courseId,
       teacher_id: teacherId
     },

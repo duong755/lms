@@ -7,5 +7,6 @@ module.exports = {
   CommentServices: require('./Comment'),
   ExamServices: require('./Exam'),
   ExerciseServices: require('./Exercise'),
+  ExerciseWorkServices: require('./ExerciseWork'),
   CourseServices: require('./Course')
 };
