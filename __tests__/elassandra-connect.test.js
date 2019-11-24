@@ -1,4 +1,6 @@
-import { cassandraClient, elasticsearchClient } from '../server/models/elassandra/connector';
+import { cassandraClient, elasticsearchClient } from '../server/models';
+
+import { closeConnection } from './helpers/close';
 
 describe('Elassandra Connect', () => {
   it('Environment Variables', () => {
@@ -23,10 +25,6 @@ describe('Elassandra Connect', () => {
     const connect = await elasticsearchClient.cat.health();
     expect(connect.statusCode).toBe(200);
   });
-
-  afterAll(async (done) => {
-    await cassandraClient.shutdown();
-    await elasticsearchClient.close();
-    done();
-  });
 });
+
+afterAll(closeConnection);

@@ -5,7 +5,6 @@ WITH replication = {'class': 'NetworkTopologyStrategy', 'DC1' : 1};
 USE "lms";
 
 CREATE TYPE IF NOT EXISTS "quiz" (
-   "id" uuid,
    "question" text,
    "choices" set<text>,
    "answer" tinyint,
@@ -30,7 +29,6 @@ CREATE TABLE IF NOT EXISTS "topic" (
 CREATE TABLE IF NOT EXISTS "course" (
   "id" uuid,
   "teacher_id" uuid,
-  "teacher_name" text,
   "course_name" text,
   "created_at" timestamp,
   "description" text,
@@ -101,7 +99,7 @@ CREATE TABLE IF NOT EXISTS "exercise_work" (
    "teacher_id" uuid,
    "exercise_id" timeuuid,
    "student_id" uuid,
-   "submit_at" timeuuid,
+   "submit_at" timestamp,
    "content" text,
    "point" float,
    PRIMARY KEY (("teacher_id", "course_id", "exercise_id"), "student_id")
@@ -124,7 +122,7 @@ CREATE TABLE IF NOT EXISTS "exam_work" (
    "exam_id" timeuuid,
    "student_id" uuid,
    "content" set<frozen<quiz>>,
-   "submit" timeuuid,
+   "submit_at" timestamp,
    "point" float,
    PRIMARY KEY (("teacher_id", "course_id", "exam_id"), "student_id")
 );
