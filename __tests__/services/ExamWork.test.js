@@ -2,7 +2,7 @@ import { types } from 'cassandra-driver';
 
 import { randomName, randomNumber } from '../helpers/random';
 import { closeConnection } from '../helpers/close';
-import { upsertExamWork, getExamWorkByStudentId, getExamWorkByExamId } from '../../server/services/ExamWork';
+import { upsertExamWork, getExamWorkByStudent, getExamWorksByExam } from '../../server/services/ExamWork';
 
 const TTL = Number(process.env.TTL) || 300;
 
@@ -44,7 +44,7 @@ describe('ExamWork Service', () => {
   it('getExamWorkByStudentId', async () => {
     await new Promise((done) => {
       setTimeout(async () => {
-        const { body } = await getExamWorkByStudentId(randomTeacherId, randomCourseId, randomExamId, randomStudentId);
+        const { body } = await getExamWorkByStudent(randomTeacherId, randomCourseId, randomExamId, randomStudentId);
         expect(body.found).toBe(true);
         done();
       }, 1000);
@@ -54,7 +54,7 @@ describe('ExamWork Service', () => {
   it('getExamWorkByExamId', async () => {
     await new Promise((done) => {
       setTimeout(async () => {
-        const { body } = await getExamWorkByExamId(randomTeacherId, randomCourseId, randomExamId, 1);
+        const { body } = await getExamWorksByExam(randomTeacherId, randomCourseId, randomExamId, 1);
         expect(body.hits.total).toBeGreaterThanOrEqual(1);
         done();
       }, 1000);

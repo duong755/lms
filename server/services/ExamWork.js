@@ -43,7 +43,7 @@ function upsertExamWork(examwork, fields, insert, ttl) {
  * @param {Uuid} courseId
  * @param {TimeUuid} examId
  */
-function getExamWorkByStudentId(teacherId, courseId, examId, studentId) {
+function getExamWorkByStudent(teacherId, courseId, examId, studentId) {
   studentId = String(studentId);
   teacherId = String(teacherId);
   courseId = String(courseId);
@@ -64,7 +64,7 @@ function getExamWorkByStudentId(teacherId, courseId, examId, studentId) {
  * @param {TimeUuid} examId
  * @param {number} page
  */
-function getExamWorkByExamId(teacherId, courseId, examId, page = 1) {
+function getExamWorksByExam(teacherId, courseId, examId, page = 1) {
   page = page < 1 ? 1 : page;
   page = _.toInteger(page);
 
@@ -89,6 +89,6 @@ function getExamWorkByExamId(teacherId, courseId, examId, page = 1) {
 
 module.exports = {
   upsertExamWork: upsertExamWork,
-  getExamWorkByStudentId: getExamWorkByStudentId,
-  getExamWorkByExamId: getExamWorkByExamId
+  getExamWorkByStudent: getExamWorkByStudent,
+  getExamWorksByExam: getExamWorksByExam
 };
