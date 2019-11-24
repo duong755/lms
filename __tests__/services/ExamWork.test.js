@@ -19,7 +19,7 @@ const randomContent = ' '
     point: randomNumber(1, 10),
     answer: randomNumber(0, 3)
   }));
-const randomPoint = randomNumber();
+const randomPoint = 10;
 const randomSubmitAt = Date.now();
 
 describe('ExamWork Service', () => {

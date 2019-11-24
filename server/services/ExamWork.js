@@ -28,6 +28,7 @@ function upsertExamWork(examwork, fields, insert, ttl) {
       examId: examwork.examId,
       courseId: examwork.courseId,
       point: examwork.point,
+      submit: examwork.submit,
       content: examwork.content,
       submitAt: examwork.submitAt
     },
