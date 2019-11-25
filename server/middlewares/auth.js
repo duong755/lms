@@ -5,6 +5,8 @@
 /**
  * @type {RequestHandler}
  */
-const auth = (req, res, next) => {};
+const auth = (req, res, next) => {
+  next();
+};
 
 module.exports = auth;

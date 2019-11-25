@@ -5,6 +5,8 @@
 /**
  * @type {RequestHandler}
  */
-const canAccessCourse = (req, res, next) => {};
+const canAccessCourse = (req, res, next) => {
+  next();
+};
 
 module.exports = canAccessCourse;

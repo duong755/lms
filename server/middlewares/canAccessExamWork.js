@@ -5,6 +5,8 @@
 /**
  * @type {RequestHandler}
  */
-const isExerciseWorkCreator = (req, res, next) => {};
+const canAccessExamWork = (req, res, next) => {
+  next();
+};
 
-module.exports = isExerciseWorkCreator;
+module.exports = canAccessExamWork;

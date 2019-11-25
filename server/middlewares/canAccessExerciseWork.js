@@ -5,6 +5,8 @@
 /**
  * @type {RequestHandler}
  */
-const isExamWorkCreator = (req, res, next) => {};
+const isExerciseWorkCreator = (req, res, next) => {
+  next();
+};
 
-module.exports = isExamWorkCreator;
+module.exports = isExerciseWorkCreator;

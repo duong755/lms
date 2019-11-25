@@ -5,6 +5,8 @@
 /**
  * @type {RequestHandler}
  */
-const canAccessJoinRequest = (req, res, next) => {};
+const canAccessJoinRequest = (req, res, next) => {
+  next();
+};
 
 module.exports = canAccessJoinRequest;

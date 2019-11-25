@@ -5,6 +5,8 @@
 /**
  * @type {RequestHandler}
  */
-const isReviewCreator = (req, res, next) => {};
+const isReviewCreator = (req, res, next) => {
+  next();
+};
 
 module.exports = isReviewCreator;

@@ -5,6 +5,8 @@
 /**
  * @type {RequestHandler}
  */
-const isCourseMember = (req, res, next) => {};
+const isCourseMember = (req, res, next) => {
+  next();
+};
 
 module.exports = isCourseMember;

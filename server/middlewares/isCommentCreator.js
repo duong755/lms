@@ -5,6 +5,8 @@
 /**
  * @type {RequestHandler}
  */
-const isCommentCreator = (req, res, next) => {};
+const isCommentCreator = (req, res, next) => {
+  next();
+};
 
 module.exports = isCommentCreator;
