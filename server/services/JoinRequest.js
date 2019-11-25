@@ -46,6 +46,26 @@ function getJoinRequests(teacherId, courseId, page = 1) {
  * @param {Uuid} teacherId
  * @param {Uuid} courseId
  * @param {Uuid} studentId
+ */
+function getJoinRequestById(teacherId, courseId, studentId) {
+  teacherId = String(teacherId);
+  courseId = String(courseId);
+  studentId = String(studentId);
+
+  const joinRequestPrimaryKey = JSON.stringify([teacherId, courseId, studentId]);
+
+  return elasticsearchClient.get({
+    index: 'lms.join_request',
+    type: 'join_request',
+    id: joinRequestPrimaryKey
+  });
+}
+
+/**
+ *
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {Uuid} studentId
  * @param {number} [ttl]
  */
 function createJoinRequest(teacherId, courseId, studentId, ttl) {
@@ -103,6 +123,27 @@ function acceptJoinRequest(teacherId, courseId, studentId, ttl) {
  * @param {Uuid} studentId
  * @param {number} [ttl]
  */
+function removeJoinRequest(teacherId, courseId, studentId, ttl) {
+  return JoinRequest.remove(
+    {
+      teacher_id: teacherId,
+      course_id: courseId,
+      student_id: studentId
+    },
+    {
+      ifExists: true,
+      ttl: ttl
+    }
+  );
+}
+
+/**
+ *
+ * @param {Uuid} teacherId
+ * @param {Uuid} courseId
+ * @param {Uuid} studentId
+ * @param {number} [ttl]
+ */
 function declineJoinRequest(teacherId, courseId, studentId, ttl) {
   return JoinRequest.remove(
     {
@@ -119,7 +160,9 @@ function declineJoinRequest(teacherId, courseId, studentId, ttl) {
 
 module.exports = {
   getJoinRequests: getJoinRequests,
+  getJoinRequestById: getJoinRequestById,
   createJoinRequest: createJoinRequest,
   acceptJoinRequest: acceptJoinRequest,
+  removeJoinRequest: removeJoinRequest,
   declineJoinRequest: declineJoinRequest
 };
