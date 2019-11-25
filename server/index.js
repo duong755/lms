@@ -8,6 +8,9 @@ const universalCookie = require('universal-cookie-express');
 const cookies = require('cookies');
 const helmet = require('helmet');
 const compression = require('compression');
+const passport = require('passport');
+
+const apiRoute = require('./routes');
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 3000;
@@ -31,6 +34,10 @@ app
 
     server.use(cookieParser());
     server.use(universalCookie());
+    server.use(passport.initialize());
+    server.use(passport.session());
+
+    server.use('/api', apiRoute);
 
     server.get('/_next/*', handler);
 
