@@ -2,6 +2,7 @@ import { types } from 'cassandra-driver';
 
 import {
   getJoinRequests,
+  getJoinRequestById,
   createJoinRequest,
   acceptJoinRequest,
   declineJoinRequest
@@ -11,19 +12,24 @@ import { closeConnection } from '../helpers/close';
 
 const TTL = Number(process.env.TTL) || 30;
 describe('JoinRequest Services', () => {
-  const teacherId = types.Uuid.random();
-  const courseId = types.Uuid.random();
-  const studentId = types.Uuid.random();
+  const randomTeacherId = types.Uuid.random();
+  const randomCourseId = types.Uuid.random();
+  const randomStudentId = types.Uuid.random();
 
   it('createJoinRequest', async () => {
-    const res = await createJoinRequest(teacherId, courseId, studentId, TTL);
+    const res = await createJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
     expect(res.wasApplied()).toBe(true);
+  });
+
+  it('getJoinRequestById', async () => {
+    const { body } = await getJoinRequestById(randomTeacherId, randomCourseId, randomStudentId);
+    expect(body.found).toBe(true);
   });
 
   it('getJoinRequests', async () => {
     await new Promise((done) => {
       setTimeout(async () => {
-        const { body } = await getJoinRequests(teacherId, courseId, studentId, 1);
+        const { body } = await getJoinRequests(randomTeacherId, randomCourseId, randomStudentId, 1);
         expect(body.hits.total).toBeGreaterThanOrEqual(1);
         done();
       }, 1000);
@@ -31,14 +37,14 @@ describe('JoinRequest Services', () => {
   });
 
   it('acceptJoinRequest', async () => {
-    await createJoinRequest(teacherId, courseId, studentId, TTL);
-    const res = await acceptJoinRequest(teacherId, courseId, studentId, TTL);
+    await createJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
+    const res = await acceptJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 
   it('declineJoinRequest', async () => {
-    await createJoinRequest(teacherId, courseId, studentId, TTL);
-    const res = await declineJoinRequest(teacherId, courseId, studentId, TTL);
+    await createJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
+    const res = await declineJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 });
