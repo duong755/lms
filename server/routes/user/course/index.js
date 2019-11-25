@@ -24,13 +24,6 @@ courseRouter.get('/', (req, res) => {
 });
 
 /**
- * create course
- */
-courseRouter.post('/', (req, res) => {
-  res.end('/api/user/:userId/course');
-});
-
-/**
  * get course data
  */
 courseRouter.get('/:courseId', (req, res) => {

@@ -1,6 +1,7 @@
 const { Router } = require('express');
 
 const userRouter = require('./user');
+const createCourseRouter = require('./create-course');
 const signinRouter = require('./signin');
 const signupRouter = require('./signup');
 const searchRouter = require('./search');
@@ -13,6 +14,7 @@ rootAPIRoute.all('/', (req, res) => {
 });
 
 rootAPIRoute.use('/user', userRouter);
+rootAPIRoute.use('/create-course', createCourseRouter);
 rootAPIRoute.use('/signin', signinRouter);
 rootAPIRoute.use('/signup', signupRouter);
 rootAPIRoute.use('/search', searchRouter);
