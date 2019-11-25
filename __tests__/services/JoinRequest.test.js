@@ -5,6 +5,7 @@ import {
   getJoinRequestById,
   createJoinRequest,
   acceptJoinRequest,
+  removeJoinRequest,
   declineJoinRequest
 } from '../../server/services/JoinRequest';
 
@@ -45,6 +46,12 @@ describe('JoinRequest Services', () => {
   it('declineJoinRequest', async () => {
     await createJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
     const res = await declineJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
+    expect(res.wasApplied()).toBe(true);
+  });
+
+  it('removeJoinRequest', async () => {
+    await createJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
+    const res = await removeJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 });

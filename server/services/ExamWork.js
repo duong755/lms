@@ -1,6 +1,7 @@
 /**
  * @typedef {import('cassandra-driver').types.Uuid} Uuid
  * @typedef {import('cassandra-driver').types.TimeUuid} TimeUuid
+ * @typedef {{ question: string, choices: string[], answer: number, point: number }} Quiz
  */
 const _ = require('lodash');
 
@@ -13,7 +14,7 @@ const { ExamWork, elasticsearchClient } = require('../models');
  * @param {Uuid} examwork.teacherId
  * @param {Uuid} examwork.examId
  * @param {Uuid} examwork.courseId
- * @param {Array} examwork.content
+ * @param {Quiz[]} examwork.content
  * @param {number} examwork.point
  * @param {number} examwork.submitAt
  * @param {string[]} [fields]
