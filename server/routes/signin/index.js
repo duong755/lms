@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const dayjs = require('dayjs');
 
 const { UserServices } = require('../../services');
 
@@ -24,12 +25,19 @@ signinRouter.post('/*', async (req, res) => {
               delete user.hash_password;
               const token = jwt.sign(user, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
 
-              req.cookies['access_token'] = token;
+              const expiresAt = dayjs()
+                .add(7, 'd')
+                .toDate();
+              res.cookie('access_token', token, {
+                path: '/',
+                sameSite: true,
+                expires: expiresAt
+              });
 
               res.locals.user = user;
               res
                 .status(200)
-                .json({ successful: true, user: user })
+                .json({ successful: true, token: token, user: user })
                 .end();
             } else {
               res.status(400).json({
@@ -46,10 +54,12 @@ signinRouter.post('/*', async (req, res) => {
         error: err.message
       });
     }
+  } else {
+    res.status(200).json({
+      success: true,
+      warning: 'You have already been authenticated'
+    });
   }
-  res.end({
-    warning: 'You have already authenticated'
-  });
 });
 
 module.exports = signinRouter;
