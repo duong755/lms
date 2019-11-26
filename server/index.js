@@ -30,7 +30,7 @@ app
     server.use(express.json());
     server.use(express.raw());
     server.use(express.text());
-    server.use(express.urlencoded({ extended: false }));
+    server.use(express.urlencoded({ extended: true }));
     server.use(express.static(path.resolve(__dirname, '../public')));
 
     server.use(cookieParser());

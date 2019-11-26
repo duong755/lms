@@ -2,41 +2,47 @@
  * @typedef {import('express').RequestHandler} RequestHandler
  * @typedef {import('express').Request} Request
  */
-const passport = require('passport');
-const passportJwt = require('passport-jwt');
+const jwt = require('jsonwebtoken');
 
 /**
  *
  * @param {Request} req
+ * @returns {string | null}
  */
-const cookieExtractor = (req) => {
+const extractFromCookie = (req) => {
   let token = null;
-  if (req.cookies['access_token']) {
+  if (req.cookies && req.cookies['access_token']) {
     token = req.cookies['access_token'];
   }
   return token;
 };
-const authHeaderExtractor = passportJwt.ExtractJwt.fromAuthHeaderAsBearerToken;
 
-const strategy = new passportJwt.Strategy(
-  {
-    secretOrKey: process.env.JWT_SECRET_KEY,
-    jwtFromRequest: passportJwt.ExtractJwt.fromExtractors([cookieExtractor, authHeaderExtractor])
-  },
-  (payload, done) => {
-    done(null, {});
+/**
+ *
+ * @param {Request} req
+ * @return {string | null}
+ */
+const extractFromAuthHeaderAsBearerToken = (req) => {
+  if (req.headers.authorization) {
+    return req.headers.authorization.replace(/^Bearer\s+/i, '');
   }
-);
-
-passport.use('jwt', strategy);
+  return null;
+};
 
 /**
  * @type {RequestHandler}
  */
 const auth = (req, res, next) => {
-  passport.authenticate('jwt', () => {
+  const token = extractFromCookie(req) || extractFromAuthHeaderAsBearerToken(req);
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+    if (!err) {
+      res.clearCookie('access_token');
+    } else {
+      req.user = decoded;
+      res.locals.user = decoded;
+    }
     next();
-  })(req, res, next);
+  });
 };
 
 module.exports = auth;

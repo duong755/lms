@@ -9,14 +9,13 @@ const signinRouter = Router({ mergeParams: true });
 
 signinRouter.post('/*', async (req, res) => {
   if (req.isUnauthenticated()) {
-    const emailOrUsername = req.body.email || req.body.username;
+    const emailOrUsername = req.body.emailOrUsername || req.body.email || req.body.username || '';
     try {
       const apires = await UserServices.getUserByEmailOrUsername(emailOrUsername);
       if (apires.body.hits.total) {
         const user = apires.body.hits.hits[0]._source;
         bcrypt.compare(req.body.password, user.hash_password, (err, same) => {
           if (err) {
-            console.log(err);
             res.status(400).json({
               error: 'Wrong username/email or password'
             });
@@ -31,7 +30,8 @@ signinRouter.post('/*', async (req, res) => {
               res.cookie('access_token', token, {
                 path: '/',
                 sameSite: true,
-                expires: expiresAt
+                expires: expiresAt,
+                httpOnly: true
               });
 
               res.locals.user = user;
@@ -51,7 +51,7 @@ signinRouter.post('/*', async (req, res) => {
       }
     } catch (err) {
       res.status(400).json({
-        error: err.message
+        error: err.message.replace(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d{1,5})?)/g, '')
       });
     }
   } else {
