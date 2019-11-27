@@ -6,7 +6,6 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const universalCookie = require('universal-cookie-express');
-const cookies = require('cookies');
 const helmet = require('helmet');
 const compression = require('compression');
 const passport = require('passport');
@@ -24,7 +23,6 @@ app
     const server = express();
 
     server.use(helmet());
-    server.use(cookies.express());
     server.use(compression());
     server.use(logger('dev'));
     server.use(express.json());
