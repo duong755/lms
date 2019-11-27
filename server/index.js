@@ -34,7 +34,6 @@ app
     server.use(cookieParser());
     server.use(universalCookie());
     server.use(passport.initialize());
-    server.use(passport.session());
 
     server.use('/api', apiRoute);
 

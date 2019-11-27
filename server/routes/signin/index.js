@@ -34,7 +34,6 @@ signinRouter.post('/*', async (req, res) => {
                 httpOnly: true
               });
 
-              res.locals.user = user;
               res
                 .status(200)
                 .json({ successful: true, token: token, user: user })
