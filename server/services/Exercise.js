@@ -12,8 +12,10 @@ const { Exercise, elasticsearchClient } = require('../models');
  * @param {Uuid} teacherId
  * @param {Uuid} courseId
  * @param {number} [page=1]
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getExercisesByCourse(teacherId, courseId, page = 1) {
+function getExercisesByCourse(teacherId, courseId, page = 1, includes, excludes) {
   page = _.toInteger();
   page = page < 1 ? 1 : page;
 
@@ -26,7 +28,8 @@ function getExercisesByCourse(teacherId, courseId, page = 1) {
     from: 10 * (page - 1),
     size: 10,
     sort: ['id:desc'],
-    _source_excludes: ['content'],
+    _source_includes: includes,
+    _source_excludes: excludes,
     body: {
       query: {
         bool: {

@@ -45,8 +45,10 @@ function upsertCourse(course, fields, insert, ttl) {
  *
  * @param {Uuid} studentId
  * @param {number} [page=1]
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getCoursesByStudent(studentId, page = 1) {
+function getCoursesByStudent(studentId, page = 1, includes, excludes) {
   page = _.toInteger(page);
   page = page < 1 ? 1 : page;
 
@@ -55,12 +57,14 @@ function getCoursesByStudent(studentId, page = 1) {
   return elasticsearchClient.search({
     index: 'lms.course',
     type: 'course',
+    _source_includes: includes,
+    _source_excludes: excludes,
     from: 10 * (page - 1),
     size: 10,
     body: {
       query: {
-        bool: {
-          must: [{ term: { members: studentId } }]
+        term: {
+          members: studentId
         }
       }
     }
@@ -71,8 +75,10 @@ function getCoursesByStudent(studentId, page = 1) {
  *
  * @param {Uuid} teacherId
  * @param {number} [page=1]
+ * @param {string | string} [includes]
+ * @param {string | string} [excludes]
  */
-function getCoursesByTeacher(teacherId, page = 1) {
+function getCoursesByTeacher(teacherId, page = 1, includes, excludes) {
   page = _.toInteger(page);
   page = page < 1 ? 1 : page;
 
@@ -81,6 +87,8 @@ function getCoursesByTeacher(teacherId, page = 1) {
   return elasticsearchClient.search({
     index: 'lms.course',
     type: 'course',
+    _source_includes: includes,
+    _source_excludes: excludes,
     from: 10 * (page - 1),
     size: 10,
     body: {
@@ -97,8 +105,10 @@ function getCoursesByTeacher(teacherId, page = 1) {
  *
  * @param {Uuid} teacherId
  * @param {Uuid} courseId
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getCourseById(teacherId, courseId) {
+function getCourseById(teacherId, courseId, includes, excludes) {
   teacherId = String(teacherId);
   courseId = String(courseId);
 
@@ -107,7 +117,9 @@ function getCourseById(teacherId, courseId) {
   return elasticsearchClient.get({
     index: 'lms.course',
     type: 'course',
-    id: coursePrimaryKey
+    id: coursePrimaryKey,
+    _source_includes: includes,
+    _source_excludes: excludes
   });
 }
 

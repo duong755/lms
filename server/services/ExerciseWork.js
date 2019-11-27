@@ -12,8 +12,10 @@ const { ExerciseWork, elasticsearchClient } = require('../models');
  * @param {Uuid} courseId
  * @param {TimeUuid} exerciseId
  * @param {number} [page=1]
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getExerciseWorksByExercise(teacherId, courseId, exerciseId, page = 1) {
+function getExerciseWorksByExercise(teacherId, courseId, exerciseId, page = 1, includes, excludes) {
   teacherId = String(teacherId);
   courseId = String(courseId);
   exerciseId = String(exerciseId);
@@ -21,9 +23,10 @@ function getExerciseWorksByExercise(teacherId, courseId, exerciseId, page = 1) {
   return elasticsearchClient.search({
     index: 'lms.exercise_work',
     type: 'exercise_work',
+    _source_includes: includes,
+    _source_excludes: excludes,
     from: 10 * (page - 1),
     size: 10,
-    _source_excludes: ['content'],
     body: {
       query: {
         bool: {
