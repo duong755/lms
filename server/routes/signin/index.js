@@ -22,7 +22,7 @@ signinRouter.post('/*', async (req, res) => {
           } else {
             if (same) {
               delete user.hash_password;
-              const token = jwt.sign(user, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
+              const token = jwt.sign({ id: user.id, type: user.type }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
 
               const expiresAt = dayjs()
                 .add(7, 'd')
@@ -33,10 +33,15 @@ signinRouter.post('/*', async (req, res) => {
                 expires: expiresAt,
                 httpOnly: true
               });
+              res.cookie('lmsuser', user, {
+                path: '/',
+                sameSite: true,
+                expires: expiresAt
+              });
 
               res
                 .status(200)
-                .json({ successful: true, token: token, user: user })
+                .json({ successful: true, token: token })
                 .end();
             } else {
               res.status(400).json({

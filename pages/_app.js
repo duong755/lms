@@ -5,6 +5,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DayjsUtils from '@date-io/dayjs';
 import { CookiesProvider } from 'react-cookie';
 
+import AppUserProvider from '../components/auth/AppUserProvider';
 import CustomThemeProvider from '../components/theme/CustomThemeProvider';
 
 class CustomApp extends App {
@@ -18,12 +19,14 @@ class CustomApp extends App {
     return (
       <>
         <CookiesProvider>
-          <MuiPickersUtilsProvider utils={DayjsUtils}>
-            <CustomThemeProvider theme={pageProps.theme}>
-              <CssBaseline />
-              <Component {...pageProps} />
-            </CustomThemeProvider>
-          </MuiPickersUtilsProvider>
+          <AppUserProvider user={pageProps.user}>
+            <MuiPickersUtilsProvider utils={DayjsUtils}>
+              <CustomThemeProvider theme={pageProps.theme}>
+                <CssBaseline />
+                <Component {...pageProps} />
+              </CustomThemeProvider>
+            </MuiPickersUtilsProvider>
+          </AppUserProvider>
         </CookiesProvider>
       </>
     );
