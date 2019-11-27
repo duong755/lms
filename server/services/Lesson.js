@@ -12,8 +12,10 @@ const { Lesson, elasticsearchClient } = require('../models');
  * @param {Uuid} teacherId
  * @param {Uuid} courseId
  * @param {number} [page=1]
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getLessonsByTeacherAndCourse(teacherId, courseId, page = 1) {
+function getLessonsByTeacherAndCourse(teacherId, courseId, page = 1, includes, excludes) {
   page = _.toInteger(page);
   page = page < 1 ? 1 : page;
 
@@ -23,6 +25,8 @@ function getLessonsByTeacherAndCourse(teacherId, courseId, page = 1) {
   return elasticsearchClient.search({
     index: 'lms.lesson',
     type: 'lesson',
+    _source_includes: includes,
+    _source_excludes: excludes,
     from: 10 * (page - 1),
     size: 10,
     body: {
