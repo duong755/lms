@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('express').RequestHandler} RequestHandler
+ */
+
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -7,49 +11,17 @@ const { UserServices } = require('../../services');
 
 const signinRouter = Router({ mergeParams: true });
 
-signinRouter.post('/*', async (req, res) => {
+/**
+ * @type {RequestHandler}
+ */
+const findUserByUsernameOrEmail = async (req, res, next) => {
   if (req.isUnauthenticated()) {
     const emailOrUsername = req.body.emailOrUsername || req.body.email || req.body.username || '';
     try {
-      const apires = await UserServices.getUserByEmailOrUsername(emailOrUsername);
-      if (apires.body.hits.total) {
-        const user = apires.body.hits.hits[0]._source;
-        bcrypt.compare(req.body.password, user.hash_password, (err, same) => {
-          if (err) {
-            res.status(400).json({
-              error: 'Wrong username/email or password'
-            });
-          } else {
-            if (same) {
-              delete user.hash_password;
-              const token = jwt.sign({ id: user.id, type: user.type }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
-
-              const expiresAt = dayjs()
-                .add(7, 'd')
-                .toDate();
-              res.cookie('access_token', token, {
-                path: '/',
-                sameSite: true,
-                expires: expiresAt,
-                httpOnly: true
-              });
-              res.cookie('lmsuser', user, {
-                path: '/',
-                sameSite: true,
-                expires: expiresAt
-              });
-
-              res
-                .status(200)
-                .json({ successful: true, token: token })
-                .end();
-            } else {
-              res.status(400).json({
-                error: 'Wrong username/email or password'
-              });
-            }
-          }
-        });
+      const apiRes = await UserServices.getUserByEmailOrUsername(emailOrUsername);
+      if (apiRes.body.hits.total) {
+        res.locals.user = apiRes.body.hits.hits[0]._source;
+        next();
       } else {
         throw new Error('Wrong username or password');
       }
@@ -64,6 +36,74 @@ signinRouter.post('/*', async (req, res) => {
       warning: 'You have already been authenticated'
     });
   }
-});
+};
+
+/**
+ * @type {RequestHandler}
+ */
+const comparePassword = (req, res, next) => {
+  const { password } = req.body;
+  const { hash_password } = res.locals.user;
+  bcrypt.compare(password, hash_password, (err, same) => {
+    if (err) {
+      res.status(500).json({
+        error: err.message
+      });
+    } else {
+      if (same) {
+        next();
+      } else {
+        res.status(400).json({
+          error: 'Wrong email/username or password'
+        });
+      }
+    }
+  });
+};
+
+/**
+ * @type {RequestHandler}
+ */
+const generateToken = (req, res) => {
+  const user = res.locals.user;
+  delete user.hash_password;
+
+  jwt.sign(
+    { id: user.id },
+    process.env.JWT_SECRET_KEY,
+    {
+      expiresIn: '7d'
+    },
+    (err, encoded) => {
+      if (err) {
+        res.status(500).json({
+          err: err.message
+        });
+      } else {
+        const expireAt = dayjs()
+          .add(7, 'day')
+          .toDate();
+        res.cookie('access_token', encoded, {
+          httpOnly: true,
+          sameSite: true,
+          path: '/',
+          expires: expireAt
+        });
+        res.cookie('lms.user', user, {
+          sameSite: true,
+          path: '/',
+          expires: expireAt
+        });
+        res.status(200).json({
+          successful: true,
+          token: encoded,
+          user: user
+        });
+      }
+    }
+  );
+};
+
+signinRouter.post('/*', findUserByUsernameOrEmail, comparePassword, generateToken);
 
 module.exports = signinRouter;

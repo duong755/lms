@@ -131,7 +131,7 @@ const signIn = async (req, res) => {
     if (resApi.body.found) {
       const user = resApi.body._source;
       delete user.hash_password;
-      const token = jwt.sign({ id: user.id, type: user.type }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
 
       const expiresAt = dayjs()
         .add(7, 'd')
@@ -142,7 +142,7 @@ const signIn = async (req, res) => {
         expires: expiresAt,
         httpOnly: true
       });
-      res.cookie('lmsuser', user, {
+      res.cookie('lms.user', user, {
         path: '/',
         sameSite: true,
         expires: expiresAt

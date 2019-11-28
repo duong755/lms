@@ -6,10 +6,11 @@
 import { createContext } from 'react';
 
 /**
- * @type {React.Context<User>}
+ * @type {React.Context<{ user: UserData, setUser: (u: UserData) => void }>}
  */
 const AppUser = createContext({
-  user: null
+  user: null,
+  setUser: () => {}
 });
 
 export default AppUser;

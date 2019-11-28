@@ -1,30 +1,14 @@
 const { Router } = require('express');
-const jwt = require('jsonwebtoken');
-
-const { extractFromCookie, extractFromAuthHeaderAsBearerToken } = require('../../helpers/jwtExtractors');
 
 const courseRouter = require('./course');
 
 const userRouter = Router({ mergeParams: true });
 
 /**
- * auth
+ * auth user info
  */
-userRouter.post('/', (req, res) => {
-  const token = extractFromCookie(req) || extractFromAuthHeaderAsBearerToken(req);
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
-    if (!err) {
-      res.clearCookie('access_token');
-      res.clearCookie('lmsuser');
-      res.json(null);
-    } else {
-      if (typeof decoded === 'object' && decoded !== null) {
-        delete decoded.iat;
-        delete decoded.exp;
-      }
-      res.json(decoded);
-    }
-  });
+userRouter.all('/', (req, res) => {
+  res.status(200).json(res.locals.user);
 });
 
 /**
