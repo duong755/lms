@@ -2,6 +2,8 @@ import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
+import React, { useState } from 'react';
+
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -69,11 +71,16 @@ const useStyle = makeStyles((theme) => ({
   deny: {
     margin: theme.spacing(0, 1),
     color: 'red'
+  },
+  students: {
+    margin: theme.spacing(1, 0),
+    padding: theme.spacing(0,1)
   }
 }));
 
-function LessonPage() {
+function LessonPage(props) {
   const classes = useStyle();
+  // const { lessons } = props;
   return (
     <>
       <Head>
@@ -85,36 +92,14 @@ function LessonPage() {
         </Button>
       </Grid>
       <Grid container direction="column" className={classes.container}>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Lesson title</Typography>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Lesson title</Typography>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Lesson title</Typography>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
-            </Typography>
-          </Paper>
-        </Grid>
+        {props.lessons.map((lesson, idx) => (
+          <Grid item key={idx}>
+            <Paper className={classes.lesson}>
+              <Typography className={classes.title}>{lesson.title}</Typography>
+              <Typography>{lesson.des}</Typography>
+            </Paper>
+          </Grid>
+        ))}
       </Grid>
       <Grid container justify="center">
         <Grid item>
@@ -139,7 +124,7 @@ function LessonPage() {
   );
 }
 
-function ExercisePage() {
+function ExercisePage(props) {
   const classes = useStyle();
   return (
     <>
@@ -152,48 +137,18 @@ function ExercisePage() {
         </Button>
       </Grid>
       <Grid container direction="column" className={classes.container}>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Exercise title</Typography>
-            <Box py={1} display="flex" alignItems="center">
-              <Icon>timer</Icon>
-              <Box display="inline">Deadline: 2019-10-30 21:00</Box>
-            </Box>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Exercise title</Typography>
-            <Box py={1} display="flex" alignItems="center">
-              <Icon>timer</Icon>
-              <Box display="inline">Deadline: 2019-10-30 21:00</Box>
-            </Box>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Exercise title</Typography>
-            <Box py={1} display="flex" alignItems="center">
-              <Icon>timer</Icon>
-              <Box display="inline">Deadline: 2019-10-30 21:00</Box>
-            </Box>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
-            </Typography>
-          </Paper>
-        </Grid>
+        {props.exercises.map((ex, idx) => (
+          <Grid item key={idx}>
+            <Paper className={classes.lesson}>
+              <Typography className={classes.title}>{ex.title}</Typography>
+              <Box py={1} display="flex" alignItems="center">
+                <Icon>timer</Icon>
+                <Box display="inline"> Deadline: {ex.deadline}</Box>
+              </Box>
+              <Typography>{ex.des}</Typography>
+            </Paper>
+          </Grid>
+        ))}
       </Grid>
       <Grid container justify="center">
         <Grid item>
@@ -218,7 +173,7 @@ function ExercisePage() {
   );
 }
 
-function ExamPage() {
+function ExamPage(props) {
   const classes = useStyle();
   return (
     <>
@@ -231,45 +186,21 @@ function ExamPage() {
         </Button>
       </Grid>
       <Grid container direction="column" className={classes.container}>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Exam title</Typography>
-            <Box py={1} display="flex" alignItems="center">
-              <Icon>schedule</Icon>
-              <Box display="inline" pr={16}>
-                Start at: 2019-10-30 21:00
+        {props.exams.map((exam, idx) => (
+          <Grid item key={idx}>
+            <Paper className={classes.lesson}>
+              <Typography className={classes.title}>{exam.title}</Typography>
+              <Box py={1} display="flex" alignItems="center">
+                <Icon>schedule</Icon>
+                <Box display="inline" pr={16}>
+                  Start at: {exam.start}
+                </Box>
+                <Icon>timelapse</Icon>
+                <Box display="inline"> Duration: {exam.duration}</Box>
               </Box>
-              <Icon>timelapse</Icon>
-              <Box display="inline">Duration: 15 min</Box>
-            </Box>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Exam title</Typography>
-            <Box py={1} display="flex" alignItems="center">
-              <Icon>schedule</Icon>
-              <Box display="inline" pr={16}>
-                Start at: 2019-10-30 21:00
-              </Box>
-              <Icon>timelapse</Icon>
-              <Box display="inline">Duration: 15 min</Box>
-            </Box>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Typography className={classes.title}>Exam title</Typography>
-            <Box py={1} display="flex" alignItems="center">
-              <Icon>schedule</Icon>
-              <Box display="inline" pr={16}>
-                Start at: 2019-10-30 21:00
-              </Box>
-              <Icon>timelapse</Icon>
-              <Box display="inline">Duration: 15 min</Box>
-            </Box>
-          </Paper>
-        </Grid>
+            </Paper>
+          </Grid>
+        ))}
       </Grid>
       <Grid container justify="center">
         <Grid item>
@@ -294,7 +225,7 @@ function ExamPage() {
   );
 }
 
-function MembersPage() {
+function MembersPage(props) {
   const classes = useStyle();
   return (
     <>
@@ -302,19 +233,21 @@ function MembersPage() {
         <title>Course detail</title>
       </Head>
       <Grid container direction="column" className={classes.container}>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Box py={1} display="flex" alignItems="center" className={classes.left}>
-              <Icon>person</Icon>
-              <Box pl={2} display="inline">
-                Student(will be replaced by props later)
+        {props.members.map((mem, idx) => (
+          <Grid item key={idx}>
+            <Paper className={classes.students}>
+              <Box py={1} display="flex" alignItems="center" className={classes.left}>
+                <Icon>person</Icon>
+                <Box pl={2} display="inline" component="strong">
+                  {mem.name}
+                </Box>
+                <Box className={classes.right}>
+                  <Box display="inline">{mem.joinDate}</Box>
+                </Box>
               </Box>
-              <Box className={classes.right}>
-                <Box display="inline">2019 Sep 01</Box>
-              </Box>
-            </Box>
-          </Paper>
-        </Grid>
+            </Paper>
+          </Grid>
+        ))}
       </Grid>
       <Grid container justify="center">
         <Grid item>
@@ -339,7 +272,7 @@ function MembersPage() {
   );
 }
 
-function JoinRequest() {
+function JoinRequest(props) {
   const classes = useStyle();
   return (
     <>
@@ -347,25 +280,27 @@ function JoinRequest() {
         <title>Course detail</title>
       </Head>
       <Grid container direction="column" className={classes.container}>
-        <Grid item>
-          <Paper className={classes.lesson}>
-            <Box py={1} display="flex" alignItems="center" className={classes.left}>
-              <Icon>person</Icon>
-              <Box pl={2} display="inline">
-                Student(will be replaced by props later)
+        {props.requests.map((rq, idx) => (
+          <Grid item key={idx}>
+            <Paper className={classes.students}>
+              <Box py={1} display="flex" alignItems="center" className={classes.left}>
+                <Icon>person</Icon>
+                <Box pl={2} display="inline" component="strong">
+                  {rq.owner}
+                </Box>
+                <Box className={classes.right}>
+                  <Box display="inline">{rq.rqDate}</Box>
+                  <IconButton className={classes.accept} aria-label="delete" size="small">
+                    <Icon>check_circle_outlined</Icon>
+                  </IconButton>
+                  <IconButton className={classes.deny} aria-label="delete" size="small">
+                    <Icon>remove_circle_outlined</Icon>
+                  </IconButton>
+                </Box>
               </Box>
-              <Box className={classes.right}>
-                <Box display="inline">2019 Sep 01</Box>
-                <IconButton className={classes.accept} aria-label="delete" size="small">
-                  <Icon>check_circle_outlined</Icon>
-                </IconButton>
-                <IconButton className={classes.deny} aria-label="delete" size="small">
-                  <Icon>remove_circle_outlined</Icon>
-                </IconButton>
-              </Box>
-            </Box>
-          </Paper>
-        </Grid>
+            </Paper>
+          </Grid>
+        ))}
       </Grid>
       <Grid container justify="center">
         <Grid item>
@@ -392,25 +327,56 @@ function JoinRequest() {
 
 function CourseDetail(props) {
   const { tab } = props;
+  const [lessons, setLessons] = useState([
+    { title: 'Lesson 1', des: 'lesson 1 description' },
+    { title: 'Lesson 2', des: 'lesson 2 description' }
+  ]);
+  const [exercises, setExercises] = useState([
+    { title: 'Exercise Title1 ', deadline: '2019-10-30 21:00', des: 'Exercise 1 Description' },
+    { title: 'Exercise Title2 ', deadline: '2019-10-30 23:00', des: 'Exercise 2 Description' },
+    { title: 'Exercise Title3 ', deadline: '2019-10-30 20:00', des: 'Exercise 3 Description' },
+    { title: 'Exercise Title4 ', deadline: '2019-10-30 12:00', des: 'Exercise 4 Description' }
+  ]);
+  const [exams, setExams] = useState([
+    { title: 'Exam 1', start: '2019-10-30 21:00', duration: '15 min' },
+    { title: 'Exam 2', start: '2019-10-30 21:00', duration: '20 min' },
+    { title: 'Exam 3', start: '2019-10-30 21:00', duration: '30 min' },
+    { title: 'Exam 4', start: '2019-10-30 21:00', duration: '1 hr' }
+  ]);
+  const [members, setMembers] = useState([
+    { name: 'Le Doi Ban Chan Buoc Di Tren Con Pho Dai', joinDate: '2019 Sep 01' },
+    { name: 'Le Van Luyen', joinDate: '2019 Sep 01' },
+    { name: 'Le O Nac Do Di Ca Po Ri O', joinDate: '2019 Sep 01' },
+    { name: 'Le O Nac Do Da Vin Si', joinDate: '2019 Sep 01' },
+    { name: 'Le Ki Ma', joinDate: '2019 Sep 01' },
+    { name: 'Le Sin', joinDate: '2019 Sep 01' }
+  ]);
+  const [requests, setRequests] = useState([
+    { owner: 'Le Quan Dop Ki', rqDate: '2019 Sep 01'},
+    { owner: 'Doan Van Hau', rqDate: '2019 Sep 01'},
+    { owner: 'Doan Tau Ti Xiu Ay La Chung Em', rqDate: '2019 Sep 01'},
+    { owner: 'Doan Quan Viet Nam Di', rqDate: '2019 Sep 01'},
+    { owner: 'Doan Van Hold', rqDate: '2019 Sep 01'}
+  ]);
   //Lesson Page
   if (tab === 'lesson') {
-    return <LessonPage />;
+    return <LessonPage lessons={lessons} />;
   }
   //ExercisePage
   if (tab === 'exercise') {
-    return <ExercisePage />;
+    return <ExercisePage exercises={exercises} />;
   }
   //Exam Page
   if (tab === 'exam') {
-    return <ExamPage />;
+    return <ExamPage exams={exams} />;
   }
   //Members Page
   if (tab === 'members') {
-    return <MembersPage />;
+    return <MembersPage members={members} />;
   }
   //Course Page
   if (tab === 'join requests') {
-    return <JoinRequest />;
+    return <JoinRequest requests={requests} />;
   }
 }
 
