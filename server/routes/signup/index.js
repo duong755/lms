@@ -15,7 +15,9 @@ const { UserServices } = require('../../services');
 const signupRouter = Router({ mergeParams: true });
 
 const signUpSchema = Joi.object({
-  username: Joi.string().required(),
+  username: Joi.string()
+    .trim()
+    .required(),
   email: Joi.string()
     .email({ allowUnicode: false })
     .required(),
@@ -24,6 +26,19 @@ const signUpSchema = Joi.object({
     .valid('teacher', 'student')
     .required()
 });
+
+/**
+ * @type {RequestHandler}
+ */
+const unauth = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.status(400).json({
+      error: 'You need to sign out first'
+    });
+  } else {
+    next();
+  }
+};
 
 /**
  * @type {RequestHandler}
@@ -51,6 +66,7 @@ const validateBody = async (req, res, next) => {
       res.status(400).json({ error: parsedErrors });
       return;
     } else {
+      req.body = validationResults.value;
       next();
     }
   } else {
@@ -75,7 +91,7 @@ const validateUniqueness = async (req, res, next) => {
       parsedErrors['username'] = `Username "${req.body.username}" has already been used`;
     }
     if (resApis[1].body.hits.total) {
-      parsedErrors['emai'] = `Email "${req.body.email}" has already been used`;
+      parsedErrors['email'] = `Email "${req.body.email}" has already been used`;
     }
 
     if (resApis.every((currentRes) => currentRes.body.hits.total === 0)) {
@@ -164,6 +180,6 @@ const signIn = async (req, res) => {
   }
 };
 
-signupRouter.post('/', validateBody, validateUniqueness, createUser, signIn);
+signupRouter.post('/', unauth, validateBody, validateUniqueness, createUser, signIn);
 
 module.exports = signupRouter;
