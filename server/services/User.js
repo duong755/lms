@@ -156,7 +156,7 @@ function createUser(user, ttl) {
       username: user.username,
       hash_password: user.hashPassword,
       info: {
-        fullName: '',
+        fullname: '',
         birthday: '',
         image: `${GRAVATAR_URL}/${md5Email}`
       },
