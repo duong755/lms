@@ -12,7 +12,7 @@ const { UserServices } = require('../../server/services');
 const auth = (req, res, next) => {
   const token = extractFromCookie(req) || extractFromAuthHeaderAsBearerToken(req);
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decoded) => {
-    if (!err || !decoded) {
+    if (err || !decoded) {
       res.clearCookie('access_token');
       res.clearCookie('lms.user');
       delete req.user;
@@ -23,8 +23,8 @@ const auth = (req, res, next) => {
       try {
         const userRes = await UserServices.getUserById(userId, void 0, ['hash_password']);
         if (userRes.body.found) {
-          req.user = userRes._source;
-          res.locals.user = userRes._source;
+          req.user = userRes.body._source;
+          res.locals.user = userRes.body._source;
         } else {
           res.clearCookie('access_token');
           res.clearCookie('lms.user');
