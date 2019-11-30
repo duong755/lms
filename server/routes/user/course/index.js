@@ -1,5 +1,8 @@
 const { Router } = require('express');
 
+const auth = require('../../../middlewares/auth');
+const isCourseCreator = require('../../../middlewares/isCourseCreator');
+
 const lessonRouter = require('./lesson');
 const memberRouter = require('./member');
 const exerciseRouter = require('./exercise');
@@ -33,7 +36,7 @@ courseRouter.get('/:courseId', (req, res) => {
 /**
  * update course
  */
-courseRouter.put('/:courseId', (req, res) => {
+courseRouter.put('/:courseId', auth, isCourseCreator, (req, res) => {
   res.end('/api/user/:userId/course/:courseId');
 });
 
