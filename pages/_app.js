@@ -11,9 +11,10 @@ import CustomThemeProvider from '../components/theme/CustomThemeProvider';
 class CustomApp extends App {
   constructor(props, context) {
     super(props, context);
+    this.getCookies = this.getCookies.bind(this);
   }
 
-  static getCookies(ctx) {
+  getCookies(ctx) {
     if (ctx && ctx.req && ctx.req.universalCookies) {
       return new Cookies(ctx.req.universalCookies);
     }
@@ -21,23 +22,11 @@ class CustomApp extends App {
     return new Cookies();
   }
 
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    const cookies = this.getCookies(ctx);
-
-    return { pageProps, cookies };
-  }
-
   render() {
-    const { Component, pageProps, cookies } = this.props;
+    const { Component, pageProps } = this.props;
 
     return (
-      <CookiesProvider cookies={new Cookies(cookies)}>
+      <CookiesProvider cookies={this.getCookies()}>
         <AppUserProvider user={pageProps.user}>
           <MuiPickersUtilsProvider utils={DayjsUtils}>
             <CustomThemeProvider theme={pageProps.theme}>
