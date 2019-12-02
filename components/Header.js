@@ -76,14 +76,15 @@ function Header() {
 
   const Account = useCallback(() => {
     if (userContext.user) {
+      const { id, username, info } = userContext.user;
       if (matchDownXS) {
         return (
           <Box className={clsx([classes.menu])}>
             <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
-              <img src="" width={30} height={30} />
-              <NextLink href="/">
+              <img src={info.image} width={30} height={30} />
+              <NextLink href={`/user/${id}`} as={`/user/${id}`} prefetch={false}>
                 <Typography component="h3">
-                  <strong>quangduong</strong>
+                  <strong>{username}</strong>
                 </Typography>
               </NextLink>
             </Box>
@@ -98,10 +99,14 @@ function Header() {
         <Box className={clsx([classes.menu])}>
           <UncontrolledDropdown>
             <DropdownToggle tag="span" caret>
-              <img src="" width={30} height={30} />
+              <img src={info.image} width={30} height={30} />
             </DropdownToggle>
             <DropdownMenu right>
-              <DropdownItem className={clsx([classes.username])}>quangduong</DropdownItem>
+              <DropdownItem className={clsx([classes.username])}>
+                <NextLink href={`/user/${id}`} as={`/user/${id}`} prefetch={false}>
+                  {username}
+                </NextLink>
+              </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>Sign out</DropdownItem>
             </DropdownMenu>
@@ -111,11 +116,11 @@ function Header() {
     }
     return (
       <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
-        <NextLink href="/signin">
+        <NextLink href="/signin" as={{ path: '/signin' }} prefetch={false}>
           <Button variant="text">Sign in</Button>
         </NextLink>
         &nbsp;&nbsp;
-        <NextLink href="/signup">
+        <NextLink href="/signup" as={{ path: '/signup' }} prefetch={false}>
           <Button variant="outlined">Sign up</Button>
         </NextLink>
       </Box>
