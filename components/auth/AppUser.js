@@ -1,5 +1,5 @@
 /**
- * @typedef {{ id: string, username: string, email: string, image: Object<string, string> }} UserData
+ * @typedef {{ id: string, username: string, email: string, info: Object<string, string> }} UserData
  * @typedef {{ user: UserData }} User
  */
 

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { get } from 'lodash';
+import { get, isObject } from 'lodash';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
 
@@ -10,10 +10,10 @@ import Header from '../Header';
  * @param {React.Component} BaseComponent
  */
 function withLayout(BaseComponent) {
-  const Layout = () => (
+  const Layout = (pageProps) => (
     <>
-      <Header />
-      <BaseComponent />
+      <Header {...pageProps} />
+      <BaseComponent {...pageProps} />
     </>
   );
 
@@ -21,14 +21,28 @@ function withLayout(BaseComponent) {
     const paletteType = new Cookies().get('paletteType') || 'light';
     try {
       const authRes = await axios.post('/api/user', null, { withCredentials: true });
-      return { theme: get(context, ['req', 'cookies', 'paletteType'], paletteType), user: authRes.data };
+      return {
+        theme: get(context, ['req', 'cookies', 'paletteType'], paletteType),
+        user: isObject(authRes.data) ? authRes.data : null
+      };
     } catch (err) {
       return { theme: get(context, ['req', 'cookies', 'paletteType'], paletteType), user: null };
     }
   };
 
   Layout.propTypes = {
-    theme: PropTypes.string
+    theme: PropTypes.string,
+    user: PropTypes.shape({
+      id: PropTypes.string,
+      email: PropTypes.string,
+      username: PropTypes.string,
+      type: PropTypes.oneOf(['teacher', 'student']),
+      info: PropTypes.shape({
+        fullname: PropTypes.string,
+        birthday: PropTypes.string,
+        image: PropTypes.string
+      })
+    })
   };
 
   return Layout;

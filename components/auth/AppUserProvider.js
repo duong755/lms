@@ -30,20 +30,17 @@ function AppUserProvider(props) {
 }
 
 AppUserProvider.propTypes = {
-  user: PropTypes.oneOfType([
-    null,
-    PropTypes.shape({
-      id: PropTypes.string,
-      username: PropTypes.string,
-      email: PropTypes.string,
-      type: PropTypes.oneOf(['teacher', 'student']),
-      info: PropTypes.shape({
-        fullname: PropTypes.string,
-        birthday: PropTypes.string,
-        image: PropTypes.string
-      })
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string,
+    email: PropTypes.string,
+    type: PropTypes.oneOf(['teacher', 'student']),
+    info: PropTypes.shape({
+      fullname: PropTypes.string,
+      birthday: PropTypes.string,
+      image: PropTypes.string
     })
-  ]),
+  }),
   children: PropTypes.node.isRequired
 };
 

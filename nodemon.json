@@ -4,6 +4,8 @@
     "components",
     "pages",
     ".vscode",
-    ".next"
+    ".next",
+    "public",
+    "docs"
   ]
 }
