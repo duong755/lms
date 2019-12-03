@@ -7,7 +7,7 @@ import Header from '../Header';
 
 /**
  *
- * @param {React.Component} BaseComponent
+ * @param {React.FC} BaseComponent
  */
 function withLayout(BaseComponent) {
   const Layout = (pageProps) => (
@@ -19,14 +19,25 @@ function withLayout(BaseComponent) {
 
   Layout.getInitialProps = async (context) => {
     const paletteType = new Cookies().get('paletteType') || 'light';
+    let componentProps = {};
+
+    if (BaseComponent.getInitialProps) {
+      componentProps = await BaseComponent.getInitialProps(context);
+    }
+
     try {
       const authRes = await axios.post('/api/user', null, { withCredentials: true });
       return {
         theme: get(context, ['req', 'cookies', 'paletteType'], paletteType),
-        user: isObject(authRes.data) ? authRes.data : null
+        user: isObject(authRes.data) ? authRes.data : null,
+        ...componentProps
       };
     } catch (err) {
-      return { theme: get(context, ['req', 'cookies', 'paletteType'], paletteType), user: null };
+      return {
+        theme: get(context, ['req', 'cookies', 'paletteType'], paletteType),
+        user: null,
+        ...componentProps
+      };
     }
   };
 
