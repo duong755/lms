@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import NextLink from 'next/link';
 
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
@@ -16,6 +17,9 @@ function Home() {
         <Container maxWidth="xl">
           <Box pt={3} display="flex" flexDirection="row" justifyContent="center" alignItems="center">
             <Typography variant="h4">Welcome to OpenLMS</Typography>
+            <NextLink href="/signup">
+              <a href="/signup">Sign up</a>
+            </NextLink>
           </Box>
         </Container>
       </Box>

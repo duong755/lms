@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
 import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
@@ -61,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Header() {
+  const [fetchingUser, setFetchingUser] = useState(true);
   const [menuExpand, setMenuExpand] = useState(false);
   const themeContext = useContext(AppTheme);
   const userContext = useContext(AppUser);
@@ -83,6 +85,9 @@ function Header() {
       })
       .catch(() => {
         userContext.setUser(null);
+      })
+      .finally(() => {
+        setFetchingUser(false);
       });
   }, []);
 
@@ -192,7 +197,7 @@ function Header() {
                 [classes.hideMenu]: matchDownXS && !menuExpand
               })}
             >
-              <Account />
+              {fetchingUser ? <CircularProgress color="primary" /> : <Account />}
             </Box>
           </NoSsr>
         </Box>
