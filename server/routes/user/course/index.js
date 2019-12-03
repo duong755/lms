@@ -2,6 +2,7 @@ const { Router } = require('express');
 
 const auth = require('../../../middlewares/auth');
 const isCourseCreator = require('../../../middlewares/isCourseCreator');
+const courseService = require('../../../services/Course');
 
 const lessonRouter = require('./lesson');
 const memberRouter = require('./member');
@@ -36,8 +37,33 @@ courseRouter.get('/:courseId', (req, res) => {
 /**
  * update course
  */
-courseRouter.put('/:courseId', auth, isCourseCreator, (req, res) => {
-  res.end('/api/user/:userId/course/:courseId');
+courseRouter.put('/:courseId', auth, isCourseCreator, async (req, res) => {
+  const user = res.locals.user;
+  try {
+    let course = await courseService.getCourseById(user.id, req.params.courseId);
+    course = course.body._source;
+    const changeCourse = {
+      courseId: req.params.courseId,
+      teacherId: res.locals.user.id,
+      courseName: req.body.courseName === undefined ? course.course_name : req.body.courseName,
+      description: req.body.description === undefined ? course.description : req.body.description,
+      archive: req.body.description === undefined ? course.archive : req.body.archive
+    };
+
+    const upsertResult = await courseService.upsertCourse(
+      changeCourse,
+      ['teacher_id', 'id', 'course_name', 'description', 'archive'],
+      false
+    );
+
+    if (upsertResult.wasApplied()) {
+      res.status(200).json({ success: 'update course successfully' });
+    } else {
+      res.status(500).json({ err: 'Unexpected error occured' });
+    }
+  } catch (err) {
+    res.status(500).json({ err: err });
+  }
 });
 
 /**
