@@ -1,6 +1,8 @@
-import { useContext, useCallback, useState } from 'react';
+import { useContext, useCallback, useState, useEffect } from 'react';
 import NextLink from 'next/link';
 import clsx from 'clsx';
+import fetch from 'isomorphic-unfetch';
+import { isObject } from 'lodash';
 
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -14,11 +16,14 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
 import Hidden from '@material-ui/core/Hidden';
+import Link from '@material-ui/core/Link';
 
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 import AppTheme from './theme/AppTheme';
 import AppUser from './auth/AppUser';
+
+import fullURL from './helpers/URL';
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -62,6 +67,24 @@ function Header() {
   const theme = useTheme();
   const matchDownXS = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true });
   const classes = useStyles();
+  useEffect(() => {
+    fetch(fullURL('/api/user'), {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin'
+    })
+      .then(async (response) => {
+        const json = await response.json();
+        if (isObject(json)) {
+          userContext.setUser(json);
+        } else {
+          userContext.setUser(null);
+        }
+      })
+      .catch(() => {
+        userContext.setUser(null);
+      });
+  }, []);
 
   const themeIcon = useCallback(() => {
     if (themeContext.theme === 'dark') {
@@ -75,7 +98,7 @@ function Header() {
   }, [menuExpand]);
 
   const Account = useCallback(() => {
-    if (userContext.user) {
+    if (isObject(userContext.user)) {
       const { id, username, info } = userContext.user;
       if (matchDownXS) {
         return (
@@ -83,9 +106,11 @@ function Header() {
             <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
               <img src={info.image} width={30} height={30} />
               <NextLink href={`/user/${id}`} as={`/user/${id}`} prefetch={false}>
-                <Typography component="h3">
-                  <strong>{username}</strong>
-                </Typography>
+                <Link href={`/user/${id}`} as={`/user/${id}`}>
+                  <Typography component="h3">
+                    <strong>{username}</strong>
+                  </Typography>
+                </Link>
               </NextLink>
             </Box>
             <Divider color={theme.palette.divider} />
@@ -104,7 +129,9 @@ function Header() {
             <DropdownMenu right>
               <DropdownItem className={clsx([classes.username])}>
                 <NextLink href={`/user/${id}`} as={`/user/${id}`} prefetch={false}>
-                  {username}
+                  <Link href={`/user/${id}`} as={`/user/${id}`}>
+                    {username}
+                  </Link>
                 </NextLink>
               </DropdownItem>
               <DropdownItem divider />

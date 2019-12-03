@@ -89,11 +89,6 @@ const generateToken = (req, res) => {
           path: '/',
           expires: expireAt
         });
-        res.cookie('lms.user', user, {
-          sameSite: true,
-          path: '/',
-          expires: expireAt
-        });
         res.status(200).json({
           successful: true,
           token: encoded,

@@ -158,15 +158,10 @@ const signIn = async (req, res) => {
         expires: expiresAt,
         httpOnly: true
       });
-      res.cookie('lms.user', user, {
-        path: '/',
-        sameSite: true,
-        expires: expiresAt
-      });
 
       res
         .status(200)
-        .json({ successful: true, token: token })
+        .json({ successful: true, token: token, user: user })
         .end();
     } else {
       res.status(500).json({
