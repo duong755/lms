@@ -1,5 +1,7 @@
 const { Router } = require('express');
 
+const auth = require('../../../../../middlewares/auth');
+
 const commentRouter = Router({ mergeParams: true });
 
 /**
@@ -12,7 +14,7 @@ commentRouter.get('/', (req, res) => {
 /**
  * create comment
  */
-commentRouter.post('/', (req, res) => {
+commentRouter.post('/', auth, (req, res) => {
   res.end('/api/user/:userId/course/:courseId/lesson/:lessonId/comment');
 });
 
