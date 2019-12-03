@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { isObject } = require('lodash');
 
 const courseRouter = require('./course');
 
@@ -8,7 +9,11 @@ const userRouter = Router({ mergeParams: true });
  * auth user info
  */
 userRouter.all('/', (req, res) => {
-  res.status(200).json(res.locals.user);
+  if (isObject(res.locals.user)) {
+    res.status(200).json(res.locals.user);
+    return;
+  }
+  res.status(200).json(null);
 });
 
 /**

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
-import { get, isObject } from 'lodash';
+import { get } from 'lodash';
 import { Cookies } from 'react-cookie';
-import axios from 'axios';
 
 import Header from '../Header';
 
@@ -25,20 +24,10 @@ function withLayout(BaseComponent) {
       componentProps = await BaseComponent.getInitialProps(context);
     }
 
-    try {
-      const authRes = await axios.post('/api/user', null, { withCredentials: true });
-      return {
-        theme: get(context, ['req', 'cookies', 'paletteType'], paletteType),
-        user: isObject(authRes.data) ? authRes.data : null,
-        ...componentProps
-      };
-    } catch (err) {
-      return {
-        theme: get(context, ['req', 'cookies', 'paletteType'], paletteType),
-        user: null,
-        ...componentProps
-      };
-    }
+    return {
+      theme: get(context, ['req', 'cookies', 'paletteType'], paletteType),
+      ...componentProps
+    };
   };
 
   Layout.propTypes = {

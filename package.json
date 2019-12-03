@@ -39,7 +39,7 @@
     "express": "4.17.1",
     "formik": "2.0.6",
     "helmet": "3.21.2",
-    "isomorphic-unfetch": "^3.0.0",
+    "isomorphic-unfetch": "3.0.0",
     "jsonwebtoken": "8.5.1",
     "lodash": "^4.17.15",
     "morgan": "1.9.1",
