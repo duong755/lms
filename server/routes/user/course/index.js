@@ -3,6 +3,7 @@ const { Router } = require('express');
 const auth = require('../../../middlewares/auth');
 const isCourseCreator = require('../../../middlewares/isCourseCreator');
 const courseService = require('../../../services/Course');
+const userService = require('../../../services/User');
 
 const lessonRouter = require('./lesson');
 const memberRouter = require('./member');
@@ -16,15 +17,25 @@ const courseRouter = Router({ mergeParams: true });
 /**
  * course pagination
  */
-courseRouter.get('/', (req, res) => {
-  /**
-   * if (student) {
-   *
-   * } else { // teacher
-   *
-   * }
-   */
-  res.end('/api/user/:userId/course');
+courseRouter.get('/', auth, async (req, res) => {
+  try {
+    const userResult = await userService.getUserById(res.locals.user.id);
+    if (userResult.body.found) {
+      if (userResult.body._source.type === 'teacher') {
+        const courseResult = await courseService.getCoursesByTeacher(res.locals.user.id);
+        const courses = courseResult.body.hits.hits.map((current) => current._source);
+        res.status(200).json({ courses: courses });
+      } else {
+        const courseResult = await courseService.getCoursesByStudent(res.locals.user.id);
+        const courses = courseResult.body.hits.hits.map((current) => current._source);
+        res.status(200).json({ courses: courses });
+      }
+    } else {
+      res.status(500).json({ error: 'Can not find user' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
 });
 
 /**
