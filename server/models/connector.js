@@ -15,6 +15,10 @@ const cassandraClient = new cassandra.Client({
     map: Map,
     set: Set
   },
+  credentials: {
+    username: process.env.CASSANDRA_USERNAME || 'cassandra',
+    password: process.env.CASSANDRA_PASSWORD || 'cassandra'
+  },
   queryOptions: {
     keyspace: KEYSPACE,
     traceQuery: true,
