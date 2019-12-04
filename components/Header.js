@@ -1,5 +1,6 @@
 import { useContext, useCallback, useState, useEffect } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import fetch from 'isomorphic-unfetch';
 import { isObject } from 'lodash';
@@ -33,6 +34,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column'
+    }
+  },
+  brandLink: {
+    color: theme.palette.common.white,
+    '&:hover': {
+      color: theme.palette.common.white,
+      textDecoration: 'none'
     }
   },
   showMenu: {
@@ -69,6 +77,8 @@ function Header() {
   const theme = useTheme();
   const matchDownXS = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true });
   const classes = useStyles();
+  const router = useRouter();
+
   useEffect(() => {
     fetch(fullURL('/api/user'), {
       method: 'POST',
@@ -102,6 +112,21 @@ function Header() {
     setMenuExpand(!menuExpand);
   }, [menuExpand]);
 
+  const signOut = useCallback(() => {
+    userContext.setUser(null);
+    fetch(fullURL('/api/signout'), {
+      method: 'DELETE',
+      credentials: 'include',
+      mode: 'same-origin'
+    })
+      .then((res) => {
+        if (res.ok) {
+          router.reload();
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   const Account = useCallback(() => {
     if (isObject(userContext.user)) {
       const { id, username, info } = userContext.user;
@@ -119,7 +144,7 @@ function Header() {
               </NextLink>
             </Box>
             <Divider color={theme.palette.divider} />
-            <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
+            <Box display="flex" alignItems="center" justifyContent="flex-end" py={1} onClick={signOut}>
               <Icon>exit_to_app</Icon>&nbsp;<strong>Sign Out</strong>
             </Box>
           </Box>
@@ -134,13 +159,13 @@ function Header() {
             <DropdownMenu right>
               <DropdownItem className={clsx([classes.username])}>
                 <NextLink href={`/user/${id}`} as={`/user/${id}`} prefetch={false}>
-                  <Link href={`/user/${id}`} as={`/user/${id}`}>
+                  <Link color="primary" href={`/user/${id}`}>
                     {username}
                   </Link>
                 </NextLink>
               </DropdownItem>
               <DropdownItem divider />
-              <DropdownItem>Sign out</DropdownItem>
+              <DropdownItem onClick={signOut}>Sign out</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </Box>
@@ -172,9 +197,13 @@ function Header() {
               alignSelf="stretch"
               px={theme.spacing(0.5)}
             >
-              <Typography>
-                <strong>OpenLMS</strong>
-              </Typography>
+              <NextLink href="/" prefetch={false}>
+                <Link className={clsx(classes.brandLink)} href="/">
+                  <Typography>
+                    <strong>OpenLMS</strong>
+                  </Typography>
+                </Link>
+              </NextLink>
             </Box>
             <Box>
               <IconButton color="default">

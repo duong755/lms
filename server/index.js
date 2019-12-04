@@ -24,7 +24,7 @@ app
 
     server.use(helmet());
     server.use(compression());
-    server.use(logger('dev'));
+    server.use(logger('dev', { skip: (req) => /^\/_next/.test(req.path) }));
     server.use(express.json());
     server.use(express.raw());
     server.use(express.text());
