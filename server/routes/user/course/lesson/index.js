@@ -6,13 +6,14 @@ const auth = require('../../../../middlewares/auth');
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const { cassandraTypes } = require('../../../../models/connector');
 const lessonService = require('../../../../services/Lesson');
+const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 
 const lessonRouter = Router({ mergeParams: true });
 
 /**
  * lesson pagination
  */
-lessonRouter.get('/', (req, res) => {
+lessonRouter.get('/', auth, canAccessCourse, async (req, res) => {
   res.end('/api/user/:userId/course/:courseId/lesson');
 });
 
@@ -43,8 +44,18 @@ lessonRouter.post('/', auth, isCourseCreator, async (req, res) => {
 /**
  * get lesson data
  */
-lessonRouter.get('/:lessonId', (req, res) => {
-  res.end('/api/user/:userId/course/:courseId/lesson/:lessonId');
+lessonRouter.get('/:lessonId', auth, canAccessCourse, async (req, res) => {
+  try {
+    const result = await lessonService.getLessonById(req.params.userId, req.params.courseId, req.params.lessonId);
+    const lesson = result.body._source;
+    if (result.body.found) {
+      res.status(200).json({ lesson: lesson });
+    } else {
+      res.status(500).json({ error: 'Unexpected error occured' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
 });
 
 /**
