@@ -28,7 +28,7 @@ courseRouter.get('/', auth, async (req, res) => {
       } else {
         const courseResult = await courseService.getCoursesByStudent(res.locals.user.id);
         const courses = courseResult.body.hits.hits.map((current) => current._source);
-        res.status(200).json({ courses: courses, total: courseResult.body.hits.total});
+        res.status(200).json({ courses: courses, total: courseResult.body.hits.total });
       }
     } else {
       res.status(500).json({ error: 'Can not find user' });
