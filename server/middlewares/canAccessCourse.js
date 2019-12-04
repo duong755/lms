@@ -14,13 +14,11 @@ const canAccessCourse = async (req, res, next) => {
     if (result.body.found && course.members.indexOf(user.id) >= 0) {
       next();
     } else {
-      res.status(500).json({ error: 'Unexpected error occured' });
+      res.status(400).json({ error: 'Can not access this course' });
     }
   } catch (error) {
     res.status(500).json({ error: error });
   }
-
-  next();
 };
 
 module.exports = canAccessCourse;
