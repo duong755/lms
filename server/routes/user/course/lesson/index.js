@@ -18,7 +18,7 @@ lessonRouter.get('/', auth, canAccessCourse, async (req, res) => {
   try {
     const result = await lessonService.getLessonsByTeacherAndCourse(req.params.userId, req.params.courseId, page);
     const lessons = result.body.hits.hits.map((current) => current._source);
-    res.status(200).json({ lessons: lessons });
+    res.status(200).json({ lessons: lessons, total: result.body.hits.total });
   } catch (error) {
     res.status(400).json({ error: error });
   }

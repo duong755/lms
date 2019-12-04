@@ -24,11 +24,11 @@ courseRouter.get('/', auth, async (req, res) => {
       if (userResult.body._source.type === 'teacher') {
         const courseResult = await courseService.getCoursesByTeacher(res.locals.user.id);
         const courses = courseResult.body.hits.hits.map((current) => current._source);
-        res.status(200).json({ courses: courses });
+        res.status(200).json({ courses: courses, total: courseResult.body.hits.total });
       } else {
         const courseResult = await courseService.getCoursesByStudent(res.locals.user.id);
         const courses = courseResult.body.hits.hits.map((current) => current._source);
-        res.status(200).json({ courses: courses });
+        res.status(200).json({ courses: courses, total: courseResult.body.hits.total});
       }
     } else {
       res.status(500).json({ error: 'Can not find user' });
