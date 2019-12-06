@@ -18,6 +18,7 @@ import Icon from '@material-ui/core/Icon';
 import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
+import NoSsr from '@material-ui/core/NoSsr';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
 import { UncontrolledAlert } from 'reactstrap';
@@ -27,7 +28,7 @@ import * as Yup from 'yup';
 
 import withLayout from '../../components/lib/withLayout';
 import AppUser from '../../components/auth/AppUser';
-import fullURL from '../../components/helpers/URL';
+import absURL from '../../components/helpers/URL';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(3)
   },
   formHelperText: {
+    marginLeft: 0,
     color: theme.palette.error.main
   }
 }));
@@ -55,7 +57,7 @@ const signInValidationSchema = Yup.object().shape({
   error: Yup.boolean().notRequired()
 });
 
-const initialSignInFormValue = {
+const initialSignInFormValues = {
   emailOrUsername: '',
   password: '',
   error: false
@@ -66,11 +68,11 @@ function SignInForm() {
   const router = useRouter();
   const classes = useStyles();
   const formik = useFormik({
-    initialValues: initialSignInFormValue,
+    initialValues: initialSignInFormValues,
     validationSchema: signInValidationSchema,
     onSubmit: async (values, helpers) => {
       try {
-        const signInRes = await fetch(fullURL('/api/signin'), {
+        const signInRes = await fetch(absURL('/api/signin'), {
           method: 'POST',
           credentials: 'include',
           mode: 'same-origin',
@@ -186,8 +188,9 @@ function SignInForm() {
 function SignIn(props) {
   const router = useRouter();
   const classes = useStyles();
+  const userContext = useContext(AppUser);
   useEffect(() => {
-    if (isObject(props.user)) {
+    if (isObject(props.user) || isObject(userContext.user)) {
       router.replace('/');
     }
   }, []);
@@ -199,25 +202,27 @@ function SignIn(props) {
       </Head>
       <Box>
         <Container maxWidth="xl">
-          {!isObject(props.user) && (
-            <Grid className={classes.root} container component="main" justify="center" alignItems="center">
-              <Grid item xs={12} sm={8} md={6}>
-                <Box className={classes.form} display="flex" flexDirection="column" alignItems="stretch">
-                  <Typography gutterBottom align="center" variant="h4">
-                    <strong>Sign in to OpenLMS</strong>
-                  </Typography>
+          {!isObject(userContext.user) && (
+            <NoSsr>
+              <Grid className={classes.root} container component="main" justify="center" alignItems="center">
+                <Grid item xs={12} sm={8} md={6}>
+                  <Box className={classes.form} display="flex" flexDirection="column" alignItems="stretch">
+                    <Typography gutterBottom align="center" variant="h4">
+                      <strong>Sign in to OpenLMS</strong>
+                    </Typography>
 
-                  <SignInForm />
+                    <SignInForm />
 
-                  <Box height={30} />
-                  <Button color="primary" variant="outlined" fullWidth>
-                    <NextLink href="/signup">
-                      <Link href="/signup">CREATE AN ACCOUNT</Link>
-                    </NextLink>
-                  </Button>
-                </Box>
+                    <Box height={30} />
+                    <Button color="primary" variant="outlined" fullWidth>
+                      <NextLink href="/signup">
+                        <Link href="/signup">CREATE AN ACCOUNT</Link>
+                      </NextLink>
+                    </Button>
+                  </Box>
+                </Grid>
               </Grid>
-            </Grid>
+            </NoSsr>
           )}
         </Container>
       </Box>

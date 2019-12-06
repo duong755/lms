@@ -6,8 +6,8 @@ const baseURL = typeof window !== 'undefined' ? window.location.origin : `http:/
  *
  * @param {string} path
  */
-const fullURL = (path) => {
+const absURL = (path) => {
   return url.resolve(baseURL, path);
 };
 
-export default fullURL;
+export default absURL;

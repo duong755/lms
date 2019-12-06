@@ -32,7 +32,7 @@ const signUpSchema = Joi.object({
  */
 const unauth = (req, res, next) => {
   if (req.isAuthenticated()) {
-    res.status(400).json({
+    res.status(403).json({
       error: 'You need to sign out first'
     });
   } else {
@@ -102,8 +102,9 @@ const validateUniqueness = async (req, res, next) => {
       });
     }
   } catch (err) {
+    console.error(err);
     res.status(500).json({
-      error: err.message
+      error: process.env.NODE_ENV === 'production' ? 'Unexpected error occured, please try again' : err.message
     });
   }
 };
@@ -115,7 +116,7 @@ const createUser = async (req, res, next) => {
   try {
     const hashPassword = await bcrypt.hash(req.body.password, 10);
     const user = {
-      userId: types.Uuid.random(),
+      userId: String(types.Uuid.random()),
       username: req.body.username,
       email: req.body.email,
       hashPassword: hashPassword,
@@ -131,8 +132,9 @@ const createUser = async (req, res, next) => {
       });
     }
   } catch (err) {
+    console.error(err);
     res.status(500).json({
-      error: err.message
+      error: process.env.NODE_ENV === 'production' ? 'Unexpected error occured, please try again' : err.message
     });
   }
 };
@@ -164,8 +166,9 @@ const signIn = async (req, res) => {
         .json({ successful: true, token: token, user: user })
         .end();
     } else {
-      res.status(500).json({
-        error: 'Cannot signin'
+      res.status(201).json({
+        successful: true,
+        message: 'Create new account'
       });
     }
   } catch (err) {

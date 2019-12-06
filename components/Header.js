@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
 import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
+import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
@@ -25,7 +26,7 @@ import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from
 import AppTheme from './theme/AppTheme';
 import AppUser from './auth/AppUser';
 
-import fullURL from './helpers/URL';
+import absURL from './helpers/URL';
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -42,6 +43,15 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.white,
       textDecoration: 'none'
     }
+  },
+  avatarContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: '50%'
   },
   showMenu: {
     display: 'flex',
@@ -80,7 +90,7 @@ function Header() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(fullURL('/api/user'), {
+    fetch(absURL('/api/user'), {
       method: 'POST',
       credentials: 'same-origin',
       mode: 'same-origin'
@@ -114,7 +124,7 @@ function Header() {
 
   const signOut = useCallback(() => {
     userContext.setUser(null);
-    fetch(fullURL('/api/signout'), {
+    fetch(absURL('/api/signout'), {
       method: 'DELETE',
       credentials: 'include',
       mode: 'same-origin'
@@ -134,7 +144,7 @@ function Header() {
         return (
           <Box className={clsx([classes.menu])}>
             <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
-              <img src={info.image} width={30} height={30} />
+              <Avatar classes={{ img: classes.avatar }} src={info.image} />
               <NextLink href={`/user/${id}`} as={`/user/${id}`} prefetch={false}>
                 <Link href={`/user/${id}`} as={`/user/${id}`}>
                   <Typography component="h3">
@@ -153,8 +163,8 @@ function Header() {
       return (
         <Box className={clsx([classes.menu])}>
           <UncontrolledDropdown>
-            <DropdownToggle tag="span" caret>
-              <img src={info.image} width={30} height={30} />
+            <DropdownToggle className={clsx([classes.avatarContainer])} tag="span" caret>
+              <Avatar classes={{ img: classes.avatar }} src={info.image} />
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem className={clsx([classes.username])}>
