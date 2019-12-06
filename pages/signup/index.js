@@ -52,7 +52,9 @@ const signUpValidationSchema = Yup.object().shape({
     .email('"email" must be a valid email')
     .required('"email" is required'),
   password: Yup.string().required('"password" is required'),
-  confirmPassword: Yup.string().oneOf([Yup.ref('password')], 'password does not match'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'password does not match')
+    .required('Retype your password'),
   type: Yup.string()
     .oneOf(['teacher', 'student'], '"type" must be one of [teacher, student]')
     .required(),
