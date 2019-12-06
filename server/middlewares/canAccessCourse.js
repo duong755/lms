@@ -11,7 +11,7 @@ const canAccessCourse = async (req, res, next) => {
   try {
     const result = await courseService.getCourseById(teacherId, req.params.courseId);
     const course = result.body._source;
-    if (result.body.found && course.members.indexOf(user.id) >= 0) {
+    if (result.body.found && (course.members.indexOf(user.id) >= 0 || user.id === course.teacher_id)) {
       next();
     } else {
       res.status(400).json({ error: 'Can not access this course' });

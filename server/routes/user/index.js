@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
 
-const auth = require('../../middlewares/auth');
 const userService = require('../../services/User');
 
 const courseRouter = require('./course');
@@ -18,7 +17,7 @@ userRouter.all('/', (req, res) => {
 /**
  * get user data
  */
-userRouter.get('/:userId', auth, async (req, res) => {
+userRouter.get('/:userId', async (req, res) => {
   try {
     const user = await userService.getUserById(req.params.userId);
     if (user.body.found) {
@@ -34,15 +33,31 @@ userRouter.get('/:userId', auth, async (req, res) => {
 /**
  * edit user data
  */
-userRouter.put('/:userId', auth, async (req, res) => {
+userRouter.put('/:userId', async (req, res) => {
   try {
-    if (req.body.password !== undefined) {
-      const hashPassword = await bcrypt.hash(req.body.password, 10);
-      const updateResult = await userService.updateUserPassword(req.params.userId, hashPassword);
-      if (updateResult.wasApplied()) {
-        res.status(200).json({ success: 'Update password successfully' });
+    if (req.body.newPassword !== undefined) {
+      const oldPassword = req.body.oldPassword;
+      const newPassword = req.body.newPassword;
+      const hashPassword = await bcrypt.hash(req.body.newPassword, 10);
+      const user = await userService.getUserById(req.params.userId);
+      if (user.body.found) {
+        const resultCompare = await bcrypt.compare(oldPassword, user.body._source.hashPassword);
+        if (resultCompare) {
+          if (newPassword !== user.body._source.hashPassword) {
+            const resultUpdate = await userService.updateUserPassword(req.params.userId, hashPassword);
+            if (resultUpdate.wasApplied()) {
+              res.status(200).json({ success: 'Update password successfully' });
+            } else {
+              res.status(500).jsonon({ error: 'Can not update password' });
+            }
+          } else {
+            res.status(400).json({ error: 'New password must be different old password' });
+          }
+        } else {
+          res.status(400).json({ error: 'Old password does not match or new' });
+        }
       } else {
-        res.status(500).json({ error: 'Can not update password' });
+        res.status(404).json({ error: 'Can not find this user' });
       }
     } else if (req.body.username !== undefined) {
       const updateResult = await userService.updateUserName(req.params.userId, req.body.username);

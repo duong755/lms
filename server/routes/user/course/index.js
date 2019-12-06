@@ -1,9 +1,9 @@
 const { Router } = require('express');
 
-const auth = require('../../../middlewares/auth');
 const isCourseCreator = require('../../../middlewares/isCourseCreator');
 const courseService = require('../../../services/Course');
 const userService = require('../../../services/User');
+const canAccessCourse = require('../../../middlewares/canAccessCourse');
 
 const lessonRouter = require('./lesson');
 const memberRouter = require('./member');
@@ -17,7 +17,7 @@ const courseRouter = Router({ mergeParams: true });
 /**
  * course pagination
  */
-courseRouter.get('/', auth, async (req, res) => {
+courseRouter.get('/', async (req, res) => {
   try {
     const userResult = await userService.getUserById(res.locals.user.id);
     if (userResult.body.found) {
@@ -31,7 +31,7 @@ courseRouter.get('/', auth, async (req, res) => {
         res.status(200).json({ courses: courses, total: courseResult.body.hits.total });
       }
     } else {
-      res.status(500).json({ error: 'Can not find user' });
+      res.status(404).json({ error: 'Can not find user' });
     }
   } catch (error) {
     res.status(500).json({ error: error });
@@ -41,21 +41,33 @@ courseRouter.get('/', auth, async (req, res) => {
 /**
  * get course data
  */
-courseRouter.get('/:courseId', (req, res) => {
+courseRouter.get('/:courseId', canAccessCourse, async (req, res) => {
+  const courseId = req.params.courseId;
+  const teacherId = req.params.userId;
+  try {
+    const result = await courseService.getCourseById(teacherId, courseId);
+    if (result.body.found) {
+      res.status(200).json({ course: result.body._source });
+    } else {
+      res.status(404).json({ error: 'Can not find this course' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
   res.end('/api/user/:userId/course/:courseId');
 });
 
 /**
  * update course
  */
-courseRouter.put('/:courseId', auth, isCourseCreator, async (req, res) => {
-  const user = res.locals.user;
+courseRouter.put('/:courseId', isCourseCreator, async (req, res) => {
+  const teacherId = req.params.userId;
   try {
-    let course = await courseService.getCourseById(user.id, req.params.courseId);
+    let course = await courseService.getCourseById(teacherId, req.params.courseId);
     course = course.body._source;
     const changeCourse = {
       courseId: req.params.courseId,
-      teacherId: res.locals.user.id,
+      teacherId: teacherId,
       courseName: req.body.courseName === undefined ? course.course_name : req.body.courseName,
       description: req.body.description === undefined ? course.description : req.body.description,
       archive: req.body.description === undefined ? course.archive : req.body.archive
@@ -70,10 +82,10 @@ courseRouter.put('/:courseId', auth, isCourseCreator, async (req, res) => {
     if (upsertResult.wasApplied()) {
       res.status(200).json({ success: 'update course successfully' });
     } else {
-      res.status(500).json({ err: 'Unexpected error occured' });
+      res.status(500).json({ error: 'Unexpected error occured' });
     }
   } catch (err) {
-    res.status(500).json({ err: err });
+    res.status(500).json({ error: err });
   }
 });
 
