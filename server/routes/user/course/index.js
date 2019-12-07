@@ -34,7 +34,8 @@ courseRouter.get('/', async (req, res) => {
       res.status(404).json({ error: 'Can not find user' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 
@@ -52,9 +53,10 @@ courseRouter.get('/:courseId', canAccessCourse, async (req, res) => {
       res.status(404).json({ error: 'Can not find this course' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
-  res.end('/api/user/:userId/course/:courseId');
+  // res.end('/api/user/:userId/course/:courseId');
 });
 
 /**
@@ -84,8 +86,9 @@ courseRouter.put('/:courseId', isCourseCreator, async (req, res) => {
     } else {
       res.status(500).json({ error: 'Unexpected error occured' });
     }
-  } catch (err) {
-    res.status(500).json({ error: err });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 

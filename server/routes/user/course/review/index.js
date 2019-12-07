@@ -16,7 +16,8 @@ reviewRouter.get('/', async (req, res) => {
     const total = resultGet.body.hits.total;
     res.status(200).json({ reviews: reviews, total: total });
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
   // res.end('/api/user/:userId/course/:courseId/review');
 });
@@ -48,7 +49,8 @@ reviewRouter.post('/', async (req, res) => {
       res.status(400).json({ error: 'Can not create new review' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
   // res.end('/api/user/:userId/course/:courseId/review');
 });
@@ -81,7 +83,8 @@ reviewRouter.put('/:studentId', async (req, res) => {
       res.status(400).json({ error: 'Can not update this review' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
   // res.end('/api/user/:userId/course/:courseId/review/:studentId');
 });
@@ -98,9 +101,10 @@ reviewRouter.delete('/:studentId', async (req, res) => {
       res.status(400).json({ error: 'Can not delete this review' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
-  res.end('/api/user/:userId/course/:courseId/review/:studentId');
+  // res.end('/api/user/:userId/course/:courseId/review/:studentId');
 });
 
 module.exports = reviewRouter;

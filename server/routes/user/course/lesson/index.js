@@ -42,8 +42,9 @@ lessonRouter.post('/', isCourseCreator, async (req, res) => {
     } else {
       res.status(500).json({ error: 'Can not create this course' });
     }
-  } catch (err) {
-    res.status(500).json({ error: err });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 
@@ -60,7 +61,8 @@ lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
       res.status(404).json({ error: 'Can not find this course' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 
@@ -92,7 +94,8 @@ lessonRouter.put('/:lessonId', isCourseCreator, async (req, res) => {
       res.status(500).json({ error: 'Can not update this lesson' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 
@@ -108,7 +111,8 @@ lessonRouter.delete('/:lessonId', isCourseCreator, async (req, res) => {
       res.status(500).json({ error: 'Can not delete this course' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 

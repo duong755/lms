@@ -26,7 +26,8 @@ userRouter.get('/:userId', async (req, res) => {
       res.status(500).json({ error: 'can not find user infomation' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 
@@ -84,9 +85,10 @@ userRouter.put('/:userId', async (req, res) => {
       res.status(400).json({ error: 'Bad request' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
-  res.end('/api/user/:userId');
+  // res.end('/api/user/:userId');
 });
 
 userRouter.use('/:userId/course', courseRouter);

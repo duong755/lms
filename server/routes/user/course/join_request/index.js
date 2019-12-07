@@ -14,7 +14,8 @@ joinRequestRouter.get('/', async (req, res) => {
     const joinRequests = result.body.hits.hits.map((current) => current._source);
     res.status(200).json({ joinRequests: joinRequests, total: result.body.hits.total });
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 
@@ -33,7 +34,8 @@ joinRequestRouter.post('/', async (req, res) => {
       res.status(500).json({ error: 'Can not create join request' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
 });
 
@@ -52,7 +54,8 @@ joinRequestRouter.post('/:studentId', isCourseCreateor, async (req, res) => {
       res.status(500).json({ error: 'Can not accept this join request' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
   // res.end('/api/user/:userId/course/:courseId/join_request/:studentId');
 });
@@ -72,7 +75,8 @@ joinRequestRouter.delete('/:studentId', isCourseCreateor, async (req, res) => {
       res.status(500).json({ error: 'Can not decline this join request' });
     }
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.error();
+    res.status(500).json({ error: 'Unexpected error occured' });
   }
   // res.end('/api/user/:userId/course/:courseId/join_request/:studentId');
 });
