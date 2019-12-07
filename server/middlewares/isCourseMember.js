@@ -16,10 +16,9 @@ const isCourseMember = async (req, res, next) => {
       res.status(400).json({ error: 'you are not in this course' });
     }
   } catch (error) {
-    res.send(500).json({ error: error });
+    console.error(error);
+    res.send(500).json({ error: 'Unexpected error occured' });
   }
-
-  next();
 };
 
 module.exports = isCourseMember;

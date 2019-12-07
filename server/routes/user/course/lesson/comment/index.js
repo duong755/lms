@@ -77,7 +77,6 @@ commentRouter.put('/:commentId', async (req, res) => {
     content: content,
     userId: userId
   };
-  console.log(newComment);
   try {
     const result = await commentService.upsertComment(
       newComment,

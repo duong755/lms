@@ -16,9 +16,10 @@ const isCourseCreator = async (req, res, next) => {
         error: 'You do not own this course'
       });
     }
-  } catch (err) {
+  } catch (error) {
+    console.error(error);
     res.status(500).json({
-      error: err
+      error: 'Unexpected error occured'
     });
   }
 };
