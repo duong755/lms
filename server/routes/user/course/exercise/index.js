@@ -199,19 +199,6 @@ exerciseRouter.put('/:exerciseId', isCourseCreator, async (req, res) => {
   const content = req.body.content;
   const deadline = req.body.deadline;
 
-  const schema = Joi.object({
-    title: Joi.string()
-      .trim()
-      .required(),
-    content: Joi.string()
-      .trim()
-      .required(),
-    deadline: Joi.date()
-      .timestamp()
-      .greater('now')
-      .required()
-  });
-
   try {
     let oldExercise = await exerciseService.getExerciseById(teacherId, courseId, exerciseId);
 
@@ -226,32 +213,6 @@ exerciseRouter.put('/:exerciseId', isCourseCreator, async (req, res) => {
         title: title !== undefined ? title : oldExercise.title,
         deadline: deadline !== undefined ? new Date(deadline).getTime() : oldExercise.deadline
       };
-
-      const validationResult = schema.validate(newExercise, {
-        errors: {
-          render: true,
-          wrapArrays: true
-        },
-        abortEarly: true,
-        allowUnknown: true
-      });
-
-      if (validationResult.error && validationResult.error.details.length) {
-        const error = _.reduce(
-          validationResult.error.details,
-          (result, value) => {
-            const key = value.path[0];
-            const message = value.message;
-            result[key] = message;
-            return result;
-          },
-          {}
-        );
-        res.status(400).json({
-          error: error
-        });
-        return;
-      }
 
       const result = await exerciseService.upsertExercise(
         newExercise,

@@ -1,4 +1,6 @@
 const { Router } = require('express');
+const Joi = require('@hapi/joi');
+const _ = require('lodash');
 
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const { cassandraTypes } = require('../../../../models/connector');
@@ -28,13 +30,46 @@ lessonRouter.get('/', canAccessCourse, async (req, res) => {
  */
 lessonRouter.post('/', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
+  const title = req.body.title;
+  const content = req.body.content;
+
+  const schema = Joi.object({
+    title: Joi.string()
+      .trim()
+      .required(),
+    content: Joi.string()
+      .trim()
+      .required()
+  });
+
   const newLesson = {
     teacherId: teacherId,
-    courseId: req.params.courseId,
+    courseId: courseId,
     id: cassandraTypes.TimeUuid.now(),
-    title: req.body.title,
-    content: req.body.content
+    title: title,
+    content: content
   };
+
+  const validationResult = schema.validate(newLesson, {
+    allowUnknown: true
+  });
+
+  if (validationResult.error && validationResult.error.details.length) {
+    const error = _.reduce(
+      validationResult.error.details,
+      (result, value) => {
+        const key = value.path[0];
+        const message = value.message;
+        result[key] = message;
+        return result;
+      },
+      {}
+    );
+    res.status(400).json({ error: error });
+    return;
+  }
+
   try {
     const upsertResult = await lessonService.upsertLesson(newLesson, void 0, true);
     if (upsertResult.wasApplied()) {
@@ -52,8 +87,11 @@ lessonRouter.post('/', isCourseCreator, async (req, res) => {
  * get lesson data
  */
 lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
+  const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
+  const lessonId = req.params.lessonId;
   try {
-    const result = await lessonService.getLessonById(req.params.userId, req.params.courseId, req.params.lessonId);
+    const result = await lessonService.getLessonById(teacherId, courseId, lessonId);
     const lesson = result.body._source;
     if (result.body.found) {
       res.status(200).json({ lesson: lesson });
@@ -71,8 +109,10 @@ lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
  */
 lessonRouter.put('/:lessonId', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
+  const lessonId = req.params.lessonId;
   try {
-    let lesson = await lessonService.getLessonById(teacherId, req.params.courseId, req.params.lessonId);
+    let lesson = await lessonService.getLessonById(teacherId, courseId, lessonId);
     lesson = lesson.body._source;
     const newLesson = {
       teacherId: teacherId,
@@ -103,8 +143,11 @@ lessonRouter.put('/:lessonId', isCourseCreator, async (req, res) => {
  * delete lesson
  */
 lessonRouter.delete('/:lessonId', isCourseCreator, async (req, res) => {
+  const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
+  const lessonId = req.params.lessonId;
   try {
-    const deleteResult = await lessonService.removeLesson(req.params.userId, req.params.courseId, req.params.lessonId);
+    const deleteResult = await lessonService.removeLesson(teacherId, courseId, lessonId);
     if (deleteResult.wasApplied()) {
       res.status(200).json({ success: 'Delete lesson successfully' });
     } else {

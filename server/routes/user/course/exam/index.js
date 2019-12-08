@@ -1,14 +1,28 @@
 const { Router } = require('express');
 
+const examService = require('../../../../services/Exam');
+
 const examRouter = Router({ mergeParams: true });
 
 /**
  * exam pagination
  */
-examRouter.get('/', (req, res) => {
-  const page = Number(req.query.page);
-  console.log(page);
-  res.end('/api/user/:userId/course/:courseId/exam');
+examRouter.get('/', async (req, res) => {
+  const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
+  const page = req.query.page || 1;
+  try {
+    const result = await examService.getExamsByCourse(teacherId, courseId, page);
+    const exam = result.body.hits.hits.map((current) => current._source);
+    res.status(200).json({
+      exam: exam,
+      total: result.body.hits.total
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Unexpected error occured' });
+  }
+  // res.end('/api/user/:userId/course/:courseId/exam');
 });
 
 /**

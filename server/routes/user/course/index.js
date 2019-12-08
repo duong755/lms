@@ -64,8 +64,9 @@ courseRouter.get('/:courseId', canAccessCourse, async (req, res) => {
  */
 courseRouter.put('/:courseId', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
   try {
-    let course = await courseService.getCourseById(teacherId, req.params.courseId);
+    let course = await courseService.getCourseById(teacherId, courseId);
     course = course.body._source;
     const changeCourse = {
       courseId: req.params.courseId,

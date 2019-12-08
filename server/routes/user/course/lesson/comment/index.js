@@ -1,4 +1,6 @@
 const { Router } = require('express');
+const Joi = require('@hapi/joi');
+const _ = require('lodash');
 
 const { cassandraTypes } = require('../../../../../models/connector');
 const commentService = require('../../../../../services/Comment');
@@ -12,6 +14,7 @@ commentRouter.get('/', async (req, res) => {
   const courseId = req.params.courseId;
   const lessonId = req.params.lessonId;
   const page = req.query.page || 1;
+
   try {
     const result = await commentService.getCommentsByLesson(teacherId, courseId, lessonId, page);
     const comments = result.body.hits.hits.map((current) => current._source);
@@ -36,6 +39,13 @@ commentRouter.post('/', async (req, res) => {
   const userId = res.locals.user.id;
   const commentId = cassandraTypes.TimeUuid.now();
   const content = req.body.content;
+
+  const schema = Joi.object({
+    content: Joi.string()
+      .trim()
+      .required()
+  });
+
   const newComment = {
     teacherId: teacherId,
     courseId: courseId,
@@ -44,7 +54,24 @@ commentRouter.post('/', async (req, res) => {
     commentId: commentId,
     content: content
   };
-  console.log(newComment);
+
+  const validationResult = schema.validate(newComment, { allowUnknown: true });
+
+  if (validationResult.error && validationResult.error.details.length) {
+    const error = _.reduce(
+      validationResult.error.details,
+      (result, value) => {
+        const key = value.path[0];
+        const message = value.message;
+        result[key] = message;
+        return result;
+      },
+      {}
+    );
+    res.status(400).json({ error: error });
+    return;
+  }
+
   try {
     const result = await commentService.upsertComment(newComment, void 0, true);
     if (result.wasApplied()) {
@@ -69,6 +96,13 @@ commentRouter.put('/:commentId', async (req, res) => {
   const commentId = req.params.commentId;
   const content = req.body.content;
   const userId = res.locals.user.id;
+
+  const schema = Joi.object({
+    content: Joi.string()
+      .trim()
+      .required()
+  });
+
   const newComment = {
     teacherId: teacherId,
     courseId: courseId,
@@ -77,6 +111,24 @@ commentRouter.put('/:commentId', async (req, res) => {
     content: content,
     userId: userId
   };
+
+  const validationResult = schema.validate(newComment, { allowUnknown: true });
+
+  if (validationResult.error && validationResult.error.details.length) {
+    const error = _.reduce(
+      validationResult.error.details,
+      (result, value) => {
+        const key = value.path[0];
+        const message = value.message;
+        result[key] = message;
+        return result;
+      },
+      {}
+    );
+    res.status(400).json({ error: error });
+    return;
+  }
+
   try {
     const result = await commentService.upsertComment(
       newComment,
