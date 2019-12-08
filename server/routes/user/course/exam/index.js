@@ -4,8 +4,9 @@ const _ = require('lodash');
 
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const isCourseMember = require('../../../../middlewares/isCourseMember');
-const examWorkService = require('../../../../services/ExamWork');
 const canAccessCourse = require('../../../../middlewares/canAccessCourse');
+const canAccessExamWork = require('../../../../middlewares/canAccessExamWork');
+const examWorkService = require('../../../../services/ExamWork');
 const examService = require('../../../../services/Exam');
 const { cassandraTypes } = require('../../../../models/connector');
 
@@ -316,7 +317,7 @@ examRouter.all('/:examId/summary', (req, res) => {
 /**
  * get exam work by student
  */
-examRouter.get('/:examId/:studentId', async (req, res) => {
+examRouter.get('/:examId/:studentId', canAccessExamWork, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const examId = req.params.examId;

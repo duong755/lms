@@ -8,6 +8,7 @@ const { cassandraTypes } = require('../../../../models/connector');
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 const isCourseMember = require('../../../../middlewares/isCourseMember');
+const canAccessExerciseWork = require('../../../../middlewares/canAccessExerciseWork');
 
 const exerciseRouter = Router({ mergeParams: true });
 
@@ -268,7 +269,7 @@ exerciseRouter.all('/:exerciseId/summary', (req, res) => {
 /**
  * get exercise work by student
  */
-exerciseRouter.get('/:exerciseId/:studentId', async (req, res) => {
+exerciseRouter.get('/:exerciseId/:studentId', canAccessExerciseWork, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const exerciseId = req.params.exerciseId;
