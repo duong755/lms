@@ -1,7 +1,6 @@
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-
-import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -38,14 +37,13 @@ function CourseTab(props) {
 
 /**
  *
- * @param {React.Component} CoursePage
-//  * @param {string} tab
+ * @param {React.FC} CoursePage
+ * @param {string} tab
  */
-function withCourse(CoursePage) {
+function withCourse(CoursePage, tab = 'lesson') {
   const tabs = ['lesson', 'exercise', 'exam', 'members', 'join requests'];
 
   const FullCoursePage = () => {
-    const [tab, setTab] = useState('lesson');
     return (
       <Box>
         <Container maxWidth="xl">
@@ -67,12 +65,7 @@ function withCourse(CoursePage) {
           </Box>
           <Box>
             {tabs.map((currentTabName) => (
-              <CourseTab
-                key={currentTabName}
-                tabName={currentTabName}
-                focusTab={tab}
-                onClick={() => setTab(currentTabName)}
-              />
+              <CourseTab key={currentTabName} tabName={currentTabName} focusTab={tab} />
             ))}
           </Box>
           <CoursePage tab={tab} />
