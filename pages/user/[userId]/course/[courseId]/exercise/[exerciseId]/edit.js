@@ -10,8 +10,8 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import withLayout from '../../../../../components/lib/withLayout';
-import MuiRte from '../../../../../components/MuiRte';
+import withLayout from '../../../../../../../components/lib/withLayout';
+import MuiRte from '../../../../../../../components/MuiRte';
 
 function EditExercise() {
   return (

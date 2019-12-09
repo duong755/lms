@@ -25,7 +25,7 @@ exerciseRouter.get('/', canAccessCourse, async (req, res) => {
     res.status(200).json({ exercises: exercises, total: result.body.hits.total });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exercise');
 });
@@ -90,13 +90,13 @@ exerciseRouter.post('/', isCourseCreator, async (req, res) => {
   try {
     const result = await exerciseService.upsertExercise(newExercise, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ success: 'create new exercise successfully' });
+      res.status(200).json({ successful: 'create new exercise successfully' });
     } else {
       res.status(400).json({ error: 'Can not create new exercise' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exercise');
 });
@@ -111,13 +111,13 @@ exerciseRouter.get('/:exerciseId', canAccessCourse, async (req, res) => {
   try {
     const result = await exerciseService.getExerciseById(teacherId, courseId, exerciseId);
     if (result.body.found) {
-      res.status(200).json({ success: 'get exercise successfully' });
+      res.status(200).json({ successful: 'get exercise successfully' });
     } else {
       res.status(400).json({ error: 'Can not get exercise' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exercise/:exerciseId');
 });
@@ -178,13 +178,13 @@ exerciseRouter.post('/:exerciseId', isCourseMember, async (req, res) => {
   try {
     const result = await exerciseWorkService.upsertExerciseWork(newExerciseWork, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ success: 'Submit exercise work successfully' });
+      res.status(200).json({ successful: 'Submit exercise work successfully' });
     } else {
       res.status(400).json({ error: 'Can not submit exercise work' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exercise/:exerciseId');
 });
@@ -222,7 +222,7 @@ exerciseRouter.put('/:exerciseId', isCourseCreator, async (req, res) => {
       );
 
       if (result.wasApplied()) {
-        res.status(200).json({ success: 'update exercise successfully' });
+        res.status(200).json({ successful: 'update exercise successfully' });
       } else {
         res.status(400).json({ error: 'Can not update new exercise' });
       }
@@ -231,7 +231,7 @@ exerciseRouter.put('/:exerciseId', isCourseCreator, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exercise/:exerciseId');
 });
@@ -246,14 +246,14 @@ exerciseRouter.delete('/:exerciseId', isCourseCreator, async (req, res) => {
   try {
     const result = await exerciseService.removeExercise(teacherId, courseId, exerciseId);
     if (result.wasApplied()) {
-      res.status(200).json({ success: 'Remove exercise successfully' });
+      res.status(200).json({ successful: 'Remove exercise successfully' });
     } else {
       res.status(400).json({ error: 'Can not remove this exercise' });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: 'Unexpected error occured'
+      error: 'Unexpected error occurred'
     });
   }
   // res.end('/api/user/:userId/course/:courseId/exercise/:exerciseId');
@@ -286,7 +286,7 @@ exerciseRouter.get('/:exerciseId/:studentId', canAccessExerciseWork, async (req,
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: 'Unexpected error occured'
+      error: 'Unexpected error occurred'
     });
   }
   // res.end('/api/user/:userId/course/:courseId/exercise/:exerciseId/:studentId');

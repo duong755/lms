@@ -11,8 +11,8 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
-import withLayout from '../../../components/lib/withLayout';
-import withCourse from '../../../components/lib/withCourse';
+import withLayout from '../../../../../components/lib/withLayout';
+import withCourse from '../../../../../components/lib/withCourse';
 
 const useStyle = makeStyles((theme) => ({
   breadCrumbs: {

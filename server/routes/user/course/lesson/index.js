@@ -73,13 +73,13 @@ lessonRouter.post('/', isCourseCreator, async (req, res) => {
   try {
     const upsertResult = await lessonService.upsertLesson(newLesson, void 0, true);
     if (upsertResult.wasApplied()) {
-      res.status(200).json({ success: 'Create new lesson successfully' });
+      res.status(200).json({ successful: 'Create new lesson successfully' });
     } else {
       res.status(500).json({ error: 'Can not create this course' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 
@@ -100,7 +100,7 @@ lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 
@@ -128,14 +128,14 @@ lessonRouter.put('/:lessonId', isCourseCreator, async (req, res) => {
     );
     if (updateResult.wasApplied()) {
       res.status(200).json({
-        success: 'Update lesson successfully'
+        successful: 'Update lesson successfully'
       });
     } else {
       res.status(500).json({ error: 'Can not update this lesson' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 
@@ -149,13 +149,13 @@ lessonRouter.delete('/:lessonId', isCourseCreator, async (req, res) => {
   try {
     const deleteResult = await lessonService.removeLesson(teacherId, courseId, lessonId);
     if (deleteResult.wasApplied()) {
-      res.status(200).json({ success: 'Delete lesson successfully' });
+      res.status(200).json({ successful: 'Delete lesson successfully' });
     } else {
       res.status(500).json({ error: 'Can not delete this course' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 

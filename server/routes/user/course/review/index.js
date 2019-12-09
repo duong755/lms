@@ -19,7 +19,7 @@ reviewRouter.get('/', async (req, res) => {
     res.status(200).json({ reviews: reviews, total: total });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/review');
 });
@@ -73,13 +73,13 @@ reviewRouter.post('/', async (req, res) => {
 
     const result = await reviewService.upsertReview(newReview, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ success: 'Create new revirew successfully' });
+      res.status(200).json({ successful: 'Create new revirew successfully' });
     } else {
       res.status(400).json({ error: 'Can not create new review' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/review');
 });
@@ -137,13 +137,13 @@ reviewRouter.put('/:studentId', async (req, res) => {
       false
     );
     if (result.wasApplied()) {
-      res.status(200).json({ success: 'Update review successfully' });
+      res.status(200).json({ successful: 'Update review successfully' });
     } else {
       res.status(400).json({ error: 'Can not update this review' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/review/:studentId');
 });
@@ -155,13 +155,13 @@ reviewRouter.delete('/:studentId', async (req, res) => {
   try {
     const result = await reviewService.deleteReview(teacherId, courseId, studentId);
     if (result.wasApplied()) {
-      res.status(200).json({ success: 'Delete review successfully' });
+      res.status(200).json({ successful: 'Delete review successfully' });
     } else {
       res.status(400).json({ error: 'Can not delete this review' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/review/:studentId');
 });

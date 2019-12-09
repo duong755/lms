@@ -47,7 +47,7 @@ examRouter.get('/', async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam');
 });
@@ -139,7 +139,7 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam');
 });
@@ -161,7 +161,7 @@ examRouter.get('/:examId', canAccessCourse, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured1' });
+    res.status(500).json({ error: 'Unexpected error occurred1' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId');
 });
@@ -236,7 +236,7 @@ examRouter.post('/:examId', isCourseMember, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId');
 });
@@ -281,7 +281,7 @@ examRouter.put('/:examId', isCourseCreator, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId');
 });
@@ -302,7 +302,7 @@ examRouter.delete('/:examId', isCourseCreator, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    req.status(500).json({ error: 'Unexpected error occured' });
+    req.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId');
 });
@@ -332,7 +332,7 @@ examRouter.get('/:examId/:studentId', canAccessExamWork, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId/:studentId');
 });

@@ -11,7 +11,7 @@ import NoSsr from '@material-ui/core/NoSsr';
 
 import ReactSelect from 'react-select';
 
-import withLayout from '../../../components/lib/withLayout';
+import withLayout from '../../../../../components/lib/withLayout';
 
 const useStyles = makeStyles((theme) => ({
   save: {

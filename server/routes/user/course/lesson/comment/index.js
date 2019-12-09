@@ -24,7 +24,7 @@ commentRouter.get('/', async (req, res) => {
     });
   } catch (error) {
     console.error('error:', error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/lesson/:lessonId/comment');
 });
@@ -75,13 +75,13 @@ commentRouter.post('/', async (req, res) => {
   try {
     const result = await commentService.upsertComment(newComment, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ success: 'Create new commemt successfully' });
+      res.status(200).json({ successful: 'Create new commemt successfully' });
     } else {
       res.status(400).json({ error: 'Can not create new comment' });
     }
   } catch (error) {
     console.error('error:', error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/lesson/:lessonId/comment');
 });
@@ -136,13 +136,13 @@ commentRouter.put('/:commentId', async (req, res) => {
       false
     );
     if (result.wasApplied()) {
-      res.status(200).json({ success: 'Update comment successfully' });
+      res.status(200).json({ successful: 'Update comment successfully' });
     } else {
       res.status(400).json({ error: 'Can not update this comment' });
     }
   } catch (error) {
     console.error('error:', error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/lesson/:lessonId/comment/:commentId');
 });
@@ -159,14 +159,14 @@ commentRouter.delete('/:commentId', async (req, res) => {
     const result = await commentService.removeComment(teacherId, courseId, lessonId, commentId);
     if (result.wasApplied()) {
       res.status(200).json({
-        success: 'Delete comment successfully'
+        successful: 'Delete comment successfully'
       });
     } else {
       res.status(400).json({ error: 'Can not delete this comment' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/lesson/:lessonId/comment/:commentId');
 });

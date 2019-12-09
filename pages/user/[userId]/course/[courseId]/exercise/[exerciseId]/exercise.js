@@ -9,8 +9,8 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 
-import withLayout from '../../../../../components/lib/withLayout';
-import MuiRte from '../../../../../components/MuiRte';
+import withLayout from '../../../../../../../components/lib/withLayout';
+import MuiRte from '../../../../../../../components/MuiRte';
 
 const exercise = {
   name: 'Exercise1',

@@ -235,6 +235,7 @@ SignIn.propTypes = {
     id: PropTypes.string,
     username: PropTypes.string,
     email: PropTypes.string,
+    type: PropTypes.oneOf(['teacher', 'student']),
     info: PropTypes.shape({
       fullname: PropTypes.string,
       birthday: PropTypes.string,

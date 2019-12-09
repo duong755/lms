@@ -35,7 +35,7 @@ courseRouter.get('/', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 
@@ -54,7 +54,7 @@ courseRouter.get('/:courseId', canAccessCourse, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId');
 });
@@ -83,13 +83,13 @@ courseRouter.put('/:courseId', isCourseCreator, async (req, res) => {
     );
 
     if (upsertResult.wasApplied()) {
-      res.status(200).json({ success: 'update course successfully' });
+      res.status(200).json({ successful: 'update course successfully' });
     } else {
-      res.status(500).json({ error: 'Unexpected error occured' });
+      res.status(500).json({ error: 'Unexpected error occurred' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 

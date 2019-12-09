@@ -104,7 +104,7 @@ const validateUniqueness = async (req, res, next) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: process.env.NODE_ENV === 'production' ? 'Unexpected error occured, please try again' : err.message
+      error: process.env.NODE_ENV === 'production' ? 'Unexpected error occurred, please try again' : err.message
     });
   }
 };
@@ -128,13 +128,13 @@ const createUser = async (req, res, next) => {
       next();
     } else {
       res.status(500).json({
-        error: 'Unexpected error occured, please try again'
+        error: 'Unexpected error occurred, please try again'
       });
     }
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: process.env.NODE_ENV === 'production' ? 'Unexpected error occured, please try again' : err.message
+      error: process.env.NODE_ENV === 'production' ? 'Unexpected error occurred, please try again' : err.message
     });
   }
 };

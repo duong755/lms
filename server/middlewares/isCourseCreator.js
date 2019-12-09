@@ -19,7 +19,7 @@ const isCourseCreator = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: 'Unexpected error occured'
+      error: 'Unexpected error occurred'
     });
   }
 };

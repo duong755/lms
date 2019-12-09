@@ -1,4 +1,5 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -288,8 +289,16 @@ function SignUpForm() {
     </>
   );
 }
-function SignUp() {
+
+function SignUp(props) {
   const userContext = useContext(AppUser);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isObject(props.user) || isObject(userContext.user)) {
+      router.replace('/');
+    }
+  }, []);
 
   return (
     <>
@@ -319,5 +328,19 @@ function SignUp() {
     </>
   );
 }
+
+SignUp.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string,
+    email: PropTypes.string,
+    type: PropTypes.oneOf(['teacher', 'student']),
+    info: PropTypes.shape({
+      fullname: PropTypes.string,
+      birthday: PropTypes.string,
+      image: PropTypes.string
+    })
+  })
+};
 
 export default withLayout(SignUp);
