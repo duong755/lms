@@ -13,8 +13,10 @@ const { Exam, elasticsearchClient } = require('../models');
  * @param {Uuid} teacherId
  * @param {Uuid} courseId
  * @param {number} [page=1]
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getExamsByCourse(teacherId, courseId, page = 1) {
+function getExamsByCourse(teacherId, courseId, page = 1, includes, excludes) {
   page = _.toInteger(page);
   page = page < 1 ? 1 : page;
 
@@ -26,7 +28,8 @@ function getExamsByCourse(teacherId, courseId, page = 1) {
     type: 'exam',
     from: 10 * (page - 1),
     size: 10,
-    _source_excludes: ['content'],
+    _source_includes: includes,
+    _source_excludes: excludes,
     sort: ['id:desc'],
     body: {
       query: {
@@ -54,9 +57,10 @@ function getExamsByCourse(teacherId, courseId, page = 1) {
  * @param {Uuid} teacherId
  * @param {Uuid} courseId
  * @param {TimeUuid} examId
- * @param {string | string[]} [sourceExcludes=[]]
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getExamById(teacherId, courseId, examId, sourceExcludes) {
+function getExamById(teacherId, courseId, examId, includes, excludes) {
   teacherId = String(teacherId);
   courseId = String(courseId);
   examId = String(examId);
@@ -67,7 +71,8 @@ function getExamById(teacherId, courseId, examId, sourceExcludes) {
     index: 'lms.exam',
     type: 'exam',
     id: examPrimaryKey,
-    _source_excludes: sourceExcludes
+    _source_includes: includes,
+    _source_excludes: excludes
   });
 }
 

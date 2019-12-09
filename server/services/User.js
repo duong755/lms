@@ -13,20 +13,26 @@ const GRAVATAR_URL = 'https://gravatar.com/avatar';
 /**
  *
  * @param {string} userId
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getUserById(userId) {
+function getUserById(userId, includes, excludes) {
   return elasticsearchClient.get({
     index: 'lms.user',
     type: 'user',
-    id: userId
+    id: userId,
+    _source_includes: includes,
+    _source_excludes: excludes
   });
 }
 
 /**
  *
  * @param {string | string[]} userId
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getMultipleUsersById(userId) {
+function getMultipleUsersById(userId, includes, excludes) {
   if (!(userId instanceof Array)) {
     userId = [userId];
   }
@@ -34,6 +40,8 @@ function getMultipleUsersById(userId) {
   return elasticsearchClient.search({
     index: 'lms.user',
     type: 'user',
+    _source_includes: includes,
+    _source_excludes: excludes,
     body: {
       query: {
         ids: {
@@ -48,12 +56,16 @@ function getMultipleUsersById(userId) {
 /**
  *
  * @param {string} username
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getUserByUsername(username) {
+function getUserByUsername(username, includes, excludes) {
   return elasticsearchClient.search({
     index: 'lms.user',
     type: 'user',
     size: 1,
+    _source_includes: includes,
+    _source_excludes: excludes,
     body: {
       query: {
         term: {
@@ -67,12 +79,16 @@ function getUserByUsername(username) {
 /**
  *
  * @param {string} email
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getUserByEmail(email) {
+function getUserByEmail(email, includes, excludes) {
   return elasticsearchClient.search({
     index: 'lms.user',
     type: 'user',
     size: 1,
+    _source_includes: includes,
+    _source_excludes: excludes,
     body: {
       query: {
         term: {
@@ -87,13 +103,17 @@ function getUserByEmail(email) {
  *
  * @param {string} text
  * Email or Username
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getUserByEmailOrUsername(text) {
+function getUserByEmailOrUsername(text, includes, excludes) {
   text = String(text);
   return elasticsearchClient.search({
     index: 'lms.user',
     type: 'user',
     size: 1,
+    _source_includes: includes,
+    _source_excludes: excludes,
     body: {
       query: {
         bool: {
@@ -120,7 +140,6 @@ function getUserByEmailOrUsername(text) {
  * @param {Uuid} user.userId
  * @param {string} user.email
  * @param {string} user.hashPassword
- * @param {object} user.info
  * @param {string} user.username
  * @param {'student' | 'teacher'} user.type
  * @param {string} user.userId
@@ -137,7 +156,7 @@ function createUser(user, ttl) {
       username: user.username,
       hash_password: user.hashPassword,
       info: {
-        fullName: '',
+        fullname: '',
         birthday: '',
         image: `${GRAVATAR_URL}/${md5Email}`
       },

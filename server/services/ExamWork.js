@@ -1,6 +1,7 @@
 /**
  * @typedef {import('cassandra-driver').types.Uuid} Uuid
  * @typedef {import('cassandra-driver').types.TimeUuid} TimeUuid
+ * @typedef {{ question: string, choices: string[], answer: number, point: number }} Quiz
  */
 const _ = require('lodash');
 
@@ -13,7 +14,7 @@ const { ExamWork, elasticsearchClient } = require('../models');
  * @param {Uuid} examwork.teacherId
  * @param {Uuid} examwork.examId
  * @param {Uuid} examwork.courseId
- * @param {Array} examwork.content
+ * @param {Quiz[]} examwork.content
  * @param {number} examwork.point
  * @param {number} examwork.submitAt
  * @param {string[]} [fields]
@@ -63,8 +64,10 @@ function getExamWorkByStudent(teacherId, courseId, examId, studentId) {
  * @param {Uuid} courseId
  * @param {TimeUuid} examId
  * @param {number} page
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
  */
-function getExamWorksByExam(teacherId, courseId, examId, page = 1) {
+function getExamWorksByExam(teacherId, courseId, examId, page = 1, includes, excludes) {
   page = page < 1 ? 1 : page;
   page = _.toInteger(page);
 
@@ -77,10 +80,22 @@ function getExamWorksByExam(teacherId, courseId, examId, page = 1) {
     type: 'exam_work',
     from: 10 * (page - 1),
     size: 10,
+    _source_includes: includes,
+    _source_excludes: excludes,
     body: {
       query: {
         bool: {
-          must: [{ term: { teacher_id: teacherId } }, { term: { course_id: courseId } }, { term: { exam_id: examId } }]
+          must: [
+            {
+              term: { teacher_id: teacherId }
+            },
+            {
+              term: { course_id: courseId }
+            },
+            {
+              term: { exam_id: examId }
+            }
+          ]
         }
       }
     }
