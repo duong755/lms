@@ -57,7 +57,8 @@ function LessonItem(props) {
   );
 }
 
-function CourseLesson() {
+function CourseLesson(props) {
+  props;
   return (
     <>
       <Box py={2} />
@@ -75,14 +76,19 @@ LessonItem.propTypes = {
   createdAt: PropTypes.string
 };
 
+const CourseLessonPage = withCourse(CourseLesson, 'lesson');
+
 CourseLesson.getInitialProps = async (context) => {
-  console.log(context.query);
-  // call get lesson by course
+  const { userId, courseId, page } = context.query; // this contain userId, courseId, page
+  /**
+   * TODO:
+   * - get lessons by pagination API
+   */
   return {
-    a: 1
+    userId: userId,
+    courseId: courseId,
+    page: Number(page) || 1
   };
 };
-
-const CourseLessonPage = withCourse(CourseLesson, 'lesson');
 
 export default withLayout(CourseLessonPage);
