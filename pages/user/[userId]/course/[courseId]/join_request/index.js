@@ -75,4 +75,4 @@ JoinRequestItem.propTypes = {
   createdAt: PropTypes.string
 };
 
-export default withLayout(withCourse(CourseJoinRequest, 'join request'));
+export default withLayout(withCourse(CourseJoinRequest, 'join_request'));

@@ -76,15 +76,13 @@ LessonItem.propTypes = {
 };
 
 CourseLesson.getInitialProps = async (context) => {
-  console.log(context);
-  return {};
+  console.log(context.query);
+  // call get lesson by course
+  return {
+    a: 1
+  };
 };
 
 const CourseLessonPage = withCourse(CourseLesson, 'lesson');
-
-CourseLessonPage.getInitialProps = async (context) => {
-  console.log(context.req);
-  return {};
-};
 
 export default withLayout(CourseLessonPage);

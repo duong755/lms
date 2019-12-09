@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -13,25 +13,45 @@ import Icon from '@material-ui/core/Icon';
 
 const useStyles = makeStyles((theme) => ({
   tab: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
+    '&.focus:hover': {
+      color: theme.palette.common.white
+    },
+    '&:hover': {
+      color: theme.palette.text.primary
+    }
   }
 }));
 
 function CourseTab(props) {
-  const { tabName, focusTab, onClick } = props;
+  const { tabName, focusTab, userId, courseId } = props;
   const classes = useStyles();
 
   if (tabName === focusTab) {
     return (
-      <Button className={classes.tab} color="primary" variant="contained" onClick={onClick}>
-        {tabName}
-      </Button>
+      <NextLink href={`/user/${userId}/course/${courseId}/${tabName}`} prefetch={false}>
+        <Button
+          href={`/user/${userId}/course/${courseId}/${tabName}`}
+          className={clsx(classes.tab, 'focus')}
+          color="primary"
+          variant="contained"
+        >
+          {tabName}
+        </Button>
+      </NextLink>
     );
   }
   return (
-    <Button className={classes.tab} variant="text" onClick={onClick}>
-      {tabName}
-    </Button>
+    <NextLink href={`/user/${userId}/course/${courseId}/${tabName}`} prefetch={false}>
+      <Button
+        href={`/user/${userId}/course/${courseId}/${tabName}`}
+        className={clsx(classes.tab)}
+        color="default"
+        variant="text"
+      >
+        {tabName}
+      </Button>
+    </NextLink>
   );
 }
 
@@ -41,9 +61,9 @@ function CourseTab(props) {
  * @param {string} tab
  */
 function withCourse(CoursePage, tab = 'lesson') {
-  const tabs = ['lesson', 'exercise', 'exam', 'members', 'join requests'];
+  const tabs = ['lesson', 'exercise', 'exam', 'member', 'join_request'];
 
-  const FullCoursePage = () => {
+  const FullCoursePage = (props) => {
     return (
       <Box>
         <Container maxWidth="xl">
@@ -65,21 +85,43 @@ function withCourse(CoursePage, tab = 'lesson') {
           </Box>
           <Box>
             {tabs.map((currentTabName) => (
-              <CourseTab key={currentTabName} tabName={currentTabName} focusTab={tab} />
+              <CourseTab
+                key={currentTabName}
+                tabName={currentTabName}
+                focusTab={tab}
+                userId={props.userId}
+                courseId={props.courseId}
+              />
             ))}
           </Box>
-          <CoursePage tab={tab} />
+          <CoursePage tab={tab} {...props} />
         </Container>
       </Box>
     );
   };
+
+  FullCoursePage.propTypes = {
+    userId: PropTypes.string.isRequired,
+    courseId: PropTypes.string.isRequired
+  };
+
+  FullCoursePage.getInitialProps = async (context) => {
+    const { userId, courseId } = context.query;
+    let coursePageProps = {};
+    if (CoursePage.getInitialProps) {
+      coursePageProps = await CoursePage.getInitialProps(context);
+    }
+    return { userId: userId, courseId: courseId, ...coursePageProps };
+  };
+
   return FullCoursePage;
 }
 
 CourseTab.propTypes = {
   tabName: PropTypes.string.isRequired,
   focusTab: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  userId: PropTypes.string.isRequired,
+  courseId: PropTypes.string.isRequired
 };
 
 export default withCourse;

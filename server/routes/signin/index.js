@@ -46,6 +46,7 @@ const comparePassword = (req, res, next) => {
   const { hash_password } = res.locals.user;
   bcrypt.compare(password, hash_password, (err, same) => {
     if (err) {
+      console.error(err);
       res.status(500).json({
         error: err.message
       });
@@ -76,6 +77,7 @@ const generateToken = (req, res) => {
     },
     (err, encoded) => {
       if (err) {
+        console.error(err);
         res.status(500).json({
           err: err.message
         });
