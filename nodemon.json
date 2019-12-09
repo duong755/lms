@@ -1,0 +1,11 @@
+{
+  "ignore": [
+    "__tests__",
+    "components",
+    "pages",
+    ".vscode",
+    ".next",
+    "public",
+    "docs"
+  ]
+}

@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import { useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import axios from 'axios';
+import clsx from 'clsx';
+import { isObject } from 'lodash';
+import fetch from 'isomorphic-unfetch';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -9,12 +13,22 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 import Link from '@material-ui/core/Link';
-import Hidden from '@material-ui/core/Hidden';
+import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import NoSsr from '@material-ui/core/NoSsr';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
+import { UncontrolledAlert } from 'reactstrap';
+
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 import withLayout from '../../components/lib/withLayout';
+import AppUser from '../../components/auth/AppUser';
+import absURL from '../../components/helpers/URL';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,31 +44,157 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3)
+  },
+  formHelperText: {
+    marginLeft: 0,
+    color: theme.palette.error.main
   }
 }));
 
-function Signin() {
+const signInValidationSchema = Yup.object().shape({
+  emailOrUsername: Yup.string().required('Email/Username is required'),
+  password: Yup.string().required('Password is required'),
+  error: Yup.boolean().notRequired()
+});
+
+const initialSignInFormValues = {
+  emailOrUsername: '',
+  password: '',
+  error: false
+};
+
+function SignInForm() {
+  const userContext = useContext(AppUser);
+  const router = useRouter();
   const classes = useStyles();
-  const [values, setValues] = useState({});
-
-  function handleChange(event) {
-    event.persist();
-    setValues((values) => ({
-      ...values,
-      [event.target.name]: event.target.value
-    }));
-  }
-
-  function handleSubmit(event) {
-    if (event) {
-      event.preventDefault();
+  const formik = useFormik({
+    initialValues: initialSignInFormValues,
+    validationSchema: signInValidationSchema,
+    onSubmit: async (values, helpers) => {
+      try {
+        const signInRes = await fetch(absURL('/api/signin'), {
+          method: 'POST',
+          credentials: 'include',
+          mode: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            emailOrUsername: values.emailOrUsername,
+            password: values.password
+          })
+        });
+        const json = await signInRes.json();
+        if (json.successful) {
+          userContext.setUser(json.user);
+          router.replace('/');
+        } else {
+          helpers.setFieldValue('error', true);
+        }
+      } catch (signInErr) {
+        helpers.setFieldValue('error', true);
+      }
+    },
+    onReset: (values, helpers) => {
+      helpers.resetForm({
+        values: {
+          error: false,
+          emailOrUsername: '',
+          password: ''
+        },
+        errors: {
+          error: '',
+          emailOrUsername: '',
+          password: ''
+        },
+        touched: {
+          error: '',
+          emailOrUsername: '',
+          password: ''
+        }
+      });
     }
-    console.log(values);
-    axios
-      .post('/signin', values)
-      .then((res) => console.log('Success ', res))
-      .catch((err) => console.error('Error ', err));
-  }
+  });
+
+  const { values, handleChange, handleSubmit, touched, errors, handleReset } = formik;
+
+  return (
+    <form onSubmit={handleSubmit} onReset={handleReset}>
+      {values.error && <UncontrolledAlert color="danger">Wrong username/email or password</UncontrolledAlert>}
+      <Paper>
+        <Box pt={2} px={2}>
+          <InputLabel htmlFor="emailOrUsername">Username or Email</InputLabel>
+          <TextField
+            variant="outlined"
+            type="text"
+            id="emailOrUsername"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Icon>account_box</Icon>
+                </InputAdornment>
+              )
+            }}
+            value={values.emailOrUsername}
+            onChange={handleChange('emailOrUsername')}
+            helperText={touched.emailOrUsername && errors.emailOrUsername}
+            FormHelperTextProps={{
+              className: clsx(classes.formHelperText)
+            }}
+          />
+        </Box>
+        <Box pt={2} px={2}>
+          <InputLabel htmlFor="password">Password</InputLabel>
+          <TextField
+            variant="outlined"
+            type="password"
+            id="Password"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Icon>lock</Icon>
+                </InputAdornment>
+              )
+            }}
+            value={values.password}
+            onChange={handleChange('password')}
+            helperText={touched.password && errors.password}
+            FormHelperTextProps={{
+              className: clsx(classes.formHelperText)
+            }}
+          />
+        </Box>
+        <Box p={2}>
+          <Button fullWidth variant="contained" type="submit" color="primary" onClick={handleSubmit}>
+            Sign in
+          </Button>
+        </Box>
+        <Box pb={2} px={2}>
+          <Button fullWidth variant="text">
+            <NextLink href="/">
+              <Link color="primary" href="/">
+                Forgot your password
+              </Link>
+            </NextLink>
+          </Button>
+        </Box>
+      </Paper>
+    </form>
+  );
+}
+
+function SignIn(props) {
+  const router = useRouter();
+  const classes = useStyles();
+  const userContext = useContext(AppUser);
+  useEffect(() => {
+    if (isObject(props.user) || isObject(userContext.user)) {
+      router.replace('/');
+    }
+  }, []);
+
   return (
     <>
       <Head>
@@ -62,76 +202,45 @@ function Signin() {
       </Head>
       <Box>
         <Container maxWidth="xl">
-          <Grid className={classes.root} container component="main" alignItems="center">
-            <Grid item xs={12} sm={6}>
-              <Box className={classes.form} display="flex" flexDirection="column" alignItems="stretch">
-                <Typography gutterBottom align="center" variant="h4">
-                  <strong>Sign in to OpenLMS</strong>
-                </Typography>
-                <Paper>
-                  <form onSubmit={handleSubmit}>
-                    <Box paddingTop={3} paddingX={3}>
-                      <Box paddingBottom={1} fontWeight="bold">
-                        Username
-                      </Box>
-                      <TextField
-                        fullWidth
-                        required
-                        autoFocus
-                        variant="outlined"
-                        onChange={handleChange}
-                        name="account"
-                        type="email"
-                      />
-                    </Box>
-                    <Box paddingLeft={3} paddingTop={3} paddingRight={3}>
-                      <Box paddingBottom={1} fontWeight="bold">
-                        Password
-                      </Box>
-                      <TextField
-                        fullWidth
-                        required
-                        variant="outlined"
-                        onChange={handleChange}
-                        name="password"
-                        type="password"
-                      />
-                    </Box>
-                    <Box paddingLeft={3} paddingTop={1.5} paddingRight={3}>
-                      <Button fullWidth variant="contained" type="submit" color="primary">
-                        Sign in
-                      </Button>
-                    </Box>
-                    <Box paddingX={3} paddingY={1.5}>
-                      <Button fullWidth variant="text">
-                        <NextLink href="/">
-                          <Link href="/">forgot your password</Link>
-                        </NextLink>
-                      </Button>
-                    </Box>
-                  </form>
-                </Paper>
-                <Box height={30} />
-                <Button color="primary" variant="outlined" fullWidth>
-                  <NextLink href="/signup">
-                    <Link href="/signup">CREATE AN ACCOUNT</Link>
-                  </NextLink>
-                </Button>
-              </Box>
-            </Grid>
-            <Grid item xs={false} sm={6}>
-              <Hidden smDown>
-                <img
-                  className={classes.image}
-                  src="https://lh3.googleusercontent.com/UGQxZMBLsql2ED-_Kx7GHy0c7l3O64uhqeubwu1A-53VIamRM_VsDth_EyKEXnrwIwxUetQmY_3c03gHCMqAG49UJi7Fom1kqwNVdR9Az13WIrgGBBbTKxIZlKy8xdOuXuKJcPeE-1nLQ2qsBzReTYupwLqXr7ie2sxjPa8jafUEK4L7zlyLfjdlAfoz6GzDgoYva2sqJALVYx4Uv_UUemEZRZWmEQGPImpJfVQxamw0xPSuak39lHflrVDQUhzZAkw5Mf1fMUuKMBkD3sb9T8UdnYMRhDp8XUM6ZLBhVfIWASw_pSuPSVHTSWvVrGobxf0pp4BmgjZ6l39lK14OtkHcQO3_R4a9DdO3D7uRk7ad85mWBpGO8EkouV0xCi5MsXFTOuF5vd89SnpZFmLvMW6_TEXYKHf4RpIECUS_8I_MrLEW2aPmY9ir2DkIlnzJUY59g754P9O6AtCyik3FHFWxRYJzfQKnCQUk7JaTMWK15BrW3CW_ka1Ah_rAgmTAjsMXYqMWqnDPjIJx3HQOZWBYSYCIRrHk9hRfOuPlY4M2umzZPKSGKOOKc4mhBFr0P9F5BvD_4xH4b2DlSwZCxDtwbAQtiYcSrloLdCU5caHVWM4IcZSss5jlYDI=w1366-h590"
-                />
-              </Hidden>
-            </Grid>
-          </Grid>
+          {!isObject(userContext.user) && (
+            <NoSsr>
+              <Grid className={classes.root} container component="main" justify="center" alignItems="center">
+                <Grid item xs={12} sm={8} md={6}>
+                  <Box className={classes.form} display="flex" flexDirection="column" alignItems="stretch">
+                    <Typography gutterBottom align="center" variant="h4">
+                      <strong>Sign in to OpenLMS</strong>
+                    </Typography>
+
+                    <SignInForm />
+
+                    <Box height={30} />
+                    <Button color="primary" variant="outlined" fullWidth>
+                      <NextLink href="/signup">
+                        <Link href="/signup">CREATE AN ACCOUNT</Link>
+                      </NextLink>
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </NoSsr>
+          )}
         </Container>
       </Box>
     </>
   );
 }
 
-export default withLayout(Signin);
+SignIn.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string,
+    email: PropTypes.string,
+    info: PropTypes.shape({
+      fullname: PropTypes.string,
+      birthday: PropTypes.string,
+      image: PropTypes.string
+    })
+  })
+};
+
+export default withLayout(SignIn);

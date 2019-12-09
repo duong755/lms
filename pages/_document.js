@@ -40,6 +40,8 @@ class CustomDocument extends Document {
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+          <link rel="stylesheet" type="text/css" href="css/nprogress.min.css" />
         </Head>
         <body>
           <Main />

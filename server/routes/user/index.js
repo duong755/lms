@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
+const { isObject } = require('lodash');
 
 const userService = require('../../services/User');
 
@@ -11,7 +12,11 @@ const userRouter = Router({ mergeParams: true });
  * auth user info
  */
 userRouter.all('/', (req, res) => {
-  res.status(200).json(res.locals.user);
+  if (isObject(res.locals.user)) {
+    res.status(200).json(res.locals.user);
+    return;
+  }
+  res.status(200).json(null);
 });
 
 /**

@@ -6,6 +6,7 @@ const userRouter = require('./user');
 const createCourseRouter = require('./create-course');
 const signinRouter = require('./signin');
 const signupRouter = require('./signup');
+const signoutRouter = require('./signout');
 const searchRouter = require('./search');
 const topicRouter = require('./topic');
 
@@ -20,6 +21,7 @@ rootAPIRoute.use('/user', userRouter);
 rootAPIRoute.use('/create-course', createCourseRouter);
 rootAPIRoute.use('/signin', signinRouter);
 rootAPIRoute.use('/signup', signupRouter);
+rootAPIRoute.use('/signout', signoutRouter);
 rootAPIRoute.use('/search', searchRouter);
 rootAPIRoute.use('/topic', topicRouter);
 
