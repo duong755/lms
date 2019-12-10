@@ -75,8 +75,8 @@ function CourseLesson(props) {
     <>
       <Box py={2} />
       <Grid container spacing={2}>
-        {props.lessons.map((currentLesson, currentLessonIndex) => (
-          <LessonItem key={currentLessonIndex} {...currentLesson} />
+        {props.lessons.map((currentLesson) => (
+          <LessonItem key={currentLesson.id} {...currentLesson} />
         ))}
       </Grid>
     </>

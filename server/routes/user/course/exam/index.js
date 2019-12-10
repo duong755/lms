@@ -4,7 +4,6 @@ const _ = require('lodash');
 
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const isCourseMember = require('../../../../middlewares/isCourseMember');
-const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 const canAccessExamWork = require('../../../../middlewares/canAccessExamWork');
 const examWorkService = require('../../../../services/ExamWork');
 const examService = require('../../../../services/Exam');
@@ -42,7 +41,7 @@ examRouter.get('/', async (req, res) => {
     const result = await examService.getExamsByCourse(teacherId, courseId, page);
     const exam = result.body.hits.hits.map((current) => current._source);
     res.status(200).json({
-      exam: exam,
+      exams: exam,
       total: result.body.hits.total
     });
   } catch (error) {
@@ -147,7 +146,7 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
 /**
  * get exam by id
  */
-examRouter.get('/:examId', canAccessCourse, async (req, res) => {
+examRouter.get('/:examId', async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const examId = req.params.examId;
