@@ -59,10 +59,10 @@ createCourseRouter.post('/', isTeacher, createTopics, async (req, res) => {
     members: req.body.members || []
   };
 
-  const schema = Joi.object({
+  const courseSchema = Joi.object({
     description: Joi.string()
       .trim()
-      .required(),
+      .allow(''),
     topics: Joi.array()
       .items(Joi.string().trim())
       .unique(),
@@ -73,7 +73,7 @@ createCourseRouter.post('/', isTeacher, createTopics, async (req, res) => {
     members: Joi.array().unique()
   });
 
-  const validationResult = schema.validate(newCourse, { allowUnknown: true });
+  const validationResult = courseSchema.validate(newCourse, { allowUnknown: true, abortEarly: false });
 
   if (validationResult.error && validationResult.error.details.length) {
     const error = _.reduce(
@@ -99,7 +99,7 @@ createCourseRouter.post('/', isTeacher, createTopics, async (req, res) => {
       });
     } else {
       res.status(400).json({
-        error: 'Can not create this course, please try again'
+        error: 'Cannot create this course, please try again'
       });
     }
   } catch (error) {
