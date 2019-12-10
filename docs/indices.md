@@ -275,7 +275,7 @@
           "cql_primary_key_order": 1
         },
         "id": {
-          "type": "keyword",
+          "type": "date",
           "cql_collection": "singleton",
           "cql_partition_key": false,
           "cql_primary_key_order": 2
@@ -324,7 +324,7 @@
           "cql_primary_key_order": 2
         },
         "id": {
-          "type": "keyword",
+          "type": "date",
           "cql_collection": "singleton",
           "cql_partition_key": false,
           "cql_primary_key_order": 3
@@ -367,7 +367,7 @@
           "cql_primary_key_order": 1
         },
         "id": {
-          "type": "keyword",
+          "type": "date",
           "cql_collection": "singleton",
           "cql_partition_key": false,
           "cql_primary_key_order": 2
@@ -414,7 +414,7 @@
           "cql_primary_key_order": 1
         },
         "exercise_id": {
-          "type": "keyword",
+          "type": "date",
           "cql_collection": "singleton",
           "cql_partition_key": true,
           "cql_primary_key_order": 2
@@ -467,7 +467,7 @@
           "cql_primary_key_order": 1
         },
         "id": {
-          "type": "keyword",
+          "type": "date",
           "cql_collection": "singleton",
           "cql_partition_key": false,
           "cql_primary_key_order": 2
@@ -490,10 +490,6 @@
           "cql_collection": "set",
           "cql_struct" : "map",
           "properties": {
-            "id": {
-              "type": "keyword",
-              "cql_collection": "singleton"
-            },
             "question": {
               "type": "text",
               "cql_collection": "singleton"
@@ -542,7 +538,7 @@
           "cql_primary_key_order": 1
         },
         "exam_id": {
-          "type": "keyword",
+          "type": "date",
           "cql_collection": "singleton",
           "cql_partition_key": true,
           "cql_primary_key_order": 2
