@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +13,12 @@ import InputLabel from '@material-ui/core/InputLabel';
 
 import withLayout from '../../../../../../components/lib/withLayout';
 import MuiRte from '../../../../../../components/MuiRte';
+import AppUser from '../../../../../../components/auth/AppUser';
+
+function CreateLessonForm() {
+  const userContext = useContext(AppUser);
+  const router = useRouter();
+}
 
 function CreateLesson() {
   return (

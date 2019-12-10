@@ -14,7 +14,7 @@ const lessonRouter = Router({ mergeParams: true });
 /**
  * lesson pagination
  */
-lessonRouter.get('/', canAccessCourse, async (req, res) => {
+lessonRouter.get('/', async (req, res) => {
   const page = req.query.page || 1;
   try {
     const result = await lessonService.getLessonsByTeacherAndCourse(req.params.userId, req.params.courseId, page);
