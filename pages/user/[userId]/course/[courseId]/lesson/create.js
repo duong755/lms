@@ -3,13 +3,15 @@ import Head from 'next/head';
 
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import InputLabel from '@material-ui/core/InputLabel';
 
-import withLayout from '../../../../../components/lib/withLayout';
-import MuiRte from '../../../../../components/MuiRte';
+import withLayout from '../../../../../../components/lib/withLayout';
+import MuiRte from '../../../../../../components/MuiRte';
 
 function CreateLesson() {
   return (
@@ -19,37 +21,34 @@ function CreateLesson() {
       </Head>
       <Box>
         <Container maxWidth="xl">
-          <Grid container component="main" justify="center">
-            <Grid item xs={12} sm={10} md={8}>
-              <Box border="1px solid black">
-                <Box component="h1">
-                  <Typography color="primary" variant="h4">
-                    <strong>Create new lesson jhfjehjfejk</strong>
-                  </Typography>
+          <Grid container justify="center">
+            <Grid item xs={12} sm={8}>
+              <Grid container direction="column" spacing={1} alignItems="stretch">
+                <Grid item>
+                  <Box py={2}>
+                    <Typography variant="h4">
+                      <strong>Create new lesson</strong>
+                    </Typography>
+                  </Box>
+                  <Divider />
+                </Grid>
+                <Box py={1} />
+                <Grid item>
+                  <InputLabel htmlFor="title">Title</InputLabel>
+                  <TextField autoFocus variant="outlined" fullWidth id="title"></TextField>
+                </Grid>
+                <Box py={1} />
+                <Grid item>
+                  <InputLabel htmlFor="content">Lesson details</InputLabel>
+                  <MuiRte label="Type something here...." inlineToolbar={true} />
+                </Grid>
+                <Box py={1} />
+                <Box>
+                  <Button variant="contained" color="primary">
+                    Post
+                  </Button>
                 </Box>
-
-                <Box display="flex" flexDirection="column">
-                  <Box marginBottom="20px">
-                    <Box>Lesson Title</Box>
-                    <Box bgcolor="#FFFFFF">
-                      <TextField autoFocus variant="outlined" fullWidth></TextField>
-                    </Box>
-                  </Box>
-
-                  <Box marginBottom="20px">
-                    <Box>Lesson Detail</Box>
-                    <Box>
-                      <MuiRte />
-                    </Box>
-                  </Box>
-
-                  <Box width="80px">
-                    <Button variant="outlined" style={{ color: '#FF5722' }} fullWidth>
-                      Post
-                    </Button>
-                  </Box>
-                </Box>
-              </Box>
+              </Grid>
             </Grid>
           </Grid>
         </Container>
