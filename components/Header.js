@@ -145,14 +145,23 @@ function Header() {
           <Box className={clsx([classes.menu])}>
             <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
               <Avatar classes={{ img: classes.avatar }} src={info.image} />
-              <NextLink href={`/user/${id}`} as={`/user/${id}`} prefetch={false}>
-                <Link href={`/user/${id}`} as={`/user/${id}`}>
+              <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
+                <Link href={`/user/${id}`}>
                   <Typography component="h3">
                     <strong>{username}</strong>
                   </Typography>
                 </Link>
               </NextLink>
             </Box>
+            {userContext.user.type === 'teacher' && (
+              <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
+                <NextLink href="/create-course" as="/create-course" prefetch={false}>
+                  <Link href="/create-course" color="inherit">
+                    Create course
+                  </Link>
+                </NextLink>
+              </Box>
+            )}
             <Divider color={theme.palette.divider} />
             <Box display="flex" alignItems="center" justifyContent="flex-end" py={1} onClick={signOut}>
               <Icon>exit_to_app</Icon>&nbsp;<strong>Sign Out</strong>
@@ -168,12 +177,21 @@ function Header() {
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem className={clsx([classes.username])}>
-                <NextLink href={`/user/${id}`} as={`/user/${id}`} prefetch={false}>
+                <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
                   <Link color="primary" href={`/user/${id}`}>
                     {username}
                   </Link>
                 </NextLink>
               </DropdownItem>
+              {userContext.user.type === 'teacher' && (
+                <DropdownItem>
+                  <NextLink href="/create-course" as="/create-course" prefetch={false}>
+                    <Link href="/create-course" color="inherit">
+                      Create course
+                    </Link>
+                  </NextLink>
+                </DropdownItem>
+              )}
               <DropdownItem divider />
               <DropdownItem onClick={signOut}>Sign out</DropdownItem>
             </DropdownMenu>

@@ -1,6 +1,7 @@
+import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -13,25 +14,48 @@ import Icon from '@material-ui/core/Icon';
 
 const useStyles = makeStyles((theme) => ({
   tab: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
+    '&.focus:hover': {
+      color: theme.palette.common.white
+    },
+    '&:hover': {
+      color: theme.palette.text.primary
+    }
   }
 }));
 
 function CourseTab(props) {
-  const { tabName, focusTab, onClick } = props;
+  const { tabName, focusTab, userId, courseId } = props;
   const classes = useStyles();
 
   if (tabName === focusTab) {
     return (
-      <Button className={classes.tab} color="primary" variant="contained" onClick={onClick}>
-        {tabName}
-      </Button>
+      <NextLink
+        href={`/user/[userId]/course/[courseId]/${tabName}`}
+        as={`/user/${userId}/course/${courseId}/${tabName}`}
+        prefetch={false}
+      >
+        <Button className={clsx(classes.tab, 'focus')} color="primary" variant="contained">
+          {tabName.replace(/_/g, ' ')}
+        </Button>
+      </NextLink>
     );
   }
   return (
-    <Button className={classes.tab} variant="text" onClick={onClick}>
-      {tabName}
-    </Button>
+    <NextLink
+      href={`/user/[userId]/course/[courseId]/${tabName}`}
+      as={`/user/${userId}/course/${courseId}/${tabName}`}
+      prefetch={false}
+    >
+      <Button
+        href={`/user/${userId}/course/${courseId}/${tabName}`}
+        className={clsx(classes.tab)}
+        color="default"
+        variant="text"
+      >
+        {tabName.replace(/_/g, ' ')}
+      </Button>
+    </NextLink>
   );
 }
 
@@ -41,45 +65,79 @@ function CourseTab(props) {
  * @param {string} tab
  */
 function withCourse(CoursePage, tab = 'lesson') {
-  const tabs = ['lesson', 'exercise', 'exam', 'members', 'join requests'];
+  const tabs = ['lesson', 'exercise', 'exam', 'member', 'join_request'];
 
-  const FullCoursePage = () => {
+  const FullCoursePage = (props) => {
     return (
-      <Box>
-        <Container maxWidth="xl">
-          <Box pt={3}>
-            <Breadcrumbs aria-label="breadcrumb">
-              <NextLink href="/">
-                <Link color="inherit" href="/">
-                  <Typography variant="h5">Username</Typography>
-                </Link>
-              </NextLink>
-              <Typography variant="h5" color="textPrimary">
-                <strong>Course Name</strong>
-              </Typography>
-            </Breadcrumbs>
-          </Box>
-          <Box py={2} display="flex" alignItems="center">
-            <Icon>calendar_today</Icon>
-            <Box display="inline">Create on someday</Box>
-          </Box>
-          <Box>
-            {tabs.map((currentTabName) => (
-              <CourseTab key={currentTabName} tabName={currentTabName} focusTab={tab} />
-            ))}
-          </Box>
-          <CoursePage tab={tab} />
-        </Container>
-      </Box>
+      <>
+        <Head>
+          <title>Course Name</title>
+        </Head>
+        <Box>
+          <Container maxWidth="xl">
+            <Box pt={3}>
+              <Breadcrumbs aria-label="breadcrumb">
+                <NextLink href="/" prefetch={false}>
+                  <Link color="inherit" href="/">
+                    <Typography variant="h5">Username</Typography>
+                  </Link>
+                </NextLink>
+                <Typography variant="h5" color="textPrimary">
+                  <strong>Course Name</strong>
+                </Typography>
+              </Breadcrumbs>
+            </Box>
+            <Box py={2} display="flex" alignItems="center">
+              <Icon>calendar_today</Icon>
+              <Box display="inline">Create on someday</Box>
+            </Box>
+            <Box>
+              {tabs.map((currentTabName) => (
+                <CourseTab
+                  key={currentTabName}
+                  tabName={currentTabName}
+                  focusTab={tab}
+                  userId={props.userId}
+                  courseId={props.courseId}
+                />
+              ))}
+            </Box>
+            <CoursePage tab={tab} {...props} />
+          </Container>
+        </Box>
+      </>
     );
   };
+
+  FullCoursePage.propTypes = {
+    userId: PropTypes.string.isRequired,
+    courseId: PropTypes.string.isRequired
+  };
+
+  FullCoursePage.getInitialProps = async (context) => {
+    const { userId, courseId } = context.query;
+    let coursePageProps = {};
+    if (CoursePage.getInitialProps) {
+      coursePageProps = await CoursePage.getInitialProps(context);
+    }
+    /**
+     * TODO:
+     * - get user data by id (use API)
+     * - get course data by teacherId and courseId (use API)
+     * - display user data, course name in FullCoursePage component
+     * - return those data
+     */
+    return { userId: userId, courseId: courseId, ...coursePageProps };
+  };
+
   return FullCoursePage;
 }
 
 CourseTab.propTypes = {
   tabName: PropTypes.string.isRequired,
   focusTab: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  userId: PropTypes.string.isRequired,
+  courseId: PropTypes.string.isRequired
 };
 
 export default withCourse;
