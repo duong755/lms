@@ -116,7 +116,7 @@ function SignInForm() {
     }
   });
 
-  const { values, handleChange, handleSubmit, touched, errors, handleReset } = formik;
+  const { values, handleChange, handleSubmit, touched, errors, handleReset, isSubmitting } = formik;
 
   return (
     <form onSubmit={handleSubmit} onReset={handleReset}>
@@ -149,7 +149,7 @@ function SignInForm() {
           <TextField
             variant="outlined"
             type="password"
-            id="Password"
+            id="password"
             fullWidth
             InputProps={{
               startAdornment: (
@@ -167,7 +167,14 @@ function SignInForm() {
           />
         </Box>
         <Box p={2}>
-          <Button fullWidth variant="contained" type="submit" color="primary" onClick={handleSubmit}>
+          <Button
+            fullWidth
+            variant="contained"
+            disabled={isSubmitting}
+            type="submit"
+            color="primary"
+            onClick={handleSubmit}
+          >
             Sign in
           </Button>
         </Box>

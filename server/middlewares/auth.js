@@ -32,7 +32,7 @@ const auth = (req, res, next) => {
           delete res.locals.user;
         }
       } catch (userErr) {
-        next();
+        console.error(userErr);
       } finally {
         next();
       }

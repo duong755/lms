@@ -19,23 +19,25 @@ const courseRouter = Router({ mergeParams: true });
  */
 courseRouter.get('/', async (req, res) => {
   try {
-    const userResult = await userService.getUserById(res.locals.user.id);
+    const userId = req.params.userId;
+    const page = Number(req.query.page) || 1;
+    const userResult = await userService.getUserById(userId);
     if (userResult.body.found) {
       if (userResult.body._source.type === 'teacher') {
-        const courseResult = await courseService.getCoursesByTeacher(res.locals.user.id);
+        const courseResult = await courseService.getCoursesByTeacher(userId, page);
         const courses = courseResult.body.hits.hits.map((current) => current._source);
         res.status(200).json({ courses: courses, total: courseResult.body.hits.total });
       } else {
-        const courseResult = await courseService.getCoursesByStudent(res.locals.user.id);
+        const courseResult = await courseService.getCoursesByStudent(userId, page);
         const courses = courseResult.body.hits.hits.map((current) => current._source);
         res.status(200).json({ courses: courses, total: courseResult.body.hits.total });
       }
     } else {
-      res.status(404).json({ error: 'Can not find user' });
+      res.status(404).json({ error: 'Cannot find user' });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Unexpected error occurred' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: process.env.NODE_ENV === 'production' ? 'Unexpected error occurred' : err.message });
   }
 });
 

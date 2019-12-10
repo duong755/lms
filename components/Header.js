@@ -73,8 +73,10 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   username: {
-    maxWidth: 300,
-    whiteSpace: 'pre-wrap',
+    maxWidth: 150,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     fontWeight: 700
   }
 }));
@@ -176,21 +178,15 @@ function Header() {
               <Avatar classes={{ img: classes.avatar }} src={info.image} />
             </DropdownToggle>
             <DropdownMenu right>
-              <DropdownItem className={clsx([classes.username])}>
-                <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
-                  <Link color="primary" href={`/user/${id}`}>
-                    {username}
-                  </Link>
-                </NextLink>
-              </DropdownItem>
-              {userContext.user.type === 'teacher' && (
-                <DropdownItem>
-                  <NextLink href="/create-course" as="/create-course" prefetch={false}>
-                    <Link href="/create-course" color="inherit">
-                      Create course
-                    </Link>
-                  </NextLink>
+              <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
+                <DropdownItem href={`/user/${id}`} title={username} className={clsx([classes.username])}>
+                  {username}
                 </DropdownItem>
+              </NextLink>
+              {userContext.user.type === 'teacher' && (
+                <NextLink href="/create-course" as="/create-course" prefetch={false}>
+                  <DropdownItem href="/create-course">Create course</DropdownItem>
+                </NextLink>
               )}
               <DropdownItem divider />
               <DropdownItem onClick={signOut}>Sign out</DropdownItem>
