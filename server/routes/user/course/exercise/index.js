@@ -33,7 +33,7 @@ exerciseRouter.get('/', async (req, res) => {
 /**
  * create exercise
  */
-exerciseRouter.post('/', isCourseCreator, async (req, res) => {
+exerciseRouter.post('/', async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const title = req.body.title;
@@ -90,7 +90,7 @@ exerciseRouter.post('/', isCourseCreator, async (req, res) => {
   try {
     const result = await exerciseService.upsertExercise(newExercise, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ successful: 'create new exercise successfully' });
+      res.status(200).json({ successful: true, exerciseId: newExercise.exerciseId });
     } else {
       res.status(400).json({ error: 'Can not create new exercise' });
     }
@@ -111,7 +111,7 @@ exerciseRouter.get('/:exerciseId', canAccessCourse, async (req, res) => {
   try {
     const result = await exerciseService.getExerciseById(teacherId, courseId, exerciseId);
     if (result.body.found) {
-      res.status(200).json({ successful: 'get exercise successfully' });
+      res.status(200).json({ successful: true, exercise: result.body._source });
     } else {
       res.status(400).json({ error: 'Can not get exercise' });
     }

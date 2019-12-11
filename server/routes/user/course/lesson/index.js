@@ -73,7 +73,7 @@ lessonRouter.post('/', isCourseCreator, async (req, res) => {
   try {
     const upsertResult = await lessonService.upsertLesson(newLesson, void 0, true);
     if (upsertResult.wasApplied()) {
-      res.status(200).json({ successful: 'Create new lesson successfully' });
+      res.status(200).json({ successful: true, lessonId: newLesson.id });
     } else {
       res.status(500).json({ error: 'Can not create this course' });
     }
@@ -94,7 +94,7 @@ lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
     const result = await lessonService.getLessonById(teacherId, courseId, lessonId);
     const lesson = result.body._source;
     if (result.body.found) {
-      res.status(200).json({ lesson: lesson });
+      res.status(200).json({ successful: true, lesson: lesson });
     } else {
       res.status(404).json({ error: 'Can not find this course' });
     }
@@ -128,7 +128,7 @@ lessonRouter.put('/:lessonId', isCourseCreator, async (req, res) => {
     );
     if (updateResult.wasApplied()) {
       res.status(200).json({
-        successful: 'Update lesson successfully'
+        successful: true
       });
     } else {
       res.status(500).json({ error: 'Can not update this lesson' });
@@ -149,7 +149,7 @@ lessonRouter.delete('/:lessonId', isCourseCreator, async (req, res) => {
   try {
     const deleteResult = await lessonService.removeLesson(teacherId, courseId, lessonId);
     if (deleteResult.wasApplied()) {
-      res.status(200).json({ successful: 'Delete lesson successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(500).json({ error: 'Can not delete this course' });
     }

@@ -1,17 +1,28 @@
 import Head from 'next/head';
-import { makeStyles } from '@material-ui/core/styles';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { useContext, useRef, useEffect } from 'react';
+import clsx from 'clsx';
+import { isObject } from 'lodash';
+import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 
+import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel';
 import NoSsr from '@material-ui/core/NoSsr';
-
-import ReactSelect from 'react-select';
+import ReactSelectAsyncCreatable from 'react-select/async-creatable';
 
 import withLayout from '../../../../../components/lib/withLayout';
+import absURL from '../../../../../components/helpers/URL';
+import AppUser from '../../../../../components/auth/AppUser';
 
 const useStyles = makeStyles((theme) => ({
   save: {
@@ -49,8 +60,166 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function EditCourse() {
+const createCourseInitialValues = {
+  courseName: '',
+  description: '',
+  topics: []
+};
+
+const createCourseValidationSchema = Yup.object().shape({
+  courseName: Yup.string()
+    .trim()
+    .required('"Course name" is required'),
+  description: Yup.string()
+    .trim()
+    .notRequired(),
+  topics: Yup.array(Yup.string().trim()).notRequired()
+});
+
+const searchTopic = async (input) => {
+  try {
+    const res = await fetch(absURL(`/api/topic/${input}`));
+    const json = await res.json();
+    return json.topics.map((topic) => ({ value: topic, label: topic }));
+  } catch {
+    return [];
+  }
+};
+
+function EditCourseForm() {
+  const select = useRef(null);
   const classes = useStyles();
+  const userContext = useContext(AppUser);
+  const formik = useFormik({
+    initialValues: createCourseInitialValues,
+    validationSchema: createCourseValidationSchema,
+    onSubmit: async (values, helpers) => {
+      try {
+        const response = await fetch(
+          absURL(`/api/user/${userContext.user.id}/course/9277810b-c733-460e-aecb-ce9eab16eef1`),
+          {
+            method: 'PUT',
+            credentials: 'include',
+            body: JSON.stringify(values),
+            mode: 'same-origin',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        const json = await response.json();
+        console.log(json);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        helpers.setSubmitting(false);
+      }
+    },
+    onReset: (values, helpers) => {
+      helpers.resetForm({
+        errors: {
+          courseName: '',
+          description: '',
+          topics: ''
+        },
+        touched: {
+          courseName: false,
+          description: false,
+          topics: false
+        },
+        values: createCourseInitialValues
+      });
+    }
+  });
+
+  const { values, touched, errors, handleSubmit, handleReset, setFieldValue, handleChange } = formik;
+
+  return (
+    <form onSubmit={handleSubmit} onReset={handleReset}>
+      <Grid container direction="column" spacing={1} alignItems="stretch">
+        <Grid item>
+          <Box py={2}>
+            <Typography variant="h4">
+              <strong>Create new course</strong>
+            </Typography>
+          </Box>
+          <Divider />
+        </Grid>
+        <Grid item>
+          <InputLabel htmlFor="courseName">Course Name</InputLabel>
+          <TextField
+            fullWidth
+            id="courseName"
+            variant="outlined"
+            value={values.courseName}
+            onChange={handleChange('courseName')}
+            helperText={touched.courseName && errors.courseName}
+            FormHelperTextProps={{
+              className: clsx(classes.formHelperText)
+            }}
+          />
+        </Grid>
+        <Box py={1} />
+        <Grid item>
+          <InputLabel htmlFor="description">Description(Optional)</InputLabel>
+          <TextField
+            fullWidth
+            multiline
+            id="description"
+            variant="outlined"
+            rows={3}
+            value={values.description}
+            onChange={handleChange('description')}
+            helperText={touched.description && errors.description}
+            FormHelperTextProps={{
+              className: clsx(classes.formHelperText)
+            }}
+          />
+        </Grid>
+        <Box py={1} />
+        <Grid item>
+          <InputLabel htmlFor="topics">Topics</InputLabel>
+          <ReactSelectAsyncCreatable
+            ref={select}
+            isMulti
+            placeholder="Search for topics..."
+            id="topics"
+            loadOptions={searchTopic}
+            onChange={(value) => {
+              setFieldValue('topics', value.map((currentSelectedOption) => currentSelectedOption.value));
+            }}
+          />
+        </Grid>
+        <Box py={1} />
+        <Grid item>
+          <Button
+            variant="contained"
+            disabled={formik.isSubmitting}
+            className={classes.button}
+            onClick={handleSubmit}
+            endIcon={formik.isSubmitting && <CircularProgress size={30} />}
+          >
+            Save
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
+  );
+}
+
+function EditCourse(props) {
+  const userContext = useContext(AppUser);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isObject(props.user) && !isObject(userContext.user)) {
+      router.replace('/');
+    } else {
+      if (userContext.user.type === 'student') {
+        router.replace('/');
+      }
+    }
+  }, []);
 
   return (
     <>
@@ -61,39 +230,11 @@ function EditCourse() {
         <Container maxWidth="xl">
           <Grid container justify="center">
             <Grid item xs={12} sm={8}>
-              <Grid container direction="column" spacing={1} alignItems="stretch">
-                <Grid item className={classes.item}>
-                  <Box paddingTop={3} component="h1">
-                    Edit course
-                  </Box>
-                  <Divider />
-                </Grid>
-                <Grid item className={classes.item}>
-                  <Box component="h3">Course Name</Box>
-                  <TextField className={classes.textField} required id="course-name" variant="outlined" />
-                </Grid>
-                <Grid item className={classes.item}>
-                  <Box component="h3">Description(Optional)</Box>
-                  <TextField className={classes.textField} multiline id="description" variant="outlined" />
-                </Grid>
-                <Grid item className={classes.item}>
-                  <Box component="h3">Topics</Box>
-                  <NoSsr>
-                    <ReactSelect isMulti options={[{ label: 'A', value: 0 }, { label: 'B', value: 1 }]} />
-                  </NoSsr>
-                </Grid>
-                <Grid item xs={12} sm={8} className={classes.item}>
-                  <Divider />
-                </Grid>
-                <Grid item xs={12} sm={8} className={classes.item}>
-                  <Button variant="contained" className={classes.save}>
-                    Save
-                  </Button>
-                  <Button variant="outlined" className={classes.cancel}>
-                    Cancel
-                  </Button>
-                </Grid>
-              </Grid>
+              {isObject(userContext.user) && userContext.user.type === 'teacher' && (
+                <NoSsr>
+                  <EditCourseForm />
+                </NoSsr>
+              )}
             </Grid>
           </Grid>
         </Container>
@@ -101,5 +242,9 @@ function EditCourse() {
     </>
   );
 }
+
+EditCourse.propTypes = {
+  user: PropTypes.object
+};
 
 export default withLayout(EditCourse);
