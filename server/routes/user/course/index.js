@@ -3,7 +3,6 @@ const { Router } = require('express');
 const isCourseCreator = require('../../../middlewares/isCourseCreator');
 const courseService = require('../../../services/Course');
 const userService = require('../../../services/User');
-const canAccessCourse = require('../../../middlewares/canAccessCourse');
 
 const lessonRouter = require('./lesson');
 const memberRouter = require('./member');
@@ -44,7 +43,7 @@ courseRouter.get('/', async (req, res) => {
 /**
  * get course data
  */
-courseRouter.get('/:courseId', canAccessCourse, async (req, res) => {
+courseRouter.get('/:courseId', async (req, res) => {
   const courseId = req.params.courseId;
   const teacherId = req.params.userId;
   try {

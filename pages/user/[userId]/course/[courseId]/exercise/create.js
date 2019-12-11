@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { isObject } from 'lodash';
+import { stateToHTML } from 'draft-js-export-html';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 const initailValues = {
   title: '',
   deadline: '',
-  content: 'This is a content' // need to change
+  content: ''
 };
 
 const exerciseSchemaValidation = Yup.object().shape({
@@ -108,7 +109,7 @@ function CreateExerciseForm() {
     }
   });
 
-  const { errors, touched, values, handleChange, handleSubmit, handleReset } = formik;
+  const { errors, touched, values, handleChange, handleSubmit, handleReset, setFieldValue } = formik;
   return (
     <form onSubmit={handleSubmit} onReset={handleReset}>
       <Grid container spacing={2} justify="center">
@@ -161,7 +162,12 @@ function CreateExerciseForm() {
             <Typography title="excercise-detail" noWrap>
               Excercise Detail
             </Typography>
-            <MuiRte />
+            <MuiRte
+              label="Type something here"
+              onChange={(data) => setFieldValue('content', stateToHTML(data.getCurrentContent()))}
+              inlineToolbar={true}
+              id="content"
+            />
           </Box>
           <Box mb={3}>
             <Button

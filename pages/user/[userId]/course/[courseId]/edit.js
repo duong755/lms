@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { isObject } from 'lodash';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+import fetch from 'isomorphic-unfetch';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -89,26 +90,42 @@ const searchTopic = async (input) => {
 function EditCourseForm() {
   const select = useRef(null);
   const classes = useStyles();
+  const router = useRouter();
   const userContext = useContext(AppUser);
+  // const [initialValues, setInitialValue] = useState({});
+
+  // // useEffect(() => {
+  // //   const fetchData = async () => {
+  // //     const result = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}`));
+  // //     const json = await result.json();
+  // //     console.log(json);
+  // //     setInitialValue(json);
+  // //   };
+  // //   fetchData();
+  // // }, []);
+
   const formik = useFormik({
     initialValues: createCourseInitialValues,
     validationSchema: createCourseValidationSchema,
+    enableReinitialize: true,
     onSubmit: async (values, helpers) => {
       try {
-        const response = await fetch(
-          absURL(`/api/user/${userContext.user.id}/course/9277810b-c733-460e-aecb-ce9eab16eef1`),
-          {
-            method: 'PUT',
-            credentials: 'include',
-            body: JSON.stringify(values),
-            mode: 'same-origin',
-            headers: {
-              'Content-Type': 'application/json'
-            }
+        const response = await fetch(absURL(`/api/user/${userContext.user.id}/course/${router.query.courseId}`), {
+          method: 'PUT',
+          credentials: 'include',
+          body: JSON.stringify(values),
+          mode: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json'
           }
-        );
+        });
         const json = await response.json();
-        console.log(json);
+        if (json.successful) {
+          router.replace(`/api/user${router.query.userId}/course/${router.query.courseId}`);
+          return;
+        } else {
+          console.log(json);
+        }
       } catch (error) {
         console.error(error);
       } finally {
@@ -140,7 +157,7 @@ function EditCourseForm() {
         <Grid item>
           <Box py={2}>
             <Typography variant="h4">
-              <strong>Create new course</strong>
+              <strong>Edit course</strong>
             </Typography>
           </Box>
           <Divider />
@@ -151,9 +168,9 @@ function EditCourseForm() {
             fullWidth
             id="courseName"
             variant="outlined"
-            value={values.courseName}
+            value={values.course_name}
             onChange={handleChange('courseName')}
-            helperText={touched.courseName && errors.courseName}
+            helperText={touched.course_name && errors.course_name}
             FormHelperTextProps={{
               className: clsx(classes.formHelperText)
             }}
@@ -194,6 +211,7 @@ function EditCourseForm() {
         <Grid item>
           <Button
             variant="contained"
+            color="primary"
             disabled={formik.isSubmitting}
             className={classes.button}
             onClick={handleSubmit}
@@ -224,7 +242,7 @@ function EditCourse(props) {
   return (
     <>
       <Head>
-        <title>Create course</title>
+        <title>Edit course</title>
       </Head>
       <Box>
         <Container maxWidth="xl">

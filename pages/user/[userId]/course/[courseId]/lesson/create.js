@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import clsx from 'clsx';
 import { isObject } from 'lodash';
 import PropTypes from 'prop-types';
+import { stateToHTML } from 'draft-js-export-html';
 
 import NoSsr from '@material-ui/core/NoSsr';
 import Container from '@material-ui/core/Container';
@@ -33,7 +34,7 @@ const CreateLessonSchema = Yup.object().shape({
 
 const initailValue = {
   title: '',
-  content: 'this is a content'
+  content: ''
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -54,28 +55,25 @@ const useStyles = makeStyles((theme) => ({
 function CreateLessonForm() {
   const router = useRouter();
   const classes = useStyles();
+
   const formik = useFormik({
     validationSchema: CreateLessonSchema,
     initialValues: initailValue,
     onSubmit: async (values, helpers) => {
+      console.log(values);
       try {
-        const respone = await fetch(
-          absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}/lesson`), //need to change
-          {
-            method: 'POST',
-            credentials: 'include',
-            mode: 'same-origin',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-          }
-        );
+        const respone = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}/lesson`), {
+          method: 'POST',
+          credentials: 'include',
+          mode: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(values)
+        });
         const json = await respone.json();
         if (json.successful) {
-          router.replace(
-            `/user/${router.query.userId}/course/${router.query.courseId}/lesson/${json.lessonId}` //need to change
-          );
+          router.replace(`/user/${router.query.userId}/course/${router.query.courseId}/lesson/${json.lessonId}`);
           return;
         } else {
           console.log(json);
@@ -103,7 +101,7 @@ function CreateLessonForm() {
       });
     }
   });
-  const { values, errors, touched, handleChange, handleSubmit, handleReset } = formik;
+  const { values, errors, touched, handleChange, handleSubmit, handleReset, setFieldValue } = formik;
   return (
     <form onSubmit={handleSubmit} onReset={handleReset}>
       <Grid container direction="column" spacing={1} alignItems="stretch">
@@ -133,7 +131,12 @@ function CreateLessonForm() {
         <Box py={1} />
         <Grid item>
           <InputLabel htmlFor="content">Lesson details</InputLabel>
-          <MuiRte label="Type something here...." inlineToolbar={true} id="content" />
+          <MuiRte
+            label="Type something here...."
+            inlineToolbar={true}
+            id="content"
+            onChange={(data) => setFieldValue('content', stateToHTML(data.getCurrentContent()))}
+          />
         </Grid>
         <Box py={1} />
         <Box>
