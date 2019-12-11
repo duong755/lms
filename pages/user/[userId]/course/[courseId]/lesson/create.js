@@ -60,7 +60,6 @@ function CreateLessonForm() {
     validationSchema: CreateLessonSchema,
     initialValues: initailValue,
     onSubmit: async (values, helpers) => {
-      console.log(values);
       try {
         const respone = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}/lesson`), {
           method: 'POST',

@@ -104,7 +104,7 @@ exerciseRouter.post('/', async (req, res) => {
 /**
  * get exercise by id
  */
-exerciseRouter.get('/:exerciseId', canAccessCourse, async (req, res) => {
+exerciseRouter.get('/:exerciseId', async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const exerciseId = req.params.exerciseId;

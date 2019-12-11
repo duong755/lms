@@ -84,7 +84,7 @@ courseRouter.put('/:courseId', isCourseCreator, async (req, res) => {
     );
 
     if (upsertResult.wasApplied()) {
-      res.status(200).json({ successful: 'update course successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(500).json({ error: 'Unexpected error occurred' });
     }

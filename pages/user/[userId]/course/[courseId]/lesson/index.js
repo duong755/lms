@@ -138,11 +138,12 @@ CourseLesson.propTypes = {
 };
 
 CourseLesson.getInitialProps = async (context) => {
-  const { userId, courseId, page } = context.query;
+  const { userId, courseId } = context.query;
+  const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
   let data = { lessons: [], total: 0 };
 
   try {
-    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/lesson?page=${Number(page)}`), {
+    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/lesson/${page}`), {
       method: 'GET'
     });
     data = await response.json();
@@ -152,7 +153,7 @@ CourseLesson.getInitialProps = async (context) => {
   return {
     userId: userId,
     courseId: courseId,
-    page: Number(page) || 1,
+    page: Number(context.query.page) || 1,
     lessonData: data
   };
 };

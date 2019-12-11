@@ -98,8 +98,8 @@ function EditCourseForm() {
   // //   const fetchData = async () => {
   // //     const result = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}`));
   // //     const json = await result.json();
-  // //     console.log(json);
-  // //     setInitialValue(json);
+  // //     const newState = Object.assagin(initialValues, json.course)
+  // //     setInitialValue(newState);
   // //   };
   // //   fetchData();
   // // }, []);
