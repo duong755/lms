@@ -5,7 +5,6 @@ const _ = require('lodash');
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const { cassandraTypes } = require('../../../../models/connector');
 const lessonService = require('../../../../services/Lesson');
-const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 
 const commentRouter = require('./comment');
 
@@ -86,7 +85,7 @@ lessonRouter.post('/', isCourseCreator, async (req, res) => {
 /**
  * get lesson data
  */
-lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
+lessonRouter.get('/:lessonId', async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const lessonId = req.params.lessonId;

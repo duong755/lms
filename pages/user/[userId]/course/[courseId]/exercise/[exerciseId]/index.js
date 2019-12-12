@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+import PropTypes from 'prop-types';
 import Head from 'next/head';
 import dayjs from 'dayjs';
 
@@ -82,6 +82,14 @@ Exercise.getInitialProps = async (context) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+Exercise.propTypes = {
+  exercise: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    deadline: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    content: PropTypes.string
+  }).isRequired
 };
 
 export default withLayout(Exercise);
