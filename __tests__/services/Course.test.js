@@ -3,7 +3,13 @@ import { types } from 'cassandra-driver';
 import { randomName } from '../helpers/random';
 import { closeConnection } from '../helpers/close';
 
-import { upsertCourse, getCourseById, getCoursesByStudent, getCoursesByTeacher } from '../../server/services/Course';
+import {
+  upsertCourse,
+  getCourseById,
+  getCoursesByStudent,
+  getCoursesByTeacher,
+  searchCourses
+} from '../../server/services/Course';
 
 const TTL = Number(process.env.TTL) || 30;
 
@@ -62,6 +68,16 @@ describe('Course Services', () => {
       setTimeout(async () => {
         const { body } = await getCoursesByStudent(randomStudentId, 1);
         expect(body.hits.total).toBeGreaterThanOrEqual(1);
+        done();
+      }, 1000);
+    });
+  });
+
+  it('searchCourses', async () => {
+    await new Promise((done) => {
+      setTimeout(async () => {
+        const { body } = await searchCourses(randomName(), randomCourseTopics, void 0, void 0, 1);
+        expect(body.hits.total).toBeGreaterThanOrEqual(0);
         done();
       }, 1000);
     });

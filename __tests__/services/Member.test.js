@@ -15,7 +15,7 @@ beforeAll(() => {
       Member.batching.insert({ teacher_id: randomTeacherId, course_id: randomCourseId, student_id: random1stMember }),
       Member.batching.insert({ teacher_id: randomTeacherId, course_id: randomCourseId, student_id: random2ndMember })
     ])
-    .then(console.log)
+    .then(() => {})
     .catch(console.error);
 });
 
