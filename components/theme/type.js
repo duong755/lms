@@ -11,6 +11,12 @@ const customBreakpoints = {
   }
 };
 
+const customTypography = {
+  button: {
+    textTransform: 'none'
+  }
+};
+
 const DarkTheme = createMuiTheme({
   breakpoints: customBreakpoints,
   palette: {
@@ -22,7 +28,8 @@ const DarkTheme = createMuiTheme({
       primary: '#FFFFFF',
       secondary: '#F5F5F5'
     }
-  }
+  },
+  typography: customTypography
 });
 const LightTheme = createMuiTheme({
   breakpoints: customBreakpoints,
@@ -35,7 +42,8 @@ const LightTheme = createMuiTheme({
       primary: '#000000',
       secondary: '#333333'
     }
-  }
+  },
+  typography: customTypography
 });
 
 const themes = {
