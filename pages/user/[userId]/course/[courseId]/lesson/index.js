@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 
 import withLayout from '../../../../../../components/lib/withLayout';
 import withCourse from '../../../../../../components/lib/withCourse';
@@ -91,6 +92,17 @@ function CourseLesson(props) {
 
   return (
     <>
+      <Grid container justify="flex-end">
+        <NextLink
+          href="/user/[userId]/course/[courseId]/lesson/create"
+          as={`/user/${userId}/course/${courseId}/lesson/create`}
+        >
+          <Button variant="contained" color="primary">
+            <Icon>add</Icon>Create Lesson
+          </Button>
+        </NextLink>
+      </Grid>
+
       <Box py={2} />
       {lessonData.total ? (
         <Grid container spacing={2}>

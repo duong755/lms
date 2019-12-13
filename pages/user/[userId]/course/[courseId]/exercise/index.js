@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 
 import withLayout from '../../../../../../components/lib/withLayout';
 import withCourse from '../../../../../../components/lib/withCourse';
@@ -72,11 +74,23 @@ function ExerciseItem(props) {
 }
 
 function CourseExercise(props) {
+  const { page, exerciseData, userId, courseId } = props;
+
   return (
     <>
+      <Grid container justify="flex-end">
+        <NextLink
+          href="/user/[userId]/course/[courseId]/exercise/create"
+          as={`/user/${userId}/course/${courseId}/exercise/create`}
+        >
+          <Button variant="contained" color="primary">
+            <Icon>add</Icon>Create Exercise
+          </Button>
+        </NextLink>
+      </Grid>
       <Box py={2} />
       <Grid container spacing={2}>
-        {props.exercises.map((currentExercise) => (
+        {exerciseData.exercises.map((currentExercise) => (
           <ExerciseItem key={currentExercise.id} {...currentExercise} />
         ))}
       </Grid>
@@ -97,6 +111,7 @@ CourseExercise.propTypes = {
 CourseExercise.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
   const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
+  let data = { exercises: [], total: 0 };
   /**
    * TODO:
    * - get exercises by pagination API
@@ -105,16 +120,15 @@ CourseExercise.getInitialProps = async (context) => {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/exercise/${page}`), {
       method: 'GET'
     });
-    const data = await response.json();
-    console.log(data);
-    return data;
+    data = await response.json();
   } catch (error) {
     console.log(error);
   }
   return {
     userId: userId,
     courseId: courseId,
-    page: Number(page) || 1
+    page: Number(page) || 1,
+    exerciseData: data
   };
 };
 
