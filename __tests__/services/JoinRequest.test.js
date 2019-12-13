@@ -1,11 +1,12 @@
 import { types } from 'cassandra-driver';
 
 import {
-  getJoinRequests,
+  getJoinRequestsByCourse,
+  getJoinRequestsByStudent,
+  getJoinRequestsByTeacher,
   getJoinRequestById,
   createJoinRequest,
   acceptJoinRequest,
-  removeJoinRequest,
   declineJoinRequest
 } from '../../server/services/JoinRequest';
 
@@ -27,10 +28,30 @@ describe('JoinRequest Services', () => {
     expect(body.found).toBe(true);
   });
 
-  it('getJoinRequests', async () => {
+  it('getJoinRequestsByCourse', async () => {
     await new Promise((done) => {
       setTimeout(async () => {
-        const { body } = await getJoinRequests(randomTeacherId, randomCourseId, randomStudentId, 1);
+        const { body } = await getJoinRequestsByCourse(randomTeacherId, randomCourseId, randomStudentId, 1);
+        expect(body.hits.total).toBeGreaterThanOrEqual(1);
+        done();
+      }, 1000);
+    });
+  });
+
+  it('getJoinRequestsByStudent', async () => {
+    await new Promise((done) => {
+      setTimeout(async () => {
+        const { body } = await getJoinRequestsByStudent(randomStudentId, 1);
+        expect(body.hits.total).toBeGreaterThanOrEqual(1);
+        done();
+      }, 1000);
+    });
+  });
+
+  it('getJoinRequestsByTeacher', async () => {
+    await new Promise((done) => {
+      setTimeout(async () => {
+        const { body } = await getJoinRequestsByTeacher(randomTeacherId, 1);
         expect(body.hits.total).toBeGreaterThanOrEqual(1);
         done();
       }, 1000);
@@ -46,12 +67,6 @@ describe('JoinRequest Services', () => {
   it('declineJoinRequest', async () => {
     await createJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
     const res = await declineJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
-    expect(res.wasApplied()).toBe(true);
-  });
-
-  it('removeJoinRequest', async () => {
-    await createJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
-    const res = await removeJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 });

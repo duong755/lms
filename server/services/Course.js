@@ -73,6 +73,65 @@ function getCoursesByStudent(studentId, page = 1, includes, excludes) {
 
 /**
  *
+ * @param {string} keyword
+ * @param {string | string[]} topics
+ * @param {string | string[]} [includes]
+ * @param {string | string[]} [excludes]
+ * @param {number} [page=1]
+ */
+function searchCourses(keyword, topics, includes, excludes, page = 1) {
+  page = _.toInteger(page);
+  page = page < 1 ? 1 : page;
+  if (!(topics instanceof Array)) {
+    topics = [topics];
+  }
+
+  const bodySearch = {
+    query: {
+      bool: {
+        must: [
+          {
+            terms: {
+              topics: topics
+            }
+          }
+        ],
+        should: [
+          {
+            match: {
+              course_name: keyword
+            }
+          },
+          {
+            match: {
+              description: keyword
+            }
+          }
+        ]
+      }
+    }
+  };
+
+  if (typeof keyword !== 'string') {
+    delete bodySearch.query.bool.should;
+  }
+  if (!topics.length) {
+    delete bodySearch.query.bool.must;
+  }
+
+  return elasticsearchClient.search({
+    index: 'lms.course',
+    type: 'course',
+    from: 10 * (page - 1),
+    size: 10,
+    _source_includes: includes,
+    _source_excludes: excludes,
+    body: bodySearch
+  });
+}
+
+/**
+ *
  * @param {Uuid} teacherId
  * @param {number} [page=1]
  * @param {string | string} [includes]
@@ -89,12 +148,13 @@ function getCoursesByTeacher(teacherId, page = 1, includes, excludes) {
     type: 'course',
     _source_includes: includes,
     _source_excludes: excludes,
+    sort: ['created_at:desc'],
     from: 10 * (page - 1),
     size: 10,
     body: {
       query: {
-        bool: {
-          must: [{ term: { teacher_id: teacherId } }]
+        term: {
+          teacher_id: teacherId
         }
       }
     }
@@ -127,5 +187,6 @@ module.exports = {
   upsertCourse: upsertCourse,
   getCoursesByStudent: getCoursesByStudent,
   getCoursesByTeacher: getCoursesByTeacher,
-  getCourseById: getCourseById
+  getCourseById: getCourseById,
+  searchCourses: searchCourses
 };
