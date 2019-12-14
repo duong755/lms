@@ -24,7 +24,7 @@ import NoSsr from '@material-ui/core/NoSsr';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import { UncontrolledAlert } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -77,6 +77,7 @@ const initialSignUpFormValues = {
 
 function SignUpForm() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [isDisplayError, setIsDisplayError] = useState(false);
   const classes = useStyles();
   const router = useRouter();
   const formik = useFormik({
@@ -176,7 +177,11 @@ function SignUpForm() {
         }
       />
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        {values.error && <UncontrolledAlert color="danger">{values.error}</UncontrolledAlert>}
+        {values.error && (
+          <Alert isOpen={isDisplayError} toggle={() => setIsDisplayError(false)} color="danger">
+            {values.error}
+          </Alert>
+        )}
         <Box pb={2}>
           <InputLabel htmlFor="username">Username</InputLabel>
           <TextField

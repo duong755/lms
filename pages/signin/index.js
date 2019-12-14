@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -21,7 +21,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import NoSsr from '@material-ui/core/NoSsr';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-import { UncontrolledAlert } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -64,6 +64,7 @@ const initialSignInFormValues = {
 };
 
 function SignInForm() {
+  const [isDisplayError, setIsDisplayError] = useState(false);
   const userContext = useContext(AppUser);
   const router = useRouter();
   const classes = useStyles();
@@ -90,9 +91,11 @@ function SignInForm() {
           router.replace('/');
         } else {
           helpers.setFieldValue('error', true);
+          setIsDisplayError(true);
         }
       } catch (signInErr) {
         helpers.setFieldValue('error', true);
+        setIsDisplayError(true);
       }
     },
     onReset: (values, helpers) => {
@@ -120,7 +123,11 @@ function SignInForm() {
 
   return (
     <form onSubmit={handleSubmit} onReset={handleReset}>
-      {values.error && <UncontrolledAlert color="danger">Wrong username/email or password</UncontrolledAlert>}
+      {values.error && (
+        <Alert isOpen={isDisplayError} toggle={() => setIsDisplayError(false)} color="danger">
+          Wrong username/email or password
+        </Alert>
+      )}
       <Paper>
         <Box pt={2} px={2}>
           <InputLabel htmlFor="emailOrUsername">Username or Email</InputLabel>
