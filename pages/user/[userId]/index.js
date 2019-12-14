@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import fetch from 'isomorphic-unfetch';
 import clsx from 'clsx';
-import dayjs from 'dayjs';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -13,9 +11,6 @@ import Container from '@material-ui/core/Container';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
-import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -61,52 +56,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-/**
- * @typedef {{ course: { id: string, teacher_id: string, course_name: string, created_at: string, description: string, members?: string | string[], topics?: string | string[] }}} CourseProps
- * @type {React.FunctionComponent<CourseProps>}
- */
-const CourseItem = (props) => {
-  const { course } = props;
-  const classes = useStyles();
-
-  const topics = course.topics ? (course.topics instanceof Array ? course.topics : [course.topics]) : null;
-
-  return (
-    <Paper className={clsx(classes.courseContainer)}>
-      <Typography variant="h4">
-        <NextLink href="/user/[userId]/course/[courseId]" as={`/user/${course.teacher_id}/course/${course.id}`}>
-          <Link href={`/user/${course.teacher_id}/course/${course.id}`} color="primary">
-            <strong>{course.course_name}</strong>
-          </Link>
-        </NextLink>
-      </Typography>
-      <Box display="flex" alignItems="center">
-        <Icon>access_time</Icon>&nbsp;
-        <Typography variant="caption" color="textSecondary">
-          {dayjs(course.created_at).format('YYYY MMM d, hh:mm A')}
-        </Typography>
-      </Box>
-      <Typography className={clsx(classes.courseDescription)}>{course.description}</Typography>
-      <Box>
-        {topics &&
-          topics.map((currentTopic) => (
-            <Button
-              key={currentTopic}
-              className={clsx(classes.courseTopic)}
-              color="primary"
-              variant="outlined"
-              size="small"
-            >
-              {currentTopic}
-            </Button>
-          ))}
-      </Box>
-    </Paper>
-  );
-};
-
 function ProfilePage(props) {
-  const { currentUser, courses, total = 0 } = props;
+  const { currentUser, total = 0 } = props;
   const [currentTab, setCurrentTab] = useState(0);
   const classes = useStyles();
 
@@ -125,11 +76,9 @@ function ProfilePage(props) {
               <Box className={clsx(classes.userInfoContainer)}>
                 <Avatar className={clsx(classes.userAvatar)} src={currentUser.info.image} />
                 <Box className={clsx(classes.usernameAndType)}>
-                  <Box display="flex" alignItems="center">
-                    <Typography variant="h5">
-                      <strong>{currentUser.username}</strong>
-                    </Typography>
-                  </Box>
+                  <Typography variant="h5">
+                    <strong>{currentUser.username}</strong>
+                  </Typography>
                   <Typography variant="caption">
                     {currentUser.type === 'teacher' && <Typography>Teacher</Typography>}
                     {currentUser.type === 'student' && <Typography>Student</Typography>}
@@ -153,8 +102,6 @@ function ProfilePage(props) {
               >
                 <Tab value={0} label={`Courses (${total})`} />
               </Tabs>
-              {currentTab === 0 &&
-                courses.map((currentCourse) => <CourseItem course={currentCourse} key={currentCourse.id} />)}
             </>
           ) : (
             <Box display="flex" flexDirection="column" alignItems="center" p={5}>
@@ -191,18 +138,6 @@ ProfilePage.getInitialProps = async (context) => {
     currentUser: userData && userData.user,
     ...courseData
   };
-};
-
-CourseItem.propTypes = {
-  course: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    teacher_id: PropTypes.string.isRequired,
-    course_name: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    created_at: PropTypes.string.isRequired,
-    members: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
-    topics: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string])
-  }).isRequired
 };
 
 ProfilePage.propTypes = {
