@@ -152,6 +152,8 @@ const ProfilePage = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const classes = useStyles();
 
+  const totalPages = Math.ceil(totalCourses / 10);
+
   useEffect(() => {
     const urlPath = `/api/user/${currentUser.id}/course?page=${currentPage}`;
     (async () => {
@@ -224,19 +226,21 @@ const ProfilePage = (props) => {
                       );
                     })}
                   </TableBody>
-                  <TableFooter>
-                    <TableRow>
-                      <TablePagination
-                        count={totalCourses}
-                        page={currentPage - 1}
-                        onChangePage={(event, page) => {
-                          setCurrentPage(page + 1);
-                        }}
-                        rowsPerPage={10}
-                        rowsPerPageOptions={[10]}
-                      />
-                    </TableRow>
-                  </TableFooter>
+                  {totalPages > 1 && (
+                    <TableFooter>
+                      <TableRow>
+                        <TablePagination
+                          count={totalCourses}
+                          page={currentPage - 1}
+                          onChangePage={(event, page) => {
+                            setCurrentPage(page + 1);
+                          }}
+                          rowsPerPage={10}
+                          rowsPerPageOptions={[10]}
+                        />
+                      </TableRow>
+                    </TableFooter>
+                  )}
                 </Table>
               )}
             </>
