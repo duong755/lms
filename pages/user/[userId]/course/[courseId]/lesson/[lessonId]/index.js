@@ -76,7 +76,6 @@ LessonDetail.getInitialProps = async (context) => {
     user = await userResponse.json();
     course = await courseResponse.json();
     lesson = await lessonResponse.json();
-    console.log(user, course, lesson);
   } catch (err) {
     console.error(err);
   }
