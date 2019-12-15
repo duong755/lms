@@ -17,6 +17,7 @@ import Icon from '@material-ui/core/Icon';
 import withLayout from '../../../../../../components/lib/withLayout';
 import withCourse from '../../../../../../components/lib/withCourse';
 import AbsURL from '../../../../../../components/helpers/URL';
+import { LessonType } from '../../../../../../components/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   lessonContainer: {
@@ -51,10 +52,10 @@ function getDateObj(uuid_str) {
   return new Date(int_millisec);
 }
 
-function LessonItem(props) {
-  const { userId, courseId, id: lessonId } = props;
+const LessonItem = (props) => {
+  const { lesson } = props;
   const classes = useStyles();
-  const objDate = getDateObj(props.id);
+  const objDate = getDateObj(lesson.id);
   const createAt = dayjs(objDate).format('YYYY-MM-DD hh:mm A');
 
   return (
@@ -62,12 +63,15 @@ function LessonItem(props) {
       <Paper className={clsx(classes.lessonContainer)}>
         <NextLink
           href="/user/[userId]/course/[courseId]/lesson/[lessonId]"
-          as={`/user/${userId}/course/${courseId}/lesson/${lessonId}`}
+          as={`/user/${lesson.teacher_id}/course/${lesson.course_id}/lesson/${lesson.id}`}
           prefetch={false}
         >
-          <Link href={`/user/${userId}/course/${courseId}/lesson/${lessonId}`} className={clsx(classes.lessonLink)}>
-            <Typography title={props.title} color="primary" variant="h5">
-              {props.title}
+          <Link
+            href={`/user/${lesson.teacher_id}/course/${lesson.course_id}/lesson/${lesson.id}`}
+            className={clsx(classes.lessonLink)}
+          >
+            <Typography title={lesson.title} color="primary" variant="h5">
+              {lesson.title}
             </Typography>
           </Link>
         </NextLink>
@@ -75,9 +79,9 @@ function LessonItem(props) {
       </Paper>
     </Grid>
   );
-}
+};
 
-function CourseLesson(props) {
+const CourseLesson = (props) => {
   const { page, lessonData, userId, courseId } = props;
   const pages = Math.ceil(lessonData.total / 10);
 
@@ -107,7 +111,7 @@ function CourseLesson(props) {
       {lessonData.total ? (
         <Grid container spacing={2}>
           {lessonData.lessons.map((currentLesson) => (
-            <LessonItem key={currentLesson.id} {...currentLesson} courseId={courseId} userId={userId} />
+            <LessonItem key={currentLesson.id} lesson={currentLesson} />
           ))}
           <Grid item xs={12}>
             <NextLink href={url(page - 1)} as={as(page - 1)}>
@@ -129,14 +133,10 @@ function CourseLesson(props) {
       )}
     </>
   );
-}
+};
 
 LessonItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  createdAt: PropTypes.string,
-  id: PropTypes.string.isRequired,
-  courseId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired
+  lesson: LessonType
 };
 
 CourseLesson.propTypes = {
@@ -144,18 +144,18 @@ CourseLesson.propTypes = {
   userId: PropTypes.string.isRequired,
   page: PropTypes.number.isRequired,
   lessonData: PropTypes.shape({
-    lessons: PropTypes.arrayOf(PropTypes.object).isRequired,
+    lessons: PropTypes.arrayOf(LessonType).isRequired,
     total: PropTypes.number.isRequired
   }).isRequired
 };
 
 CourseLesson.getInitialProps = async (context) => {
   const { userId, courseId } = context.query;
-  const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
+  const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
   let data = { lessons: [], total: 0 };
 
   try {
-    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/lesson/${page}`), {
+    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/lesson?page=${page}`), {
       method: 'GET'
     });
     data = await response.json();
