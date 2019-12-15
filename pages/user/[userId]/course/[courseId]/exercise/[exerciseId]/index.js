@@ -13,7 +13,6 @@ import Divider from '@material-ui/core/Divider';
 import withLayout from '../../../../../../../components/lib/withLayout';
 import MuiRte from '../../../../../../../components/MuiRte';
 import absURL from '../../../../../../../components/helpers/URL';
-// import getContentMuiRTE from '../../../../../../../components/helpers/contentMuiRTE';
 
 function Exercise(props) {
   return (
@@ -38,7 +37,7 @@ function Exercise(props) {
                     </Typography>
                   </Box>
                   <Box p={2}>
-                    <MuiRte controls={{}} />
+                    <div dangerouslySetInnerHTML={{ __html: props.exercise.content }}></div>
                   </Box>
                 </Paper>
               </Box>

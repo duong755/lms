@@ -46,7 +46,9 @@ function LessonDetail(props) {
               </Typography>
             </Breadcrumbs>
           </Box>
-          <Box py={3}>{lesson.content}</Box>
+          <Box py={3}>
+            <div dangerouslySetInnerHTML={{ __html: lesson.content }}></div>
+          </Box>
           <Divider color="initial" />
         </Container>
       </Box>

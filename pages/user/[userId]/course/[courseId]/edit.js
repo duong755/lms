@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useContext, useRef, useEffect } from 'react';
+import { useContext, useRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { isObject } from 'lodash';
 import { useRouter } from 'next/router';
@@ -87,25 +87,14 @@ const searchTopic = async (input) => {
   }
 };
 
-function EditCourseForm() {
+function EditCourseForm(props) {
   const select = useRef(null);
   const classes = useStyles();
   const router = useRouter();
   const userContext = useContext(AppUser);
-  // const [initialValues, setInitialValue] = useState({});
-
-  // // useEffect(() => {
-  // //   const fetchData = async () => {
-  // //     const result = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}`));
-  // //     const json = await result.json();
-  // //     const newState = Object.assagin(initialValues, json.course)
-  // //     setInitialValue(newState);
-  // //   };
-  // //   fetchData();
-  // // }, []);
 
   const formik = useFormik({
-    initialValues: createCourseInitialValues,
+    initialValues: props.createCourseInitialValues,
     validationSchema: createCourseValidationSchema,
     enableReinitialize: true,
     onSubmit: async (values, helpers) => {
@@ -229,6 +218,19 @@ function EditCourse(props) {
   const userContext = useContext(AppUser);
   const router = useRouter();
 
+  const [initialValues, setInitialValue] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}`));
+      const json = await result.json();
+      const newState = { ...initialValues, ...json.course };
+      console.log(newState);
+      setInitialValue(newState);
+    };
+    fetchData();
+  }, []);
+
   useEffect(() => {
     if (!isObject(props.user) && !isObject(userContext.user)) {
       router.replace('/');
@@ -250,7 +252,7 @@ function EditCourse(props) {
             <Grid item xs={12} sm={8}>
               {isObject(userContext.user) && userContext.user.type === 'teacher' && (
                 <NoSsr>
-                  <EditCourseForm />
+                  <EditCourseForm createCourseInitialValues={initialValues} />
                 </NoSsr>
               )}
             </Grid>

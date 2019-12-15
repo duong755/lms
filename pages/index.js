@@ -5,7 +5,6 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import withLayout from '../components/lib/withLayout';
-
 function Home() {
   return (
     <>
