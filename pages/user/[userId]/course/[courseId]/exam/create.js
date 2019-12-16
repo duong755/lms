@@ -26,7 +26,7 @@ import absURL from '../../../../../../components/helpers/URL';
 
 class Header extends React.Component {
   render() {
-    const { startAt, editStartedTime, duration, editDuration } = this.props;
+    const { startAt, editStartedTime, duration, editDuration, title, handleChangeTitle } = this.props;
     return (
       <>
         <Grid item>
@@ -35,10 +35,13 @@ class Header extends React.Component {
               <strong>Create new exam</strong>
             </Typography>
           </Box>
-          {console.log('Render Header')}
           <Divider />
         </Grid>
-        <Box py={2} />
+        <Box py={1} />
+        <Grid item>
+          <TextField value={title} fullWidth onChange={handleChangeTitle} placeholder="Exam Title" />
+        </Grid>
+        <Box py={1} />
         <Grid container spacing={3}>
           <Grid item xs={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -74,6 +77,9 @@ class Header extends React.Component {
       return true;
     }
     if (nextProps.startAt !== this.props.startAt) {
+      return true;
+    }
+    if (nextProps.title !== this.props.title) {
       return true;
     }
     return false;
@@ -122,12 +128,98 @@ class Choice extends React.Component {
   }
 }
 
+class DeleteQuestionButton extends React.Component {
+  render() {
+    const { deleteQuestion } = this.props;
+    return (
+      <>
+        <Grid item>
+          <IconButton onClick={deleteQuestion}>
+            <Icon>
+              <Delete fontSize="large" />
+            </Icon>
+          </IconButton>
+        </Grid>
+      </>
+    );
+  }
+  shouldComponentUpdate() {
+    return false;
+  }
+}
+
+class PointAndDelete extends React.Component {
+  render() {
+    const { point, deleteQuestion, handlePoint } = this.props;
+    return (
+      <>
+        <Grid container direction="row" justify="space-between">
+          <Grid item>
+            {console.log('Render Point')}
+            <Grid container>
+              <TextField value={point} placeholder="Nhập điểm" onChange={handlePoint} />
+              <Typography>điểm</Typography>
+            </Grid>
+          </Grid>
+          <DeleteQuestionButton deleteQuestion={deleteQuestion} />
+        </Grid>
+      </>
+    );
+  }
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.point !== this.props.point) {
+      return true;
+    }
+    return false;
+  }
+}
+
+class AddQuestionButton extends React.Component {
+  render() {
+    const { addQuestion } = this.props;
+    return (
+      <>
+        <IconButton onClick={addQuestion}>
+          <Icon>
+            <AddCircleOutline />
+          </Icon>
+        </IconButton>
+      </>
+    );
+  }
+  shouldComponentUpdate() {
+    return false;
+  }
+}
+
+class SubmitedButton extends React.Component {
+  render() {
+    const { handleSubmit } = this.props;
+    return (
+      <>
+        <Grid item>
+          <Box marginY={3}>
+            {console.log('render submited button')}
+            <Button color="primary" variant="contained" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </Box>
+        </Grid>
+      </>
+    );
+  }
+  shouldComponentUpdate() {
+    return false;
+  }
+}
+
 class CreateExamPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       startAt: new Date().getTime(),
       duration: 0,
+      title: '',
       questions: [
         {
           question: '',
@@ -248,11 +340,18 @@ class CreateExamPage extends React.Component {
     });
   }
 
+  editTitle(event) {
+    this.setState({
+      title: event.target.value
+    });
+  }
+
   async handleSubmit() {
     event.preventDefault();
-    const { userId, courseId } = this.props.router.query;
+    const { router } = this.props;
+
     try {
-      const result = await fetch(absURL(`/api/user/${userId}/course/${courseId}/exam`), {
+      const result = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}/exam`), {
         method: 'POST',
         body: JSON.stringify(this.state),
         credentials: 'include',
@@ -263,7 +362,7 @@ class CreateExamPage extends React.Component {
       });
       const json = await result.json();
       if (json.successful) {
-        router.replace(`/user/${router.userId}/course/${router.courseId}/exam/${json.examId}`);
+        router.replace(`/user/${router.query.userId}/course/${router.query.courseId}/exam/${json.examId}`);
         return;
       } else {
         console.log(json);
@@ -278,21 +377,20 @@ class CreateExamPage extends React.Component {
       <Container maxWidth="xl">
         <Grid container justify="center">
           <Grid item xs={12} sm={8}>
+            {console.log('Render Container')}
             <Grid container alignItems="stretch" direction="column">
               <Header
                 duration={this.state.duration}
                 editDuration={(event) => this.handleDuration(event)}
                 startAt={this.state.startAt}
                 editStartedTime={(event) => this.handleStartedTime(event)}
+                title={this.state.title}
+                handleChangeTitle={(event) => this.editTitle(event)}
               />
               <Grid item>
                 {this.state.questions.map((currentQuestion, questionIdx) => (
                   <Paper className="question" key={questionIdx} style={{ position: 'relative' }}>
-                    <IconButton onClick={() => this.addQuestion(questionIdx)}>
-                      <Icon>
-                        <AddCircleOutline />
-                      </Icon>
-                    </IconButton>
+                    <AddQuestionButton addQuestion={() => this.addQuestion(questionIdx)} />
                     <Question
                       value={currentQuestion.question}
                       onChange={(event) => this.editQuestion(event, questionIdx)}
@@ -308,35 +406,15 @@ class CreateExamPage extends React.Component {
                         />
                       ))}
                     </RadioGroup>
-                    <Grid container direction="row" justify="space-between">
-                      <Grid item>
-                        <Grid container>
-                          <TextField
-                            value={this.state.point}
-                            placeholder="Nhập điểm"
-                            onChange={(event) => this.editPoint(event, questionIdx)}
-                          />
-                          <Typography>điểm</Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid item>
-                        <IconButton onClick={() => this.deleteQuestion(questionIdx)}>
-                          <Icon>
-                            <Delete fontSize="large" />
-                          </Icon>
-                        </IconButton>
-                      </Grid>
-                    </Grid>
+                    <PointAndDelete
+                      point={currentQuestion.point}
+                      deleteQuestion={() => this.deleteQuestion(questionIdx)}
+                      handlePoint={(event) => this.editPoint(event)}
+                    />
                   </Paper>
                 ))}
               </Grid>
-              <Grid item>
-                <Box marginY={3}>
-                  <Button color="primary" variant="contained" onClick={(event) => this.handleSubmit(event)}>
-                    Submit
-                  </Button>
-                </Box>
-              </Grid>
+              <SubmitedButton handleSubmit={(event) => this.handleSubmit(event)} />
             </Grid>
           </Grid>
         </Grid>
@@ -345,11 +423,17 @@ class CreateExamPage extends React.Component {
   }
 }
 
+CreateExamPage.propTypes = {
+  router: PropTypes.object
+};
+
 Header.propTypes = {
   startAt: PropTypes.number.isRequired,
   editStartedTime: PropTypes.func.isRequired,
   duration: PropTypes.string.isRequired,
-  editDuration: PropTypes.func.isRequired
+  editDuration: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  handleChangeTitle: PropTypes.func.isRequired
 };
 
 Question.propTypes = {
@@ -362,6 +446,24 @@ Choice.propTypes = {
   value: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired
+};
+
+DeleteQuestionButton.propTypes = {
+  deleteQuestion: PropTypes.func.isRequired
+};
+
+PointAndDelete.propTypes = {
+  point: PropTypes.number.isRequired,
+  handlePoint: PropTypes.func.isRequired,
+  deleteQuestion: PropTypes.func.isRequired
+};
+
+AddQuestionButton.propTypes = {
+  addQuestion: PropTypes.func.isRequired
+};
+
+SubmitedButton.propTypes = {
+  handleSubmit: PropTypes.func.isRequired
 };
 
 export default withLayout(withRouter(CreateExamPage));
