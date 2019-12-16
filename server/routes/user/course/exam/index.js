@@ -132,7 +132,7 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
   try {
     const result = await examService.upsertExam(newExam, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ message: 'Create new exam successfully' });
+      res.status(200).json({ successful: true, examId: newExam.examId });
     } else {
       res.status(400).json({ message: 'Can not create exam' });
     }
@@ -247,8 +247,6 @@ examRouter.put('/:examId', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const examId = req.params.examId;
-
-  console.log('dcm admadmasd');
 
   try {
     let oldExam = await examService.getExamById(teacherId, courseId, examId);

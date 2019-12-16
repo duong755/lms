@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
+import Icon from '@material-ui/core/Icon';
+import Button from '@material-ui/core/Button';
 
 import AbsURL from '../../../../../../components/helpers/URL';
 import withLayout from '../../../../../../components/lib/withLayout';
@@ -73,11 +75,22 @@ function ExamItem(props) {
 }
 
 function CourseExam(props) {
+  const { userId, courseId } = props;
   return (
     <>
+      <Grid container justify="flex-end">
+        <NextLink
+          href="/user/[userId]/course/[courseId]/exam/create"
+          as={`/user/${userId}/course/${courseId}/exam/create`}
+        >
+          <Button variant="contained" color="primary">
+            <Icon>add</Icon>Create Exam
+          </Button>
+        </NextLink>
+      </Grid>
       <Box py={2} />
       <Grid container spacing={2}>
-        {props.exams.map((currentExam) => (
+        {props.examData.exams.map((currentExam) => (
           <ExamItem key={currentExam.id} {...currentExam} />
         ))}
       </Grid>
@@ -98,6 +111,7 @@ CourseExam.propTypes = {
 CourseExam.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
   const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
+  let data = { exams: [], total: 0 };
   /**
    * TODO:
    * - get lessons by pagination API
@@ -106,11 +120,21 @@ CourseExam.getInitialProps = async (context) => {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/exam/${page}`), {
       method: 'GET'
     });
-    const data = await response.json();
-    return data;
+    data = await response.json();
   } catch (error) {
     console.log(error);
   }
+  return {
+    userId: userId,
+    courseId: courseId,
+    page: Number(page) || 1,
+    examData: data
+  };
 };
 
+CourseExam.propTypes = {
+  userId: PropTypes.string.isRequired,
+  courseId: PropTypes.string.isRequired,
+  examData: PropTypes.array.isRequired
+};
 export default withLayout(withCourse(CourseExam, 'exam'));
