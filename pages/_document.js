@@ -38,8 +38,10 @@ class CustomDocument extends Document {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" key="viewport" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" key="httpEquiv" />
           <link rel="shortcut icon" href="/favicon.ico" />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap" />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          <link rel="stylesheet" href="/css/roboto.css" />
+          <link rel="stylesheet" href="/css/material-icons.css" />
+          <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+          <link rel="stylesheet" type="text/css" href="/css/nprogress.min.css" />
         </Head>
         <body>
           <Main />

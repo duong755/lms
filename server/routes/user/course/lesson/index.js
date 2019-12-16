@@ -5,7 +5,6 @@ const _ = require('lodash');
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const { cassandraTypes } = require('../../../../models/connector');
 const lessonService = require('../../../../services/Lesson');
-const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 
 const commentRouter = require('./comment');
 
@@ -14,7 +13,7 @@ const lessonRouter = Router({ mergeParams: true });
 /**
  * lesson pagination
  */
-lessonRouter.get('/', canAccessCourse, async (req, res) => {
+lessonRouter.get('/', async (req, res) => {
   const page = req.query.page || 1;
   try {
     const result = await lessonService.getLessonsByTeacherAndCourse(req.params.userId, req.params.courseId, page);
@@ -73,20 +72,20 @@ lessonRouter.post('/', isCourseCreator, async (req, res) => {
   try {
     const upsertResult = await lessonService.upsertLesson(newLesson, void 0, true);
     if (upsertResult.wasApplied()) {
-      res.status(200).json({ success: 'Create new lesson successfully' });
+      res.status(200).json({ successful: true, lessonId: newLesson.id });
     } else {
       res.status(500).json({ error: 'Can not create this course' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 
 /**
  * get lesson data
  */
-lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
+lessonRouter.get('/:lessonId', async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const lessonId = req.params.lessonId;
@@ -94,13 +93,13 @@ lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
     const result = await lessonService.getLessonById(teacherId, courseId, lessonId);
     const lesson = result.body._source;
     if (result.body.found) {
-      res.status(200).json({ lesson: lesson });
+      res.status(200).json({ successful: true, lesson: lesson });
     } else {
       res.status(404).json({ error: 'Can not find this course' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 
@@ -128,14 +127,14 @@ lessonRouter.put('/:lessonId', isCourseCreator, async (req, res) => {
     );
     if (updateResult.wasApplied()) {
       res.status(200).json({
-        success: 'Update lesson successfully'
+        successful: true
       });
     } else {
       res.status(500).json({ error: 'Can not update this lesson' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 
@@ -149,13 +148,13 @@ lessonRouter.delete('/:lessonId', isCourseCreator, async (req, res) => {
   try {
     const deleteResult = await lessonService.removeLesson(teacherId, courseId, lessonId);
     if (deleteResult.wasApplied()) {
-      res.status(200).json({ success: 'Delete lesson successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(500).json({ error: 'Can not delete this course' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 

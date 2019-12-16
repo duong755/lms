@@ -12,7 +12,7 @@ const { JoinRequest, cassandraClient, elasticsearchClient } = require('../models
  * @param {string} courseId
  * @param {number} [page=1]
  */
-function getJoinRequests(teacherId, courseId, page = 1) {
+function getJoinRequestsByCourse(teacherId, courseId, page = 1) {
   page = _.toInteger(page);
   page = page < 1 ? 1 : page;
 
@@ -24,6 +24,7 @@ function getJoinRequests(teacherId, courseId, page = 1) {
     type: 'join_request',
     from: 10 * (page - 1),
     size: 10,
+    sort: ['request_at:desc'],
     body: {
       query: {
         bool: {
@@ -35,6 +36,58 @@ function getJoinRequests(teacherId, courseId, page = 1) {
               term: { course_id: courseId }
             }
           ]
+        }
+      }
+    }
+  });
+}
+
+/**
+ *
+ * @param {Uuid} teacherId
+ * @param {number} [page=1]
+ */
+function getJoinRequestsByTeacher(teacherId, page = 1) {
+  page = _.toInteger(page);
+  page = page < 1 ? 1 : page;
+
+  teacherId = String(teacherId);
+
+  return elasticsearchClient.search({
+    index: 'lms.join_request',
+    type: 'join_request',
+    from: 10 * (page - 1),
+    size: 10,
+    sort: ['request_at:desc'],
+    body: {
+      query: {
+        term: { teacher_id: teacherId }
+      }
+    }
+  });
+}
+
+/**
+ *
+ * @param {Uuid} studentId
+ * @param {number} [page=1]
+ */
+function getJoinRequestsByStudent(studentId, page = 1) {
+  page = _.toInteger(page);
+  page = page < 1 ? 1 : page;
+
+  studentId = String(studentId);
+
+  return elasticsearchClient.search({
+    index: 'lms.join_request',
+    type: 'join_request',
+    from: 10 * (page - 1),
+    size: 10,
+    sort: ['request_at:desc'],
+    body: {
+      query: {
+        term: {
+          student_id: studentId
         }
       }
     }
@@ -123,27 +176,6 @@ function acceptJoinRequest(teacherId, courseId, studentId, ttl) {
  * @param {Uuid} studentId
  * @param {number} [ttl]
  */
-function removeJoinRequest(teacherId, courseId, studentId, ttl) {
-  return JoinRequest.remove(
-    {
-      teacher_id: teacherId,
-      course_id: courseId,
-      student_id: studentId
-    },
-    {
-      ifExists: true,
-      ttl: ttl
-    }
-  );
-}
-
-/**
- *
- * @param {Uuid} teacherId
- * @param {Uuid} courseId
- * @param {Uuid} studentId
- * @param {number} [ttl]
- */
 function declineJoinRequest(teacherId, courseId, studentId, ttl) {
   return JoinRequest.remove(
     {
@@ -159,10 +191,11 @@ function declineJoinRequest(teacherId, courseId, studentId, ttl) {
 }
 
 module.exports = {
-  getJoinRequests: getJoinRequests,
+  getJoinRequestsByCourse: getJoinRequestsByCourse,
+  getJoinRequestsByStudent: getJoinRequestsByStudent,
+  getJoinRequestsByTeacher: getJoinRequestsByTeacher,
   getJoinRequestById: getJoinRequestById,
   createJoinRequest: createJoinRequest,
   acceptJoinRequest: acceptJoinRequest,
-  removeJoinRequest: removeJoinRequest,
   declineJoinRequest: declineJoinRequest
 };

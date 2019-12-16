@@ -32,7 +32,7 @@ const findUserByUsernameOrEmail = async (req, res, next) => {
     }
   } else {
     res.status(200).json({
-      success: true,
+      successful: true,
       warning: 'You have already been authenticated'
     });
   }
@@ -46,6 +46,7 @@ const comparePassword = (req, res, next) => {
   const { hash_password } = res.locals.user;
   bcrypt.compare(password, hash_password, (err, same) => {
     if (err) {
+      console.error(err);
       res.status(500).json({
         error: err.message
       });
@@ -76,6 +77,7 @@ const generateToken = (req, res) => {
     },
     (err, encoded) => {
       if (err) {
+        console.error(err);
         res.status(500).json({
           err: err.message
         });
@@ -85,11 +87,6 @@ const generateToken = (req, res) => {
           .toDate();
         res.cookie('access_token', encoded, {
           httpOnly: true,
-          sameSite: true,
-          path: '/',
-          expires: expireAt
-        });
-        res.cookie('lms.user', user, {
           sameSite: true,
           path: '/',
           expires: expireAt

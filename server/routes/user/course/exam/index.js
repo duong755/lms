@@ -4,7 +4,6 @@ const _ = require('lodash');
 
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const isCourseMember = require('../../../../middlewares/isCourseMember');
-const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 const canAccessExamWork = require('../../../../middlewares/canAccessExamWork');
 const examWorkService = require('../../../../services/ExamWork');
 const examService = require('../../../../services/Exam');
@@ -42,12 +41,12 @@ examRouter.get('/', async (req, res) => {
     const result = await examService.getExamsByCourse(teacherId, courseId, page);
     const exam = result.body.hits.hits.map((current) => current._source);
     res.status(200).json({
-      exam: exam,
+      exams: exam,
       total: result.body.hits.total
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam');
 });
@@ -139,7 +138,7 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam');
 });
@@ -147,7 +146,7 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
 /**
  * get exam by id
  */
-examRouter.get('/:examId', canAccessCourse, async (req, res) => {
+examRouter.get('/:examId', async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const examId = req.params.examId;
@@ -161,7 +160,7 @@ examRouter.get('/:examId', canAccessCourse, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured1' });
+    res.status(500).json({ error: 'Unexpected error occurred1' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId');
 });
@@ -236,7 +235,7 @@ examRouter.post('/:examId', isCourseMember, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId');
 });
@@ -281,7 +280,7 @@ examRouter.put('/:examId', isCourseCreator, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId');
 });
@@ -302,7 +301,7 @@ examRouter.delete('/:examId', isCourseCreator, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    req.status(500).json({ error: 'Unexpected error occured' });
+    req.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId');
 });
@@ -332,7 +331,7 @@ examRouter.get('/:examId/:studentId', canAccessExamWork, async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId/course/:courseId/exam/:examId/:studentId');
 });

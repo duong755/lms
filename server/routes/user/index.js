@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
+const { isObject } = require('lodash');
 
 const userService = require('../../services/User');
 
@@ -11,7 +12,11 @@ const userRouter = Router({ mergeParams: true });
  * auth user info
  */
 userRouter.all('/', (req, res) => {
-  res.status(200).json(res.locals.user);
+  if (isObject(res.locals.user)) {
+    res.status(200).json(res.locals.user);
+    return;
+  }
+  res.status(200).json(null);
 });
 
 /**
@@ -27,7 +32,7 @@ userRouter.get('/:userId', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
 });
 
@@ -47,7 +52,7 @@ userRouter.put('/:userId', async (req, res) => {
           if (newPassword !== user.body._source.hashPassword) {
             const resultUpdate = await userService.updateUserPassword(req.params.userId, hashPassword);
             if (resultUpdate.wasApplied()) {
-              res.status(200).json({ success: 'Update password successfully' });
+              res.status(200).json({ successful: 'Update password successfully' });
             } else {
               res.status(500).jsonon({ error: 'Can not update password' });
             }
@@ -63,21 +68,21 @@ userRouter.put('/:userId', async (req, res) => {
     } else if (req.body.username !== undefined) {
       const updateResult = await userService.updateUserName(req.params.userId, req.body.username);
       if (updateResult.wasApplied()) {
-        res.status(200).json({ success: 'Update username successfully' });
+        res.status(200).json({ successful: 'Update username successfully' });
       } else {
         res.status(500).json({ error: 'Can not update username' });
       }
     } else if (req.body.email !== undefined) {
       const updateResult = await userService.updateEmail(req.params.userId, req.body.email);
       if (updateResult.wasApplied()) {
-        res.status(200).json({ success: 'Update email successfully' });
+        res.status(200).json({ successful: 'Update email successfully' });
       } else {
         res.status(500).json({ error: 'Can not update email' });
       }
     } else if (req.body.info !== undefined) {
       const updateResult = await userService.updateUserInfo(req.params.userId, req.body.info);
       if (updateResult.wasApplied()) {
-        res.status(200).json({ success: 'Update information successfully' });
+        res.status(200).json({ successful: 'Update information successfully' });
       } else {
         res.status(500).json({ error: 'Can not update information' });
       }
@@ -86,7 +91,7 @@ userRouter.put('/:userId', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Unexpected error occured' });
+    res.status(500).json({ error: 'Unexpected error occurred' });
   }
   // res.end('/api/user/:userId');
 });

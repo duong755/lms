@@ -17,7 +17,7 @@ const isCourseMember = async (req, res, next) => {
     }
   } catch (error) {
     console.error(error);
-    res.send(500).json({ error: 'Unexpected error occured' });
+    res.send(500).json({ error: 'Unexpected error occurred' });
   }
 };
 
