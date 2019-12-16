@@ -11,15 +11,6 @@ const { cassandraTypes } = require('../../../../models/connector');
 
 const examRouter = Router({ mergeParams: true });
 
-function getTimeStamp(dateTime) {
-  const dateTimeParts = dateTime.split(' ');
-  const timeParts = dateTimeParts[1].split(':');
-  const dateParts = dateTimeParts[0].split('-');
-
-  const date = new Date(dateParts[2], parseInt(dateParts[1], 10) - 1, dateParts[0], timeParts[0], timeParts[1]);
-  return date.getTime();
-}
-
 function getMark(content, examContent) {
   let point = 0;
   for (let i = 0; i < content.length; i++) {
@@ -69,7 +60,7 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
     examId: cassandraTypes.TimeUuid.now(),
     duration: duration,
     content: content,
-    startAt: getTimeStamp(startAt),
+    startAt: Number(startAt),
     title: title
   };
   const schema = Joi.object({
@@ -128,7 +119,7 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
     });
     return;
   }
-
+  console.log(newExam);
   try {
     const result = await examService.upsertExam(newExam, void 0, true);
     if (result.wasApplied()) {
@@ -259,7 +250,7 @@ examRouter.put('/:examId', isCourseCreator, async (req, res) => {
         duration: req.body.duration !== undefined ? req.body.duration : oldExam.duration,
         examId: oldExam.id,
         content: req.body.content !== undefined ? req.body.content : oldExam.content,
-        startAt: req.body.startAt !== undefined ? getTimeStamp(req.body.startAt) : oldExam.start_at,
+        startAt: req.body.startAt !== undefined ? req.body.startAt : oldExam.start_at,
         title: req.body.title !== undefined ? req.body.title : oldExam.title
       };
       const result = await examService.upsertExam(

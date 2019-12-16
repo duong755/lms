@@ -220,7 +220,7 @@ class CreateExamPage extends React.Component {
       startAt: new Date().getTime(),
       duration: 0,
       title: '',
-      questions: [
+      content: [
         {
           question: '',
           choices: ['', '', '', ''],
@@ -232,7 +232,7 @@ class CreateExamPage extends React.Component {
   }
 
   editQuestion(event, questionIdx) {
-    const newQuestions = this.state.questions.map((currentQuestion, questionIndex) => {
+    const newQuestions = this.state.content.map((currentQuestion, questionIndex) => {
       if (questionIdx === questionIndex) {
         return {
           ...currentQuestion,
@@ -242,12 +242,12 @@ class CreateExamPage extends React.Component {
       return currentQuestion;
     });
     this.setState({
-      questions: newQuestions
+      content: newQuestions
     });
   }
 
   editChoice(event, questionIdx, choiceIdx) {
-    const newQuestions = this.state.questions.map((currentQuestion, questionIndex) => {
+    const newQuestions = this.state.content.map((currentQuestion, questionIndex) => {
       if (questionIdx === questionIndex) {
         return {
           ...currentQuestion,
@@ -262,7 +262,7 @@ class CreateExamPage extends React.Component {
       return currentQuestion;
     });
     this.setState({
-      questions: newQuestions
+      content: newQuestions
     });
   }
 
@@ -275,31 +275,31 @@ class CreateExamPage extends React.Component {
     };
 
     const newQuestions = [
-      ...this.state.questions.slice(0, questionIdx + 1),
+      ...this.state.content.slice(0, questionIdx + 1),
       newQuestion,
-      ...this.state.questions.slice(questionIdx + 1)
+      ...this.state.content.slice(questionIdx + 1)
     ];
 
-    this.setState({ questions: newQuestions });
+    this.setState({ content: newQuestions });
   }
 
   deleteQuestion(questionIdx) {
-    if (this.state.questions.length === 1) {
+    if (this.state.content.length === 1) {
       return;
     }
 
     const newQuestions = [
-      ...this.state.questions.slice(0, questionIdx),
-      ...this.state.questions.slice(questionIdx + 1)
+      ...this.state.content.slice(0, questionIdx),
+      ...this.state.content.slice(questionIdx + 1)
     ];
 
     this.setState({
-      questions: newQuestions
+      content: newQuestions
     });
   }
 
   editPoint(event, questionIdx) {
-    const newQuestions = this.state.questions.map((currentQuestion, questionIndex) => {
+    const newQuestions = this.state.content.map((currentQuestion, questionIndex) => {
       if (questionIdx === questionIndex) {
         return {
           ...currentQuestion,
@@ -309,12 +309,12 @@ class CreateExamPage extends React.Component {
       return currentQuestion;
     });
     this.setState({
-      questions: newQuestions
+      content: newQuestions
     });
   }
 
   editAnswer(questionIdx, choiceIdx) {
-    const newQuestions = this.state.questions.map((currentQuestion, questionIndex) => {
+    const newQuestions = this.state.content.map((currentQuestion, questionIndex) => {
       if (questionIdx === questionIndex) {
         return {
           ...currentQuestion,
@@ -324,7 +324,7 @@ class CreateExamPage extends React.Component {
       return currentQuestion;
     });
     this.setState({
-      questions: newQuestions
+      content: newQuestions
     });
   }
 
@@ -349,7 +349,7 @@ class CreateExamPage extends React.Component {
   async handleSubmit() {
     event.preventDefault();
     const { router } = this.props;
-
+    console.log(JSON.stringify(this.state));
     try {
       const result = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}/exam`), {
         method: 'POST',
@@ -388,7 +388,7 @@ class CreateExamPage extends React.Component {
                 handleChangeTitle={(event) => this.editTitle(event)}
               />
               <Grid item>
-                {this.state.questions.map((currentQuestion, questionIdx) => (
+                {this.state.content.map((currentQuestion, questionIdx) => (
                   <Paper className="question" key={questionIdx} style={{ position: 'relative' }}>
                     <AddQuestionButton addQuestion={() => this.addQuestion(questionIdx)} />
                     <Question

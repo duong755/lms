@@ -145,17 +145,19 @@ const CourseLessonPage = (props) => {
               );
             })}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                page={page - 1}
-                onChangePage={(event, page) => setCurrentPage(page + 1)}
-                count={lessonData.total}
-                rowsPerPage={10}
-                rowsPerPageOptions={[10]}
-              />
-            </TableRow>
-          </TableFooter>
+          {lessonData.total >= 10 && (
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  page={page - 1}
+                  onChangePage={(page) => setCurrentPage(page + 1)}
+                  count={lessonData.total}
+                  rowsPerPage={10}
+                  rowsPerPageOptions={10}
+                />
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
       ) : (
         <Box textAlign="center">
