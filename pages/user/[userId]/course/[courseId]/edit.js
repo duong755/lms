@@ -263,9 +263,12 @@ function EditCourse(props) {
   );
 }
 
-EditCourse.propTypes = {
-  user: PropTypes.object,
+EditCourseForm.propTypes = {
   createCourseInitialValues: PropTypes.any
+};
+
+EditCourse.propTypes = {
+  user: PropTypes.object
 };
 
 export default withLayout(EditCourse);
