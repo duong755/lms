@@ -1,6 +1,9 @@
-import { useCallback } from 'react';
+import { useContext, useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import Head from 'next/head';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import { isObject } from 'lodash';
 import clsx from 'clsx';
 import fetch from 'isomorphic-unfetch';
 import dayjs from 'dayjs';
@@ -13,10 +16,19 @@ import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import NoSsr from '@material-ui/core/NoSsr';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 
 import withLayout from '../../../../../../components/lib/withLayout';
 import withCourse from '../../../../../../components/lib/withCourse';
 import AbsURL from '../../../../../../components/helpers/URL';
+import AppUser from '../../../../../../components/auth/AppUser';
+import { LessonType, CourseType } from '../../../../../../components/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   lessonContainer: {
@@ -24,104 +36,127 @@ const useStyles = makeStyles((theme) => ({
   },
   lessonLink: {
     color: theme.palette.primary.main,
-    textDecoration: 'none'
+    '&:hover': {
+      textDecoration: 'none'
+    }
   },
-  pageContainer: {
-    listStyleType: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  pageLink: {
-    padding: theme.spacing(1.5),
-    fontSize: theme.typography.fontSize,
-    color: theme.palette.text.primary
+  cell: {
+    padding: theme.spacing(2, 0)
   }
 }));
 
-function getTimeInt(uuid_str) {
-  const uuid_arr = uuid_str.split('-'),
-    time_str = [uuid_arr[2].substring(1), uuid_arr[1], uuid_arr[0]].join('');
-  return parseInt(time_str, 16);
-}
+const getTimeInt = function(uuidStr) {
+  const uuidArr = uuidStr.split('-'),
+    timeStr = [uuidArr[2].substring(1), uuidArr[1], uuidArr[0]].join('');
+  return parseInt(timeStr, 16);
+};
 
-function getDateObj(uuid_str) {
-  const int_time = getTimeInt(uuid_str) - 122192928000000000,
-    int_millisec = Math.floor(int_time / 10000);
-  return new Date(int_millisec);
-}
+const getDateFromTimeUuid = function(uuidStr) {
+  const intTime = getTimeInt(uuidStr) - 122192928000000000,
+    intMillisec = Math.floor(intTime / 10000);
+  return new Date(intMillisec);
+};
 
-function LessonItem(props) {
-  const { userId, courseId, id: lessonId } = props;
+const LessonItem = (props) => {
+  const { lesson } = props;
   const classes = useStyles();
-  const objDate = getDateObj(props.id);
-  const createAt = dayjs(objDate).format('YYYY-MM-DD hh:mm A');
+  const createdAt = getDateFromTimeUuid(lesson.id);
 
   return (
     <Grid item xs={12}>
       <Paper className={clsx(classes.lessonContainer)}>
         <NextLink
           href="/user/[userId]/course/[courseId]/lesson/[lessonId]"
-          as={`/user/${userId}/course/${courseId}/lesson/${lessonId}`}
+          as={`/user/${lesson.teacher_id}/course/${lesson.course_id}/lesson/${lesson.id}`}
           prefetch={false}
         >
-          <Link href={`/user/${userId}/course/${courseId}/lesson/${lessonId}`} className={clsx(classes.lessonLink)}>
-            <Typography title={props.title} color="primary" variant="h5">
-              {props.title}
+          <Link
+            href={`/user/${lesson.teacher_id}/course/${lesson.course_id}/lesson/${lesson.id}`}
+            className={clsx(classes.lessonLink)}
+          >
+            <Typography title={lesson.title} color="primary" variant="h5">
+              {lesson.title}
             </Typography>
           </Link>
         </NextLink>
-        <Typography>{createAt}</Typography>
+        <Box display="flex" alignItems="center">
+          <Icon>access_time</Icon>
+          &nbsp;
+          <Typography variant="caption">{dayjs(createdAt).format('YYYY MMM D hh:mm A')}</Typography>
+        </Box>
       </Paper>
     </Grid>
   );
-}
+};
 
-function CourseLesson(props) {
-  const { page, lessonData, userId, courseId } = props;
-  const pages = Math.ceil(lessonData.total / 10);
+const CourseLessonPage = (props) => {
+  const { page, lessonData, userId, courseId, course } = props;
+  const userContext = useContext(AppUser);
+  const [currentPage, setCurrentPage] = useState(props.page);
+  const router = useRouter();
+  const classes = useStyles();
 
-  /**
-   * @type {(page: number) => string}
-   */
-  const url = useCallback((page) => `/user/[userId]/course/[courseId]/lesson?page=${page}`, []);
-  /**
-   * @type {(page: number) => string}
-   */
-  const as = useCallback((page) => `/user/${userId}/course/${courseId}/lesson?page=${page}`, []);
+  useEffect(() => {
+    router.push(
+      `/user/[userId]/course/[courseId]/lesson?page=${currentPage}`,
+      `/user/${userId}/course/${courseId}/lesson?page=${currentPage}`
+    );
+  }, [currentPage]);
+
+  const isCourseOwner = useMemo(() => {
+    if (isObject(userContext.user)) {
+      return userContext.user.id === userId;
+    }
+    return false;
+  }, [userContext.user, userId]);
 
   return (
     <>
-      <Grid container justify="flex-end">
-        <NextLink
-          href="/user/[userId]/course/[courseId]/lesson/create"
-          as={`/user/${userId}/course/${courseId}/lesson/create`}
-        >
-          <Button variant="contained" color="primary">
-            <Icon>add</Icon>Create Lesson
-          </Button>
-        </NextLink>
-      </Grid>
+      <Head>
+        <title>{`${course.course_name}'s lessons`}</title>
+      </Head>
 
-      <Box py={2} />
-      {lessonData.total ? (
-        <Grid container spacing={2}>
-          {lessonData.lessons.map((currentLesson) => (
-            <LessonItem key={currentLesson.id} {...currentLesson} courseId={courseId} userId={userId} />
-          ))}
-          <Grid item xs={12}>
-            <NextLink href={url(page - 1)} as={as(page - 1)}>
-              <Button color="primary" variant="outlined" href={as(page - 1)} disabled={page <= 1} size="small">
-                Previous
-              </Button>
-            </NextLink>
-            <NextLink href={url(page + 1)} as={as(page + 1)}>
-              <Button color="primary" variant="outlined" href={as(page + 1)} disabled={page >= pages} size="small">
-                Next
+      <NoSsr>
+        {isCourseOwner && (
+          <Grid container justify="flex-end">
+            <NextLink
+              href="/user/[userId]/course/[courseId]/lesson/create"
+              as={`/user/${userId}/course/${courseId}/lesson/create`}
+            >
+              <Button variant="contained" color="primary">
+                <Icon>add</Icon>Create Lesson
               </Button>
             </NextLink>
           </Grid>
-        </Grid>
+        )}
+      </NoSsr>
+
+      <Box py={2} />
+      {lessonData.total ? (
+        <Table>
+          <TableBody>
+            {lessonData.lessons.map((currentLesson) => {
+              return (
+                <TableRow key={currentLesson.id}>
+                  <TableCell className={clsx(classes.cell)}>
+                    <LessonItem lesson={currentLesson} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                page={page - 1}
+                onChangePage={(event, page) => setCurrentPage(page + 1)}
+                count={lessonData.total}
+                rowsPerPage={10}
+                rowsPerPageOptions={[10]}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
       ) : (
         <Box textAlign="center">
           <Typography variant="h4">No lesson available</Typography>
@@ -129,33 +164,30 @@ function CourseLesson(props) {
       )}
     </>
   );
-}
-
-LessonItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  createdAt: PropTypes.string,
-  id: PropTypes.string.isRequired,
-  courseId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired
 };
 
-CourseLesson.propTypes = {
+LessonItem.propTypes = {
+  lesson: LessonType
+};
+
+CourseLessonPage.propTypes = {
   courseId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
+  course: CourseType,
   page: PropTypes.number.isRequired,
   lessonData: PropTypes.shape({
-    lessons: PropTypes.arrayOf(PropTypes.object).isRequired,
+    lessons: PropTypes.arrayOf(LessonType).isRequired,
     total: PropTypes.number.isRequired
   }).isRequired
 };
 
-CourseLesson.getInitialProps = async (context) => {
+CourseLessonPage.getInitialProps = async (context) => {
   const { userId, courseId } = context.query;
-  const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
+  const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
   let data = { lessons: [], total: 0 };
 
   try {
-    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/lesson/${page}`), {
+    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/lesson?page=${page}`), {
       method: 'GET'
     });
     data = await response.json();
@@ -170,6 +202,4 @@ CourseLesson.getInitialProps = async (context) => {
   };
 };
 
-const CourseLessonPage = withCourse(CourseLesson, 'lesson');
-
-export default withLayout(CourseLessonPage);
+export default withLayout(withCourse(CourseLessonPage, 'lesson'));

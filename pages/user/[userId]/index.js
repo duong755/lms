@@ -34,6 +34,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 
 import withLayout from '../../../components/lib/withLayout';
 import absURL from '../../../components/helpers/URL';
+import { UserType, CourseType } from '../../../components/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   courseContainer: {
@@ -281,30 +282,13 @@ ProfilePage.getInitialProps = async (context) => {
   };
 };
 
-const CoursePropType = PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  course_name: PropTypes.string.isRequired,
-  created_at: PropTypes.string.isRequired,
-  members: PropTypes.arrayOf(PropTypes.string)
-});
-
 CourseItem.propTypes = {
-  course: CoursePropType
+  course: CourseType
 };
 
 ProfilePage.propTypes = {
-  currentUser: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['teacher', 'student']).isRequired,
-    info: PropTypes.shape({
-      fullname: PropTypes.string,
-      birthday: PropTypes.string,
-      image: PropTypes.string
-    })
-  }),
-  courses: PropTypes.arrayOf(CoursePropType),
+  currentUser: UserType,
+  courses: PropTypes.arrayOf(CourseType),
   total: PropTypes.number
 };
 

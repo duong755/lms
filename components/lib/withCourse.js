@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
 
 import absURL from '../helpers/URL';
+import { UserType, CourseType } from '../propTypes';
 
 const useStyles = makeStyles((theme) => ({
   tab: {
@@ -67,11 +68,15 @@ function CourseTab(props) {
  * @param {React.FC} CoursePage
  * @param {string} tab
  */
-function withCourse(CoursePage, tab = 'lesson') {
+function withCourse(CoursePage, tab) {
   const tabs = ['lesson', 'exercise', 'exam', 'member', 'join_request'];
 
   const FullCoursePage = (props) => {
     const { user, course } = props;
+
+    const createdAtString = `Created on ${dayjs(course.created_at).format('YYYY MMM d')} at ${dayjs(
+      course.created_at
+    ).format('hh:mm A')}`;
 
     return (
       <>
@@ -94,7 +99,8 @@ function withCourse(CoursePage, tab = 'lesson') {
             </Box>
             <Box py={2} display="flex" alignItems="center">
               <Icon>calendar_today</Icon>
-              <Box display="inline">{dayjs(course.created_at).format('YYYY MMM d, hh:mm A')}</Box>
+              &nbsp;
+              <Box display="inline">{createdAtString}</Box>
             </Box>
             <Box>
               {tabs.map((currentTabName) => (
@@ -117,18 +123,8 @@ function withCourse(CoursePage, tab = 'lesson') {
   FullCoursePage.propTypes = {
     userId: PropTypes.string.isRequired,
     courseId: PropTypes.string.isRequired,
-    user: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      username: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['teacher', 'student']).isRequired
-    }),
-    course: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      teacher_id: PropTypes.string.isRequired,
-      course_name: PropTypes.string.isRequired,
-      created_at: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    })
+    user: UserType,
+    course: CourseType
   };
 
   FullCoursePage.getInitialProps = async (context) => {
@@ -156,7 +152,7 @@ function withCourse(CoursePage, tab = 'lesson') {
 
 CourseTab.propTypes = {
   tabName: PropTypes.string.isRequired,
-  focusTab: PropTypes.string.isRequired,
+  focusTab: PropTypes.string,
   userId: PropTypes.string.isRequired,
   courseId: PropTypes.string.isRequired
 };
