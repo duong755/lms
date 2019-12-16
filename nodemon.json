@@ -1,6 +1,7 @@
 {
   "ignore": [
     "__tests__",
+    "node_modules",
     "components",
     "pages",
     ".vscode",
