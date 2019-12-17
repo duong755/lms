@@ -27,6 +27,7 @@ import withLayout from '../../../../../../components/lib/withLayout';
 import withCourse from '../../../../../../components/lib/withCourse';
 import AbsURL from '../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../components/auth/AppUser';
+import { ExerciseType } from '../../../../../../components/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   exerciseContainer: {
@@ -195,6 +196,9 @@ CourseExercise.propTypes = {
   page: PropTypes.number.isRequired,
   userId: PropTypes.string.isRequired,
   courseId: PropTypes.string.isRequired,
-  exerciseData: PropTypes.array.isRequired,
+  exerciseData: PropTypes.shape({
+    total: PropTypes.number.isRequired,
+    exercises: PropTypes.arrayOf(ExerciseType)
+  }),
   course: PropTypes.object.isRequired
 };

@@ -32,7 +32,7 @@ const CreateLessonSchema = Yup.object().shape({
   content: Yup.string()
 });
 
-const initailValue = {
+const initialValues = {
   title: '',
   content: ''
 };
@@ -58,7 +58,7 @@ function CreateLessonForm() {
 
   const formik = useFormik({
     validationSchema: CreateLessonSchema,
-    initialValues: initailValue,
+    initialValues: initialValues,
     onSubmit: async (values, helpers) => {
       try {
         const respone = await fetch(absURL(`/api/user/${router.query.userId}/course/${router.query.courseId}/lesson`), {
