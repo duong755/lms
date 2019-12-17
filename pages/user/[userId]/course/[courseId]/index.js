@@ -28,7 +28,13 @@ const CoursePage = (props) => {
       <Head>
         <title>{course.course_name}</title>
       </Head>
-      <Box py={2}>{course.description || <Typography color="textSecondary">No description provided</Typography>}</Box>
+      <Box py={2}>
+        {course.description || (
+          <Typography color="textSecondary">
+            <em>No description provided</em>
+          </Typography>
+        )}
+      </Box>
       {allTopics.length &&
         allTopics.map((currentTopic) => (
           <Box component="span" key={currentTopic} mr={1}>

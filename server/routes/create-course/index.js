@@ -61,7 +61,7 @@ createCourseRouter.post('/', isTeacher, createTopics, async (req, res) => {
   const courseSchema = Joi.object({
     description: Joi.string()
       .trim()
-      .allow(),
+      .allow(''),
     topics: Joi.array()
       .items(Joi.string().trim())
       .unique(),
