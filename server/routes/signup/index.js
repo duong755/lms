@@ -7,8 +7,6 @@ const { types } = require('cassandra-driver');
 const Joi = require('@hapi/joi');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const dayjs = require('dayjs');
 
 const { UserServices } = require('../../services');
 
@@ -147,23 +145,10 @@ const signIn = async (req, res) => {
   try {
     const resApi = await UserServices.getUserById(String(userId));
     if (resApi.body.found) {
-      const user = resApi.body._source;
-      delete user.hash_password;
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
-
-      const expiresAt = dayjs()
-        .add(7, 'd')
-        .toDate();
-      res.cookie('access_token', token, {
-        path: '/',
-        sameSite: true,
-        expires: expiresAt,
-        httpOnly: true
-      });
-
+      req.session.userId = userId;
       res
         .status(200)
-        .json({ successful: true, token: token, user: user })
+        .json({ successful: true })
         .end();
     } else {
       res.status(201).json({

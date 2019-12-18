@@ -10,6 +10,7 @@ const signoutRouter = Router({ mergeParams: true });
  * @type {RequestHandler}
  */
 const signout = (req, res) => {
+  req.session = null;
   res.clearCookie('access_token');
   res.clearCookie('lms.user');
   res.status(200).end();

@@ -9,6 +9,9 @@ const universalCookie = require('universal-cookie-express');
 const helmet = require('helmet');
 const compression = require('compression');
 const passport = require('passport');
+const cookieSession = require('cookie-session');
+
+const dayjs = require('dayjs');
 
 const apiRoute = require('./routes');
 
@@ -33,6 +36,18 @@ app
 
     server.use(cookieParser());
     server.use(universalCookie());
+    server.use(
+      cookieSession({
+        httpOnly: true,
+        secret: process.env.SESSION_SECRET,
+        expires: dayjs()
+          .add(7, 'date')
+          .toDate(),
+        name: 'lms.sid',
+        sameSite: true,
+        path: '/'
+      })
+    );
     server.use(passport.initialize());
 
     server.use('/api', apiRoute);
