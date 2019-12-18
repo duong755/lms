@@ -88,7 +88,8 @@ function SignInForm() {
         const json = await signInRes.json();
         if (json.successful) {
           userContext.setUser(json.user);
-          router.replace('/');
+          const redirectURL = router.query.redirect || '/';
+          router.replace(redirectURL);
         } else {
           helpers.setFieldValue('error', true);
           setIsDisplayError(true);
