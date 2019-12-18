@@ -10,7 +10,9 @@ const auth = async (req, res, next) => {
   try {
     const userRes = await UserServices.getUserById(req.session.userId, void 0, ['hash_password']);
     if (userRes.body.found) {
-      res.locals.user = userRes.body._source;
+      const user = userRes.body._source;
+      delete user.hash_password;
+      res.locals.user = user;
     } else {
       res.locals.user = null;
     }

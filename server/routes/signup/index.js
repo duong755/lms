@@ -146,8 +146,10 @@ const signIn = async (req, res) => {
   try {
     const resApi = await UserServices.getUserById(String(userId), void 0, ['hash_password']);
     if (resApi.body.found) {
+      const user = resApi.body._source;
+      delete user.hash_password;
       req.session.userId = userId;
-      res.cookie('lms.user', res.body._source, {
+      res.cookie('lms.user', user, {
         sameSite: true,
         path: '/',
         expires: dayjs()
