@@ -7,6 +7,7 @@ const { types } = require('cassandra-driver');
 const Joi = require('@hapi/joi');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const dayjs = require('dayjs');
 
 const { UserServices } = require('../../services');
 
@@ -143,9 +144,16 @@ const createUser = async (req, res, next) => {
 const signIn = async (req, res) => {
   const userId = res.locals.userId;
   try {
-    const resApi = await UserServices.getUserById(String(userId));
+    const resApi = await UserServices.getUserById(String(userId), void 0, ['hash_password']);
     if (resApi.body.found) {
       req.session.userId = userId;
+      res.cookie('lms.user', res.body._source, {
+        sameSite: true,
+        path: '/',
+        expires: dayjs()
+          .add(7, 'date')
+          .toDate()
+      });
       res
         .status(200)
         .json({ successful: true })
