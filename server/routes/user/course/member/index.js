@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { Router } = require('express');
 
 const memberService = require('../../../../services/Member');
@@ -9,7 +10,7 @@ const memberRouter = Router({ mergeParams: true });
 /**
  * member pagination
  */
-memberRouter.get('/', isCourseCreator, async (req, res) => {
+memberRouter.get('/', async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
 
@@ -34,7 +35,7 @@ memberRouter.get('/', isCourseCreator, async (req, res) => {
 /**
  * leave course
  */
-memberRouter.delete('/', isCourseMember, async (req, res) => {
+memberRouter.delete('/', async (req, res) => {
   const studentId = res.locals.user.id;
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
@@ -54,7 +55,7 @@ memberRouter.delete('/', isCourseMember, async (req, res) => {
 /**
  * remove member
  */
-memberRouter.delete('/:studentId', isCourseCreator, async (req, res) => {
+memberRouter.delete('/:studentId', async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const studentId = req.params.studentId;
