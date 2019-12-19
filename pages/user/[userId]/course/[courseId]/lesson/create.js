@@ -130,12 +130,14 @@ function CreateLessonForm() {
         <Box py={1} />
         <Grid item>
           <InputLabel htmlFor="content">Lesson details</InputLabel>
-          <MuiRte
-            label="Type something here...."
-            inlineToolbar={true}
-            id="content"
-            onChange={(data) => setFieldValue('content', stateToHTML(data.getCurrentContent()))}
-          />
+          <NoSsr>
+            <MuiRte
+              label="Type something here..."
+              inlineToolbar
+              id="content"
+              onChange={(data) => setFieldValue('content', stateToHTML(data.getCurrentContent()))}
+            />
+          </NoSsr>
         </Grid>
         <Box py={1} />
         <Box>

@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { deepOrange, orange, red } from '@material-ui/core/colors';
+import { deepOrange, orange, red, grey } from '@material-ui/core/colors';
 
 const customBreakpoints = {
   values: {
@@ -17,6 +17,26 @@ const customTypography = {
   }
 };
 
+const MUIRichTextEditor = {
+  root: {
+    width: '100%'
+  },
+  container: {
+    borderWidth: 1,
+    borderColor: grey[300],
+    borderStyle: 'solid',
+    borderRadius: '4px'
+  },
+  toolbar: {
+    borderBottomWidth: 1,
+    borderBottomColor: grey[300],
+    borderBottomStyle: 'solid'
+  },
+  editorContainer: {
+    padding: '16px 16px 24px'
+  }
+};
+
 const DarkTheme = createMuiTheme({
   breakpoints: customBreakpoints,
   palette: {
@@ -29,7 +49,10 @@ const DarkTheme = createMuiTheme({
       secondary: '#F5F5F5'
     }
   },
-  typography: customTypography
+  typography: customTypography,
+  overrides: {
+    MUIRichTextEditor: MUIRichTextEditor
+  }
 });
 const LightTheme = createMuiTheme({
   breakpoints: customBreakpoints,
@@ -43,7 +66,10 @@ const LightTheme = createMuiTheme({
       secondary: '#333333'
     }
   },
-  typography: customTypography
+  typography: customTypography,
+  overrides: {
+    MUIRichTextEditor: MUIRichTextEditor
+  }
 });
 
 const themes = {
