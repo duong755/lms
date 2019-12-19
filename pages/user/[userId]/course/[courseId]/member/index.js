@@ -12,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
-import Delete from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -75,9 +74,7 @@ function MemberItem(props) {
           </Grid>
           <Grid item>
             <IconButton onClick={onDelete}>
-              <Icon>
-                <Delete fontSize="large" />
-              </Icon>
+              <Icon>delete</Icon>
             </IconButton>
           </Grid>
         </Grid>
@@ -116,10 +113,10 @@ function CourseMember(props) {
 
   useEffect(() => {
     router.push(
-      `/user/[userId]/course/[courseId]/member/?page=${currentPage}`,
-      `/user/${userId}/course/${courseId}/member/?page=${currentPage}`
+      `/user/[userId]/course/[courseId]/member?page=${currentPage}`,
+      `/user/${userId}/course/${courseId}/member?page=${currentPage}`
     );
-  }, [page]);
+  }, [currentPage]);
   return (
     <>
       <Head>
@@ -144,10 +141,10 @@ function CourseMember(props) {
               <TableRow>
                 <TablePagination
                   page={page - 1}
-                  onChangePage={(page) => setPage(page + 1)}
+                  onChangePage={(event, page) => setPage(page + 1)}
                   count={memberData.total}
                   rowsPerPage={10}
-                  rowsPerPageOptions={10}
+                  rowsPerPageOptions={[10]}
                 />
               </TableRow>
             </TableFooter>

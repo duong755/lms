@@ -174,11 +174,11 @@ CourseExam.propTypes = {
 
 CourseExam.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
-  const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
+  const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
   let data = { exams: [], total: 0 };
 
   try {
-    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/exam/${page}`), {
+    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/exam?page=${page}`), {
       method: 'GET'
     });
     data = await response.json();

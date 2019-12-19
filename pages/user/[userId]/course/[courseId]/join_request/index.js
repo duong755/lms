@@ -96,13 +96,13 @@ CourseJoinRequest.propTypes = {
 
 CourseJoinRequest.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
-  const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
+  const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
   /**
    * TODO:
    * - get lessons by pagination API
    */
   try {
-    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/join_request/${page}`), {
+    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/join_request?page=${page}`), {
       method: 'GET'
     });
     const data = await response.json();
