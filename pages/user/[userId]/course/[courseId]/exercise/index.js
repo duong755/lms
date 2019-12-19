@@ -27,7 +27,7 @@ import withLayout from '../../../../../../components/lib/withLayout';
 import withCourse from '../../../../../../components/lib/withCourse';
 import AbsURL from '../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../components/auth/AppUser';
-import { ExerciseType } from '../../../../../../components/propTypes';
+import { ExerciseType, CourseType } from '../../../../../../components/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   exerciseContainer: {
@@ -54,7 +54,7 @@ const getDateFromTimeUuid = function(uuidStr) {
   return new Date(intMillisec);
 };
 
-function ExerciseItem(props) {
+const ExerciseItem = (props) => {
   const classes = useStyles();
   const { exercise } = props;
   const createAt = getDateFromTimeUuid(exercise.id);
@@ -83,9 +83,9 @@ function ExerciseItem(props) {
       </Paper>
     </Grid>
   );
-}
+};
 
-function CourseExercise(props) {
+const CourseExercise = (props) => {
   const { page, exerciseData, userId, courseId, course } = props;
   const userContext = useContext(AppUser);
   const [currentPage, setCurrentPage] = useState(page);
@@ -94,8 +94,8 @@ function CourseExercise(props) {
 
   useEffect(() => {
     router.push(
-      `/user/[userId]/course/[courseId]/exercise/?page=${currentPage}`,
-      `/user/${userId}/course/${courseId}/exercise/?page=${currentPage}`
+      `/user/[userId]/course/[courseId]/exercise?page=${currentPage}`,
+      `/user/${userId}/course/${courseId}/exercise?page=${currentPage}`
     );
   }, [currentPage]);
 
@@ -108,7 +108,7 @@ function CourseExercise(props) {
   return (
     <>
       <Head>
-        <title>{`${course.course_name} 's exercise`}</title>
+        <title>{`${course.course_name} 's exercises`}</title>
       </Head>
 
       <NoSsr>
@@ -117,6 +117,7 @@ function CourseExercise(props) {
             <NextLink
               href="/user/[userId]/course/[courseId]/exercise/create"
               as={`/user/${userId}/course/${courseId}/exam/create`}
+              prefetch={false}
             >
               <Button variant="contained" color="primary">
                 <Icon>add</Icon>Create Exercise
@@ -145,10 +146,10 @@ function CourseExercise(props) {
               <TableRow>
                 <TablePagination
                   page={page - 1}
-                  onChangePage={(page) => setCurrentPage(page + 1)}
+                  onChangePage={(event, page) => setCurrentPage(page + 1)}
                   count={exerciseData.total}
                   rowsPerPage={10}
-                  rowsPerPageOptions={10}
+                  rowsPerPageOptions={[10]}
                 />
               </TableRow>
             </TableFooter>
@@ -161,30 +162,7 @@ function CourseExercise(props) {
       )}
     </>
   );
-}
-
-CourseExercise.getInitialProps = async (context) => {
-  const { userId, courseId } = context.query; // this contain userId, courseId, page
-  const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
-  let data = { exercises: [], total: 0 };
-
-  try {
-    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/exercise/${page}`), {
-      method: 'GET'
-    });
-    data = await response.json();
-  } catch (error) {
-    console.log(error);
-  }
-  return {
-    userId: userId,
-    courseId: courseId,
-    page: Number(context.query.page) || 1,
-    exerciseData: data
-  };
 };
-
-export default withLayout(withCourse(CourseExercise, 'exercise'));
 
 ExerciseItem.propTypes = {
   title: PropTypes.string.isRequired,
@@ -200,5 +178,28 @@ CourseExercise.propTypes = {
     total: PropTypes.number.isRequired,
     exercises: PropTypes.arrayOf(ExerciseType)
   }),
-  course: PropTypes.object.isRequired
+  course: CourseType.isRequired
 };
+
+CourseExercise.getInitialProps = async (context) => {
+  const { userId, courseId } = context.query;
+  const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
+  let data = { exercises: [], total: 0 };
+
+  try {
+    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/exercise?page=${page}`), {
+      method: 'GET'
+    });
+    data = await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+  return {
+    userId: userId,
+    courseId: courseId,
+    page: page,
+    exerciseData: data
+  };
+};
+
+export default withLayout(withCourse(CourseExercise, 'exercise'));

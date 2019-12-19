@@ -122,6 +122,7 @@ const CourseLessonPage = (props) => {
             <NextLink
               href="/user/[userId]/course/[courseId]/lesson/create"
               as={`/user/${userId}/course/${courseId}/lesson/create`}
+              prefetch={false}
             >
               <Button variant="contained" color="primary">
                 <Icon>add</Icon>Create Lesson
@@ -153,7 +154,7 @@ const CourseLessonPage = (props) => {
                   onChangePage={(event, page) => setCurrentPage(page + 1)}
                   count={lessonData.total}
                   rowsPerPage={10}
-                  rowsPerPageOptions={10}
+                  rowsPerPageOptions={[10]}
                 />
               </TableRow>
             </TableFooter>
@@ -199,7 +200,7 @@ CourseLessonPage.getInitialProps = async (context) => {
   return {
     userId: userId,
     courseId: courseId,
-    page: Number(context.query.page) || 1,
+    page: page,
     lessonData: data
   };
 };

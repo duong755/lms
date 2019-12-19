@@ -27,7 +27,13 @@ app
 
     server.use(helmet());
     server.use(compression());
-    server.use(logger('dev', { skip: (req) => /^\/_next/.test(req.path) }));
+    server.use(
+      logger('dev', {
+        skip: (req) => {
+          return /(^\/_next|\/css|\/fonts|\/favicon\.ico)/.test(req.path);
+        }
+      })
+    );
     server.use(express.json());
     server.use(express.raw());
     server.use(express.text());
