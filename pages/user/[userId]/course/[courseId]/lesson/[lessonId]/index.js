@@ -263,7 +263,7 @@ const LessonDetail = (props) => {
               <NoSsr>{isCourseCreator && <LessonTasks lesson={lesson} />}</NoSsr>
 
               <Box py={3}>
-                <div dangerouslySetInnerHTML={{ __html: lesson.content }}></div>
+                <div id="lessonContent" dangerouslySetInnerHTML={{ __html: lesson.content }}></div>
               </Box>
               <Divider color="initial" />
             </>

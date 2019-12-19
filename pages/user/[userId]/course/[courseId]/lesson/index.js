@@ -150,7 +150,7 @@ const CourseLessonPage = (props) => {
               <TableRow>
                 <TablePagination
                   page={page - 1}
-                  onChangePage={(page) => setCurrentPage(page + 1)}
+                  onChangePage={(event, page) => setCurrentPage(page + 1)}
                   count={lessonData.total}
                   rowsPerPage={10}
                   rowsPerPageOptions={10}
