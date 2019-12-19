@@ -33,7 +33,8 @@ const MUIRichTextEditor = {
     borderBottomStyle: 'solid'
   },
   editorContainer: {
-    padding: '16px 16px 24px'
+    padding: '16px 16px 24px',
+    minHeight: 80
   }
 };
 

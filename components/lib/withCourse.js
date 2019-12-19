@@ -1,9 +1,6 @@
 import Head from 'next/head';
 import PropTypes from 'prop-types';
 
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
-
 import absURL from '../helpers/URL';
 import { UserType, CourseType } from '../propTypes';
 
@@ -21,11 +18,9 @@ function withCourse(CoursePage) {
         <Head>
           <title>{course.course_name}</title>
         </Head>
-        <Box>
-          <Container maxWidth="xl">
-            <CoursePage {...props} />
-          </Container>
-        </Box>
+        <>
+          <CoursePage {...props} />
+        </>
       </>
     );
   };

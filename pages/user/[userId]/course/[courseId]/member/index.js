@@ -24,6 +24,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import withLayout from '../../../../../../components/lib/withLayout';
 import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
+import { getDateFromTimeUuid } from '../../../../../../components/helpers/timeuuid';
 
 const useStyles = makeStyles((theme) => ({
   memberContainer: {
@@ -37,18 +38,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 0)
   }
 }));
-
-const getTimeInt = function(uuidStr) {
-  const uuidArr = uuidStr.split('-'),
-    timeStr = [uuidArr[2].substring(1), uuidArr[1], uuidArr[0]].join('');
-  return parseInt(timeStr, 16);
-};
-
-const getDateFromTimeUuid = function(uuidStr) {
-  const intTime = getTimeInt(uuidStr) - 122192928000000000,
-    intMillisec = Math.floor(intTime / 10000);
-  return new Date(intMillisec);
-};
 
 function MemberItem(props) {
   const classes = useStyles();
