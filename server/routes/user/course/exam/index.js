@@ -119,7 +119,6 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
     });
     return;
   }
-  console.log(newExam);
   try {
     const result = await examService.upsertExam(newExam, void 0, true);
     if (result.wasApplied()) {
