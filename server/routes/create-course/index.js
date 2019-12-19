@@ -9,20 +9,32 @@ const _ = require('lodash');
 const courserService = require('../../services/Course');
 const topicService = require('../../services/Topic');
 const { cassandraTypes } = require('../../models');
+const userService = require('../../services/User');
 const createCourseRouter = Router({ mergeParams: true });
 
 /**
  * @type {RequestHandler}
  */
-const isTeacher = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    const user = res.locals.user;
-    if (user.type === 'teacher') {
-      next();
-    } else {
-      res.status(403).json({
-        error: 'Only teacher can create new course'
-      });
+const isTeacher = async (req, res, next) => {
+  const userId = req.session.userId;
+  console.log(userId);
+  if (userId) {
+    try {
+      const response = await userService.getUserById(userId);
+      if (response.body.found) {
+        const user = response.body._source;
+        if (user.type === 'teacher') {
+          next();
+        } else {
+          res.status(403).json({
+            error: 'Only teacher can create new course'
+          });
+        }
+      } else {
+        res.status(404).json({ error: 'User does not exist' });
+      }
+    } catch (error) {
+      res.status(500).json('Unexpected error occurred');
     }
   } else {
     res.status(401).json({
@@ -88,7 +100,6 @@ createCourseRouter.post('/', isTeacher, createTopics, async (req, res) => {
     res.status(400).json({ error: error });
     return;
   }
-
   try {
     const resultUpsert = await courserService.upsertCourse(newCourse, void 0, true);
     if (resultUpsert.wasApplied()) {
