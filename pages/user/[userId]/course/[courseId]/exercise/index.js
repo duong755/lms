@@ -62,8 +62,8 @@ const ExerciseItem = (props) => {
     <Grid item xs={12}>
       <Paper className={clsx(classes.exerciseContainer)}>
         <NextLink
-          href="/user/[userId]/course/[courseId]/exercise/[exerciseid]"
-          as={`/user/${exercise.teacher_id}/courseId/${exercise.course_id}/exercise/${exercise.id}`}
+          href="/user/[userId]/course/[courseId]/exercise/[exerciseId]"
+          as={`/user/${exercise.teacher_id}/course/${exercise.course_id}/exercise/${exercise.id}`}
           prefetch={false}
         >
           <Link
@@ -75,11 +75,22 @@ const ExerciseItem = (props) => {
             </Typography>
           </Link>
         </NextLink>
-        <Box display="flex" alignItems="center">
-          <Icon>access_time</Icon>
-          &nbsp;
-          <Typography variant="caption">{dayjs(createAt).format('YYYY MMM D hh:mm A')}</Typography>
-        </Box>
+        <Grid container>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box display="flex" alignItems="center">
+              <Icon>access_time</Icon>
+              &nbsp;
+              <Typography variant="caption">{dayjs(createAt).format('YYYY MMM D hh:mm')}</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Box display="flex" alignItems="center">
+              <Icon>timer</Icon>
+              &nbsp;
+              <Typography variant="caption">{dayjs(exercise.deadline).format('YYYY MMM D hh:mm')}</Typography>
+            </Box>
+          </Grid>
+        </Grid>
       </Paper>
     </Grid>
   );
@@ -116,7 +127,7 @@ const CourseExercise = (props) => {
           <Grid container justify="flex-end">
             <NextLink
               href="/user/[userId]/course/[courseId]/exercise/create"
-              as={`/user/${userId}/course/${courseId}/exam/create`}
+              as={`/user/${userId}/course/${courseId}/exercise/create`}
               prefetch={false}
             >
               <Button variant="contained" color="primary">
@@ -165,9 +176,7 @@ const CourseExercise = (props) => {
 };
 
 ExerciseItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  createdAt: PropTypes.string.isRequired,
-  exercise: PropTypes.object.isRequired
+  exercise: ExerciseType
 };
 
 CourseExercise.propTypes = {

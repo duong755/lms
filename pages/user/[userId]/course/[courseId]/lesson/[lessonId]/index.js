@@ -22,6 +22,7 @@ import Icon from '@material-ui/core/Icon';
 import NoSsr from '@material-ui/core/NoSsr';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -127,7 +128,7 @@ const LessonTasks = (props) => {
 
   return ((
     <>
-      <Box display="flex" justifyContent="flex-end">
+      <Box display="flex" justifyContent="flex-end" pb={3}>
         <Button
           color="secondary"
           size="small"
@@ -262,9 +263,11 @@ const LessonDetail = (props) => {
 
               <NoSsr>{isCourseCreator && <LessonTasks lesson={lesson} />}</NoSsr>
 
-              <Box py={3}>
-                <div id="lessonContent" dangerouslySetInnerHTML={{ __html: lesson.content }}></div>
-              </Box>
+              <Paper>
+                <Box px={2} py={3}>
+                  <div id="lessonContent" dangerouslySetInnerHTML={{ __html: lesson.content }}></div>
+                </Box>
+              </Paper>
               <Divider color="initial" />
             </>
           ) : (
