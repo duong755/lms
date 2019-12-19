@@ -288,10 +288,7 @@ class CreateExamPage extends React.Component {
       return;
     }
 
-    const newQuestions = [
-      ...this.state.content.slice(0, questionIdx),
-      ...this.state.content.slice(questionIdx + 1)
-    ];
+    const newQuestions = [...this.state.content.slice(0, questionIdx), ...this.state.content.slice(questionIdx + 1)];
 
     this.setState({
       content: newQuestions

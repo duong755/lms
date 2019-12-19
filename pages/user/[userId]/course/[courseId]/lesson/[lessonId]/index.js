@@ -32,12 +32,13 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import MuiRte from 'mui-rte';
 
-import { UserType, CourseType, LessonType } from '../../../../../../../components/propTypes';
 import withLayout from '../../../../../../../components/lib/withLayout';
+import withCourse from '../../../../../../../components/lib/withCourse';
 import NotFound from '../../../../../../../components/NotFound';
 import absURL from '../../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../../components/auth/AppUser';
 import { useFormStyles } from '../../../../../../../components/styles/form';
+import { UserType, CourseType, LessonType } from '../../../../../../../components/propTypes';
 
 const EditLessonSchema = Yup.object().shape({
   title: Yup.string().required('Lesson title must not be empty'),
@@ -283,29 +284,13 @@ const LessonDetail = (props) => {
 
 LessonDetail.getInitialProps = async (context) => {
   const { userId, courseId, lessonId } = context.query;
-  let user = {};
-  let course = {};
   let lesson = {};
 
   try {
-    const userResponse = await fetch(absURL(`/api/user/${userId}`), {
-      method: 'GET',
-      credentials: 'include'
-    });
-    const courseResponse = await fetch(absURL(`/api/user/${userId}/course/${courseId}`), {
-      method: 'GET',
-      credentials: 'include'
-    });
     const lessonResponse = await fetch(absURL(`/api/user/${userId}/course/${courseId}/lesson/${lessonId}`), {
       method: 'GET',
       credentials: 'include'
     });
-    if (userResponse.ok) {
-      user = await userResponse.json();
-    }
-    if (courseResponse.ok) {
-      course = await courseResponse.json();
-    }
     if (lessonResponse.ok) {
       lesson = await lessonResponse.json();
     }
@@ -314,8 +299,6 @@ LessonDetail.getInitialProps = async (context) => {
   }
 
   return {
-    ...user,
-    ...course,
     ...lesson
   };
 };
@@ -330,4 +313,4 @@ LessonDetail.propTypes = {
   lesson: LessonType
 };
 
-export default withLayout(LessonDetail);
+export default withLayout(withCourse(LessonDetail));

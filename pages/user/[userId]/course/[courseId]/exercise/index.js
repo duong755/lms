@@ -24,7 +24,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
 
 import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../components/auth/AppUser';
 import { ExerciseType, CourseType } from '../../../../../../components/propTypes';
@@ -211,4 +211,4 @@ CourseExercise.getInitialProps = async (context) => {
   };
 };
 
-export default withLayout(withCourse(CourseExercise, 'exercise'));
+export default withLayout(withCourseLayout(CourseExercise, 'exercise'));

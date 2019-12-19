@@ -22,7 +22,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 
 const useStyles = makeStyles((theme) => ({
@@ -194,4 +194,4 @@ CourseMember.propTypes = {
   course_name: PropTypes.string
 };
 
-export default withLayout(withCourse(CourseMember, 'member'));
+export default withLayout(withCourseLayout(CourseMember, 'member'));

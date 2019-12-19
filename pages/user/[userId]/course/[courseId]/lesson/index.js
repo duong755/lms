@@ -25,7 +25,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../components/auth/AppUser';
 import { LessonType, CourseType } from '../../../../../../components/propTypes';
@@ -205,4 +205,4 @@ CourseLessonPage.getInitialProps = async (context) => {
   };
 };
 
-export default withLayout(withCourse(CourseLessonPage, 'lesson'));
+export default withLayout(withCourseLayout(CourseLessonPage, 'lesson'));

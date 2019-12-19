@@ -26,6 +26,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import withLayout from '../../../../../../components/lib/withLayout';
+import withCourse from '../../../../../../components/lib/withCourse';
 import { UserType, CourseType } from '../../../../../../components/propTypes';
 import MuiRte from '../../../../../../components/MuiRte';
 import AppUser from '../../../../../../components/auth/AppUser';
@@ -220,23 +221,4 @@ CreateLesson.propTypes = {
   course: CourseType
 };
 
-CreateLesson.getInitialProps = async (context) => {
-  const { userId, courseId } = context.query;
-  let user = {};
-  let course = {};
-  try {
-    const userRes = await fetch(absURL(`/api/user/${userId}`));
-    const courseRes = await fetch(absURL(`/api/user/${userId}/course/${courseId}`));
-    if (userRes.ok) {
-      user = await userRes.json();
-    }
-    if (courseRes.ok) {
-      course = await courseRes.json();
-    }
-  } catch (err) {
-    console.error(err);
-  }
-  return { ...user, ...course };
-};
-
-export default withLayout(CreateLesson);
+export default withLayout(withCourse(CreateLesson));

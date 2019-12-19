@@ -25,7 +25,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import AbsURL from '../../../../../../components/helpers/URL';
 import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AppUser from '../../../../../../components/auth/AppUser';
 
 const useStyles = makeStyles((theme) => ({
@@ -205,4 +205,4 @@ CourseExam.propTypes = {
   course_name: PropTypes.string.isRequired,
   course: PropTypes.object.isRequired
 };
-export default withLayout(withCourse(CourseExam, 'exam'));
+export default withLayout(withCourseLayout(CourseExam, 'exam'));

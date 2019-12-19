@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import withLayout from '../../../../../components/lib/withLayout';
-import withCourse from '../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../components/lib/withCourseLayout';
 import { CourseType, UserType } from '../../../../../components/propTypes';
 /**
  * @type {React.FunctionComponent<CoursePageProps>}
@@ -54,4 +54,4 @@ CoursePage.propTypes = {
   course: CourseType
 };
 
-export default withLayout(withCourse(CoursePage));
+export default withLayout(withCourseLayout(CoursePage));

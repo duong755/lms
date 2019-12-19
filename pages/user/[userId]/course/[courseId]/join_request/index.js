@@ -11,7 +11,7 @@ import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 
 import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 
 const useStyles = makeStyles((theme) => ({
@@ -112,4 +112,4 @@ CourseJoinRequest.getInitialProps = async (context) => {
     console.log(error);
   }
 };
-export default withLayout(withCourse(CourseJoinRequest, 'join_request'));
+export default withLayout(withCourseLayout(CourseJoinRequest, 'join_request'));
