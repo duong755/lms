@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import fetch from 'isomorphic-unfetch';
 import { isObject } from 'lodash';
 
-import { useTheme, makeStyles } from '@material-ui/core/styles';
+import { useTheme, makeStyles, fade } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -20,6 +20,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
 import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import InputBase from '@material-ui/core/InputBase';
 
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
@@ -78,6 +79,32 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     fontWeight: 700
+  },
+  searchRoot: {
+    borderRadius: 5,
+    padding: theme.spacing(0.25, 1),
+    backgroundColor: fade(theme.palette.common.white, 0.2),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.4)
+    },
+    [theme.breakpoints.down('xs')]: {
+      display: 'none'
+    }
+  },
+  searchInput: {
+    padding: theme.spacing(0.75, 1)
+  },
+  searchMenuRoot: {
+    borderRadius: 5,
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(0.25, 1),
+    backgroundColor: fade(theme.palette.common.white, 0.2),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.4)
+    }
+  },
+  searchMenuInput: {
+    padding: theme.spacing(0.75, 1)
   }
 }));
 
@@ -108,7 +135,19 @@ const Account = () => {
     if (matchDownXS) {
       return (
         <Box className={clsx([classes.menu])}>
-          <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
+          <Box alignSelf="stretch">
+            <InputBase
+              fullWidth
+              startAdornment={<Icon>search</Icon>}
+              classes={{
+                root: classes.searchMenuRoot,
+                input: classes.searchMenuInput
+              }}
+              placeholder="Search..."
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Box>
+          <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
             <Avatar classes={{ img: classes.avatar }} src={info.image} />
             <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
               <Link href={`/user/${id}`}>
@@ -119,7 +158,7 @@ const Account = () => {
             </NextLink>
           </Box>
           {userContext.user.type === 'teacher' && (
-            <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
+            <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
               <NextLink href="/create-course" as="/create-course" prefetch={false}>
                 <Link href="/create-course" color="inherit">
                   Create course
@@ -160,13 +199,11 @@ const Account = () => {
   }
   return (
     <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
-      <NextLink
-        href={`/signin?redirect=${encodeURI(router.asPath)}`}
-        as={{ path: '/signin', query: { redirect: encodeURI(router.asPath) } }}
-        prefetch={false}
-      >
-        <Button variant="text">Sign in</Button>
-      </NextLink>
+      {!router.asPath.startsWith('/signin') && (
+        <NextLink href={`/signin?redirect=${encodeURIComponent(router.asPath)}`} prefetch={false}>
+          <Button variant="text">Sign in</Button>
+        </NextLink>
+      )}
       &nbsp;&nbsp;
       <NextLink href="/signup" as={{ path: '/signup' }} prefetch={false}>
         <Button variant="outlined">Sign up</Button>
@@ -238,10 +275,16 @@ const Header = () => {
                 </Link>
               </NextLink>
             </Box>
-            <Box>
-              <IconButton color="default">
-                <Icon color="inherit">search</Icon>
-              </IconButton>
+            <Box display="flex" alignItems="center" justifyContent="flex-end">
+              <InputBase
+                startAdornment={<Icon>search</Icon>}
+                placeholder="Search..."
+                classes={{
+                  root: classes.searchRoot,
+                  input: classes.searchInput
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+              />
               <IconButton color="default" onClick={themeContext.toggleTheme}>
                 <Icon color="inherit">{themeIcon()}</Icon>
               </IconButton>
