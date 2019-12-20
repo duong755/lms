@@ -107,8 +107,21 @@ function removeComment(teacherId, courseId, lessonId, commentId, ttl) {
   );
 }
 
-exports.upsertComment = upsertComment;
+function getCommentById(teacherId, courseId, lessonId, commentId) {
+  teacherId = String(teacherId);
+  courseId = String(courseId);
+  lessonId = String(lessonId);
+  commentId = String(commentId);
 
+  const key = JSON.stringify([teacherId, courseId, lessonId, commentId]);
+  return elasticsearchClient.get({
+    index: 'lms.comment',
+    type: 'comment',
+    id: key
+  });
+}
+
+module.exports.getCommentById = getCommentById;
 module.exports.removeComment = removeComment;
 module.exports.upsertComment = upsertComment;
 module.exports.getCommentsByLesson = getCommentsByLesson;
