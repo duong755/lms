@@ -25,6 +25,7 @@ import ReactSelectAsyncCreatable from 'react-select/async-creatable';
 import withLayout from '../../components/lib/withLayout';
 import AppUser from '../../components/auth/AppUser';
 import absURL from '../../components/helpers/URL';
+import { searchTopic } from '../../components/helpers/searchTopic';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -40,16 +41,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.error.main
   }
 }));
-
-const searchTopic = async (input) => {
-  try {
-    const res = await fetch(absURL(`/api/topic?query=${input}`));
-    const json = await res.json();
-    return json.topics.map((topic) => ({ value: topic, label: topic }));
-  } catch {
-    return [];
-  }
-};
 
 const createCourseValidationSchema = Yup.object().shape({
   courseName: Yup.string()
