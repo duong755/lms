@@ -37,7 +37,7 @@ const Exercise = (props) => {
         <Container maxWidth="xl">
           <Grid container spacing={2}>
             <Grid item md={12} sm={12}>
-              <Box p={2} pb={0}>
+              <Box pt={2}>
                 <Breadcrumbs separator="/" aria-label="breadcrumb">
                   <NextLink href="/user/[userId]" as={`/user/${user.id}`} prefetch={false}>
                     <Link color="textPrimary" href={`/user/${user.id}`}>

@@ -1,11 +1,10 @@
-import { useContext, useCallback, useState, useEffect } from 'react';
+import { useContext, useCallback, useState, useEffect, createContext } from 'react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import clsx from 'clsx';
-import fetch from 'isomorphic-unfetch';
-import { isObject } from 'lodash';
+import { isObject, isEqual } from 'lodash';
 
-import { useTheme, makeStyles, fade } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -26,97 +25,33 @@ import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from
 
 import AppTheme from './theme/AppTheme';
 import AppUser from './auth/AppUser';
-
 import absURL from './helpers/URL';
+import { useHeaderStyles } from './styles/header';
 
-const useStyles = makeStyles((theme) => ({
-  navbar: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column'
-    }
-  },
-  brandLink: {
-    color: theme.palette.common.white,
-    '&:hover': {
-      color: theme.palette.common.white,
-      textDecoration: 'none'
-    }
-  },
-  avatarContainer: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  avatar: {
-    width: 30,
-    height: 30,
-    borderRadius: '50%'
-  },
-  showMenu: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  hideMenu: {
-    display: 'none',
-    alignItems: 'center',
-    verticalAlign: 'middle'
-  },
-  menu: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-end'
-    }
-  },
-  username: {
-    maxWidth: 150,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    fontWeight: 700
-  },
-  searchRoot: {
-    borderRadius: 5,
-    padding: theme.spacing(0.25, 1),
-    backgroundColor: fade(theme.palette.common.white, 0.2),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.4)
-    },
-    [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    }
-  },
-  searchInput: {
-    padding: theme.spacing(0.75, 1)
-  },
-  searchMenuRoot: {
-    borderRadius: 5,
-    marginTop: theme.spacing(1),
-    padding: theme.spacing(0.25, 1),
-    backgroundColor: fade(theme.palette.common.white, 0.2),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.4)
-    }
-  },
-  searchMenuInput: {
-    padding: theme.spacing(0.75, 1)
+const AppSearch = createContext({
+  query: '',
+  setQuery: () => {},
+  submitSearch: () => {}
+});
+
+/**
+ *
+ * @param {React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>} event
+ */
+function handleSubmitSearch(event) {
+  if (event.keyCode === 13 && event.currentTarget.value.trim()) {
+    Router.push(`/search?query=${event.target.value}`);
   }
-}));
+}
 
 const Account = () => {
   const userContext = useContext(AppUser);
   const theme = useTheme();
   const matchDownXS = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true });
-  const classes = useStyles();
+  const classes = useHeaderStyles();
   const router = useRouter();
 
   const signOut = useCallback(() => {
-    userContext.setUser(null);
     fetch(absURL('/api/signout'), {
       method: 'DELETE',
       credentials: 'include',
@@ -124,6 +59,7 @@ const Account = () => {
     })
       .then((res) => {
         if (res.ok) {
+          userContext.setUser(null);
           router.reload();
         }
       })
@@ -136,16 +72,25 @@ const Account = () => {
       return (
         <Box className={clsx([classes.menu])}>
           <Box alignSelf="stretch">
-            <InputBase
-              fullWidth
-              startAdornment={<Icon>search</Icon>}
-              classes={{
-                root: classes.searchMenuRoot,
-                input: classes.searchMenuInput
+            <AppSearch.Consumer>
+              {({ query, setQuery, submitSearch }) => {
+                return (
+                  <InputBase
+                    fullWidth
+                    startAdornment={<Icon>search</Icon>}
+                    placeholder="Search..."
+                    classes={{
+                      root: classes.searchMenuRoot,
+                      input: classes.searchMenuInput
+                    }}
+                    inputProps={{ 'aria-label': 'search' }}
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    onKeyUp={submitSearch}
+                  />
+                );
               }}
-              placeholder="Search..."
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            </AppSearch.Consumer>
           </Box>
           <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
             <Avatar classes={{ img: classes.avatar }} src={info.image} />
@@ -205,21 +150,24 @@ const Account = () => {
         </NextLink>
       )}
       &nbsp;&nbsp;
-      <NextLink href="/signup" as={{ path: '/signup' }} prefetch={false}>
-        <Button variant="outlined">Sign up</Button>
-      </NextLink>
+      {!router.asPath.startsWith('/signup') && (
+        <NextLink href="/signup" as={{ path: '/signup' }} prefetch={false}>
+          <Button variant="outlined">Sign up</Button>
+        </NextLink>
+      )}
     </Box>
   );
 };
 
 const Header = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const [fetchingUser, setFetchingUser] = useState(true);
   const [menuExpand, setMenuExpand] = useState(false);
   const themeContext = useContext(AppTheme);
   const userContext = useContext(AppUser);
   const theme = useTheme();
   const matchDownXS = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true });
-  const classes = useStyles();
+  const classes = useHeaderStyles();
 
   useEffect(() => {
     fetch(absURL('/api/user'), {
@@ -229,10 +177,12 @@ const Header = () => {
     })
       .then(async (response) => {
         const json = await response.json();
-        if (isObject(json)) {
-          userContext.setUser(json);
-        } else {
-          userContext.setUser(null);
+        if (!isEqual(json, userContext.user)) {
+          if (isObject(json)) {
+            userContext.setUser(json);
+          } else {
+            userContext.setUser(null);
+          }
         }
       })
       .catch(() => {
@@ -255,59 +205,72 @@ const Header = () => {
   }, [menuExpand]);
 
   return (
-    <AppBar color="default" position="static">
-      <Container maxWidth="xl">
-        <Box className={clsx([classes.navbar])}>
-          <Box display="flex" justifyContent="space-between" flexGrow={1}>
-            <Box
-              bgcolor={theme.palette.primary.main}
-              color={theme.palette.common.white}
-              display="flex"
-              alignItems="center"
-              alignSelf="stretch"
-              px={theme.spacing(0.5)}
-            >
-              <NextLink href="/" prefetch={false}>
-                <Link className={clsx(classes.brandLink)} href="/">
-                  <Typography>
-                    <strong>OpenLMS</strong>
-                  </Typography>
-                </Link>
-              </NextLink>
-            </Box>
-            <Box display="flex" alignItems="center" justifyContent="flex-end">
-              <InputBase
-                startAdornment={<Icon>search</Icon>}
-                placeholder="Search..."
-                classes={{
-                  root: classes.searchRoot,
-                  input: classes.searchInput
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              />
-              <IconButton color="default" onClick={themeContext.toggleTheme}>
-                <Icon color="inherit">{themeIcon()}</Icon>
-              </IconButton>
-              <Hidden smUp>
-                <IconButton color="default" onClick={toggleMenu}>
-                  <Icon color="inherit">menu</Icon>
+    <AppSearch.Provider value={{ query: searchQuery, setQuery: setSearchQuery, submitSearch: handleSubmitSearch }}>
+      <AppBar color="default" position="static">
+        <Container maxWidth="xl">
+          <Box className={clsx([classes.navbar])}>
+            <Box display="flex" justifyContent="space-between" flexGrow={1}>
+              <Box
+                bgcolor={theme.palette.primary.main}
+                color={theme.palette.common.white}
+                display="flex"
+                alignItems="center"
+                alignSelf="stretch"
+                px={theme.spacing(0.5)}
+              >
+                <NextLink href="/" prefetch={false}>
+                  <Link className={clsx(classes.brandLink)} href="/">
+                    <Typography>
+                      <strong>OpenLMS</strong>
+                    </Typography>
+                  </Link>
+                </NextLink>
+              </Box>
+              <Box display="flex" alignItems="center" justifyContent="flex-end">
+                <NoSsr>
+                  <AppSearch.Consumer>
+                    {({ query, setQuery, submitSearch }) => {
+                      return (
+                        <InputBase
+                          startAdornment={<Icon>search</Icon>}
+                          placeholder="Search..."
+                          classes={{
+                            root: classes.searchRoot,
+                            input: classes.searchInput
+                          }}
+                          inputProps={{ 'aria-label': 'search' }}
+                          value={query}
+                          onChange={(event) => setQuery(event.target.value)}
+                          onKeyUp={submitSearch}
+                        />
+                      );
+                    }}
+                  </AppSearch.Consumer>
+                </NoSsr>
+                <IconButton color="default" onClick={themeContext.toggleTheme}>
+                  <Icon color="inherit">{themeIcon()}</Icon>
                 </IconButton>
-              </Hidden>
+                <Hidden smUp>
+                  <IconButton color="default" onClick={toggleMenu}>
+                    <Icon color="inherit">menu</Icon>
+                  </IconButton>
+                </Hidden>
+              </Box>
             </Box>
+            <NoSsr>
+              <Box
+                className={clsx({
+                  [classes.showMenu]: !matchDownXS,
+                  [classes.hideMenu]: matchDownXS && !menuExpand
+                })}
+              >
+                {fetchingUser ? <CircularProgress color="primary" /> : <Account />}
+              </Box>
+            </NoSsr>
           </Box>
-          <NoSsr>
-            <Box
-              className={clsx({
-                [classes.showMenu]: !matchDownXS,
-                [classes.hideMenu]: matchDownXS && !menuExpand
-              })}
-            >
-              {fetchingUser ? <CircularProgress color="primary" /> : <Account />}
-            </Box>
-          </NoSsr>
-        </Box>
-      </Container>
-    </AppBar>
+        </Container>
+      </AppBar>
+    </AppSearch.Provider>
   );
 };
 
