@@ -18,7 +18,7 @@ rootAPIRoute.all('/', (req, res) => {
 });
 
 rootAPIRoute.use(auth);
-rootAPIRoute.use('/user', isAuthenticated, userRouter);
+rootAPIRoute.use('/user', userRouter);
 rootAPIRoute.use('/create-course', isAuthenticated, createCourseRouter);
 rootAPIRoute.use('/signin', signinRouter);
 rootAPIRoute.use('/signup', signupRouter);
