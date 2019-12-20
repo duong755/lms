@@ -11,7 +11,7 @@ const isExerciseWorkCreator = async (req, res, next) => {
   const exerciseId = req.params.exerciseId;
   const studentId = req.params.studentId;
 
-  const userId = res.locals.user.id;
+  const userId = req.session.userId;
   try {
     const result = await exerciseWorkService.getExerciseWorkById(teacherId, courseId, exerciseId, studentId);
     if (result.body.found) {

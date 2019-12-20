@@ -5,7 +5,7 @@ const { Router } = require('express');
 const Joi = require('@hapi/joi');
 
 const { TopicServices, CourseServices } = require('../../services');
-
+const isAuthenticated = require('../../middlewares/isAuthenticated');
 const topicRouter = Router({ mergeParams: true });
 
 const topicNameSchema = Joi.string()
@@ -30,7 +30,7 @@ const validateTopicName = (req, res, next) => {
 /**
  * create topic
  */
-topicRouter.post('/', validateTopicName, async (req, res) => {
+topicRouter.post('/', isAuthenticated, validateTopicName, async (req, res) => {
   try {
     const createTopicRes = await TopicServices.createTopic(req.body.topicName);
     if (createTopicRes.wasApplied()) {
@@ -53,7 +53,7 @@ topicRouter.post('/', validateTopicName, async (req, res) => {
 /**
  * search topics
  */
-topicRouter.all('/', async (req, res) => {
+topicRouter.all('/', isAuthenticated, async (req, res) => {
   let topicList = [];
   const topicName = String(req.query.query).trim();
   try {

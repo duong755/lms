@@ -15,7 +15,7 @@ const isCourseMember = async (req, res, next) => {
     if (members.indexOf(userId) >= 0) {
       next();
     } else {
-      res.status(400).json({ error: 'you are not in this course' });
+      res.status(400).json({ error: 'you are not members of this course' });
     }
   } catch (error) {
     console.error(error);

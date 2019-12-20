@@ -2,6 +2,7 @@ const { Router } = require('express');
 
 const isCourseCreator = require('../../../middlewares/isCourseCreator');
 const courseService = require('../../../services/Course');
+const canAccessCourse = require('../../../middlewares/canAccessCourse');
 const userService = require('../../../services/User');
 
 const lessonRouter = require('./lesson');
@@ -16,7 +17,7 @@ const courseRouter = Router({ mergeParams: true });
 /**
  * course pagination
  */
-courseRouter.get('/', async (req, res) => {
+courseRouter.get('/', canAccessCourse, async (req, res) => {
   try {
     const userId = req.params.userId;
     const page = Number(req.query.page) || 1;
