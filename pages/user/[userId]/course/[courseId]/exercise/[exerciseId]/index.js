@@ -1,5 +1,10 @@
-import PropTypes from 'prop-types';
+/**
+ * @typedef {{ id: string, email: string, username: string, type: 'teacher' | 'student', info: Object<string, string> }} User
+ * @typedef {{ id: string, teacher_id: string, course_name: string, created_at: string, archive?: boolean, description?: string, topics?: string | string[], members?: string | string[] }} Course
+ * @typedef {{ teacher_id: string, course_id: string, id: string, title: string, content: string, deadline: string }} Exercise
+ */
 import Head from 'next/head';
+import NextLink from 'next/link';
 import dayjs from 'dayjs';
 
 import Box from '@material-ui/core/Box';
@@ -9,35 +14,61 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import Link from '@material-ui/core/Link';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
 import withLayout from '../../../../../../../components/lib/withLayout';
+import withCourse from '../../../../../../../components/lib/withCourse';
 import MuiRte from '../../../../../../../components/MuiRte';
 import absURL from '../../../../../../../components/helpers/URL';
+import { UserType, CourseType, ExerciseType } from '../../../../../../../components/propTypes';
 
-function Exercise(props) {
-  return (
+/**
+ * @type {React.FunctionComponent<{ user?: User, course?: Course, exercise?: Exercise }>}
+ */
+const Exercise = (props) => {
+  const { user, course, exercise } = props;
+  return ((
     <>
       <Head>
-        <title>Exercise</title>
+        <title>{exercise.title}</title>
       </Head>
       <Box>
         <Container maxWidth="xl">
           <Grid container spacing={2}>
             <Grid item md={12} sm={12}>
+              <Box p={2} pb={0}>
+                <Breadcrumbs separator="/" aria-label="breadcrumb">
+                  <NextLink href="/user/[userId]" as={`/user/${user.id}`} prefetch={false}>
+                    <Link color="textPrimary" href={`/user/${user.id}`}>
+                      <Typography variant="h5">{user.username}</Typography>
+                    </Link>
+                  </NextLink>
+                  <NextLink
+                    href="/user/[userId]/course/[courseId]"
+                    as={`/user/${user.id}/course/${course.id}`}
+                    prefetch={false}
+                  >
+                    <Link color="textPrimary" href={`/user/${user.id}/course/${course.id}`}>
+                      <Typography variant="h5">
+                        <strong>{course.course_name}</strong>
+                      </Typography>
+                    </Link>
+                  </NextLink>
+                  <Typography variant="h5" color="textPrimary">
+                    <strong>{exercise.title}</strong>
+                  </Typography>
+                </Breadcrumbs>
+              </Box>
               <Box pt={4} pb={1}>
                 <Typography title="Due-time" noWrap color="primary">
-                  Due: {String(dayjs(new Date(props.exercise.deadline)).format('DD-MM-YYYY hh:mm A'))}
+                  Due date: {dayjs(new Date(props.exercise.deadline)).format('YYYY MMM D, hh:mm')}
                 </Typography>
               </Box>
               <Box mb={3}>
                 <Paper>
-                  <Box p={2} pb={0}>
-                    <Typography title="exercise-title" noWrap variant="h5">
-                      <strong>{props.exercise.title}</strong>
-                    </Typography>
-                  </Box>
                   <Box p={2}>
-                    <div dangerouslySetInnerHTML={{ __html: props.exercise.content }}></div>
+                    <div dangerouslySetInnerHTML={{ __html: exercise.content }}></div>
                   </Box>
                 </Paper>
               </Box>
@@ -64,8 +95,8 @@ function Exercise(props) {
         </Container>
       </Box>
     </>
-  );
-}
+  ));
+};
 
 Exercise.getInitialProps = async (context) => {
   const { userId, courseId, exerciseId } = context.query;
@@ -84,11 +115,9 @@ Exercise.getInitialProps = async (context) => {
 };
 
 Exercise.propTypes = {
-  exercise: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    deadline: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    content: PropTypes.string
-  }).isRequired
+  user: UserType,
+  course: CourseType,
+  exercise: ExerciseType
 };
 
-export default withLayout(Exercise);
+export default withLayout(withCourse(Exercise));

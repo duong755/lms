@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import withLayout from '../../../../../components/lib/withLayout';
-import withCourse from '../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../components/lib/withCourseLayout';
 import { CourseType, UserType } from '../../../../../components/propTypes';
 /**
  * @type {React.FunctionComponent<CoursePageProps>}
@@ -28,7 +28,13 @@ const CoursePage = (props) => {
       <Head>
         <title>{course.course_name}</title>
       </Head>
-      <Box py={2}>{course.description || <Typography color="textSecondary">No description provided</Typography>}</Box>
+      <Box py={2}>
+        {course.description || (
+          <Typography color="textSecondary">
+            <em>No description provided</em>
+          </Typography>
+        )}
+      </Box>
       {allTopics.length &&
         allTopics.map((currentTopic) => (
           <Box component="span" key={currentTopic} mr={1}>
@@ -48,4 +54,4 @@ CoursePage.propTypes = {
   course: CourseType
 };
 
-export default withLayout(withCourse(CoursePage));
+export default withLayout(withCourseLayout(CoursePage));

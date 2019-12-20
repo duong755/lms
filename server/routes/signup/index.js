@@ -7,7 +7,6 @@ const { types } = require('cassandra-driver');
 const Joi = require('@hapi/joi');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const dayjs = require('dayjs');
 
 const { UserServices } = require('../../services');
@@ -145,25 +144,21 @@ const createUser = async (req, res, next) => {
 const signIn = async (req, res) => {
   const userId = res.locals.userId;
   try {
-    const resApi = await UserServices.getUserById(String(userId));
+    const resApi = await UserServices.getUserById(String(userId), void 0, ['hash_password']);
     if (resApi.body.found) {
       const user = resApi.body._source;
       delete user.hash_password;
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
-
-      const expiresAt = dayjs()
-        .add(7, 'd')
-        .toDate();
-      res.cookie('access_token', token, {
-        path: '/',
+      req.session.userId = userId;
+      res.cookie('lms.user', user, {
         sameSite: true,
-        expires: expiresAt,
-        httpOnly: true
+        path: '/',
+        expires: dayjs()
+          .add(7, 'date')
+          .toDate()
       });
-
       res
         .status(200)
-        .json({ successful: true, token: token, user: user })
+        .json({ successful: true })
         .end();
     } else {
       res.status(201).json({
