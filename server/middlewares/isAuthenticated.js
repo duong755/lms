@@ -1,5 +1,5 @@
 const isAuthenticated = (req, res, next) => {
-  if (req.session.userId) {
+  if (res.locals.user) {
     next();
   } else {
     res.status(401).json({ message: 'Unauthenticated' });
