@@ -4,12 +4,14 @@ const _ = require('lodash');
 
 const { cassandraTypes } = require('../../../../../models/connector');
 const commentService = require('../../../../../services/Comment');
+const canAccessCourse = require('../../../../../middlewares/canAccessCourse');
+const isCommentCreator = require('../../../../../middlewares/isCommentCreator');
 const commentRouter = Router({ mergeParams: true });
 
 /**
  * comment pagination
  */
-commentRouter.get('/', async (req, res) => {
+commentRouter.get('/', canAccessCourse, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const lessonId = req.params.lessonId;
@@ -32,7 +34,7 @@ commentRouter.get('/', async (req, res) => {
 /**
  * create comment
  */
-commentRouter.post('/', async (req, res) => {
+commentRouter.post('/', canAccessCourse, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const lessonId = req.params.lessonId;
@@ -75,7 +77,7 @@ commentRouter.post('/', async (req, res) => {
   try {
     const result = await commentService.upsertComment(newComment, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ successful: 'Create new commemt successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(400).json({ error: 'Can not create new comment' });
     }
@@ -89,7 +91,7 @@ commentRouter.post('/', async (req, res) => {
 /**
  * edit comment
  */
-commentRouter.put('/:commentId', async (req, res) => {
+commentRouter.put('/:commentId', isCommentCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const lessonId = req.params.lessonId;
@@ -136,7 +138,7 @@ commentRouter.put('/:commentId', async (req, res) => {
       false
     );
     if (result.wasApplied()) {
-      res.status(200).json({ successful: 'Update comment successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(400).json({ error: 'Can not update this comment' });
     }
@@ -150,7 +152,7 @@ commentRouter.put('/:commentId', async (req, res) => {
 /**
  * delete comment
  */
-commentRouter.delete('/:commentId', async (req, res) => {
+commentRouter.delete('/:commentId', isCommentCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const lessonId = req.params.lessonId;
@@ -159,10 +161,10 @@ commentRouter.delete('/:commentId', async (req, res) => {
     const result = await commentService.removeComment(teacherId, courseId, lessonId, commentId);
     if (result.wasApplied()) {
       res.status(200).json({
-        successful: 'Delete comment successfully'
+        successful: true
       });
     } else {
-      res.status(400).json({ error: 'Can not delete this comment' });
+      res.status(400).json({ error: true });
     }
   } catch (error) {
     console.error(error);

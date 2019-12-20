@@ -1,6 +1,7 @@
 const { Router } = require('express');
 
 const { auth } = require('../middlewares');
+const isAuthenticated = require('../middlewares/isAuthenticated');
 
 const userRouter = require('./user');
 const createCourseRouter = require('./create-course');
@@ -18,7 +19,7 @@ rootAPIRoute.all('/', (req, res) => {
 
 rootAPIRoute.use(auth);
 rootAPIRoute.use('/user', userRouter);
-rootAPIRoute.use('/create-course', createCourseRouter);
+rootAPIRoute.use('/create-course', isAuthenticated, createCourseRouter);
 rootAPIRoute.use('/signin', signinRouter);
 rootAPIRoute.use('/signup', signupRouter);
 rootAPIRoute.use('/signout', signoutRouter);

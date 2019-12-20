@@ -10,7 +10,7 @@ const memberRouter = Router({ mergeParams: true });
 /**
  * member pagination
  */
-memberRouter.get('/', async (req, res) => {
+memberRouter.get('/', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
 
@@ -35,7 +35,7 @@ memberRouter.get('/', async (req, res) => {
 /**
  * leave course
  */
-memberRouter.delete('/', async (req, res) => {
+memberRouter.delete('/', isCourseMember, async (req, res) => {
   const studentId = res.locals.user.id;
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
@@ -55,7 +55,7 @@ memberRouter.delete('/', async (req, res) => {
 /**
  * remove member
  */
-memberRouter.delete('/:studentId', async (req, res) => {
+memberRouter.delete('/:studentId', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const studentId = req.params.studentId;

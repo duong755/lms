@@ -1,7 +1,9 @@
 const { Router } = require('express');
 
 const isCourseCreator = require('../../../middlewares/isCourseCreator');
+const isAuthenticated = require('../../../middlewares/isAuthenticated');
 const courseService = require('../../../services/Course');
+const canAccessCourse = require('../../../middlewares/canAccessCourse');
 const userService = require('../../../services/User');
 
 const lessonRouter = require('./lesson');
@@ -16,7 +18,7 @@ const courseRouter = Router({ mergeParams: true });
 /**
  * course pagination
  */
-courseRouter.get('/', async (req, res) => {
+courseRouter.get('/', canAccessCourse, async (req, res) => {
   try {
     const userId = req.params.userId;
     const page = Number(req.query.page) || 1;
@@ -101,11 +103,11 @@ courseRouter.delete('/:courseId', (req, res) => {
   res.end('/api/user/:userId/course/:courseId');
 });
 
-courseRouter.use('/:courseId/lesson', lessonRouter);
-courseRouter.use('/:courseId/member', memberRouter);
-courseRouter.use('/:courseId/exercise', exerciseRouter);
-courseRouter.use('/:courseId/exam', examRouter);
-courseRouter.use('/:courseId/join_request', joinRequestRouter);
+courseRouter.use('/:courseId/lesson', isAuthenticated, lessonRouter);
+courseRouter.use('/:courseId/member', isAuthenticated, memberRouter);
+courseRouter.use('/:courseId/exercise', isAuthenticated, exerciseRouter);
+courseRouter.use('/:courseId/exam', isAuthenticated, examRouter);
+courseRouter.use('/:courseId/join_request', isAuthenticated, joinRequestRouter);
 courseRouter.use('/:courseId/review', reviewRouter);
 
 module.exports = courseRouter;
