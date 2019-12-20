@@ -1,0 +1,15 @@
+#lessonContent pre,
+#exerciseContent pre,
+#examContent pre {
+  background-color: #fafafa;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+#lessonContent code, #lessonContent kbd,
+#exerciseContent code, #exerciseContent kbd,
+#examContent code, #examContent kbd {
+  background-color: #fafafa;
+  padding: 4px;
+  border-radius: 2px;
+}

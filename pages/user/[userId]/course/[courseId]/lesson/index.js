@@ -25,10 +25,11 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../components/auth/AppUser';
 import { LessonType, CourseType } from '../../../../../../components/propTypes';
+import { getDateFromTimeUuid } from '../../../../../../components/helpers/timeuuid';
 
 const useStyles = makeStyles((theme) => ({
   lessonContainer: {
@@ -44,18 +45,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 0)
   }
 }));
-
-const getTimeInt = function(uuidStr) {
-  const uuidArr = uuidStr.split('-'),
-    timeStr = [uuidArr[2].substring(1), uuidArr[1], uuidArr[0]].join('');
-  return parseInt(timeStr, 16);
-};
-
-const getDateFromTimeUuid = function(uuidStr) {
-  const intTime = getTimeInt(uuidStr) - 122192928000000000,
-    intMillisec = Math.floor(intTime / 10000);
-  return new Date(intMillisec);
-};
 
 const LessonItem = (props) => {
   const { lesson } = props;
@@ -122,6 +111,7 @@ const CourseLessonPage = (props) => {
             <NextLink
               href="/user/[userId]/course/[courseId]/lesson/create"
               as={`/user/${userId}/course/${courseId}/lesson/create`}
+              prefetch={false}
             >
               <Button variant="contained" color="primary">
                 <Icon>add</Icon>Create Lesson
@@ -145,17 +135,19 @@ const CourseLessonPage = (props) => {
               );
             })}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                page={page - 1}
-                onChangePage={(event, page) => setCurrentPage(page + 1)}
-                count={lessonData.total}
-                rowsPerPage={10}
-                rowsPerPageOptions={[10]}
-              />
-            </TableRow>
-          </TableFooter>
+          {lessonData.total >= 10 && (
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  page={page - 1}
+                  onChangePage={(event, page) => setCurrentPage(page + 1)}
+                  count={lessonData.total}
+                  rowsPerPage={10}
+                  rowsPerPageOptions={[10]}
+                />
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
       ) : (
         <Box textAlign="center">
@@ -197,9 +189,9 @@ CourseLessonPage.getInitialProps = async (context) => {
   return {
     userId: userId,
     courseId: courseId,
-    page: Number(context.query.page) || 1,
+    page: page,
     lessonData: data
   };
 };
 
-export default withLayout(withCourse(CourseLessonPage, 'lesson'));
+export default withLayout(withCourseLayout(CourseLessonPage, 'lesson'));

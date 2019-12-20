@@ -11,15 +11,6 @@ const { cassandraTypes } = require('../../../../models/connector');
 
 const examRouter = Router({ mergeParams: true });
 
-function getTimeStamp(dateTime) {
-  const dateTimeParts = dateTime.split(' ');
-  const timeParts = dateTimeParts[1].split(':');
-  const dateParts = dateTimeParts[0].split('-');
-
-  const date = new Date(dateParts[2], parseInt(dateParts[1], 10) - 1, dateParts[0], timeParts[0], timeParts[1]);
-  return date.getTime();
-}
-
 function getMark(content, examContent) {
   let point = 0;
   for (let i = 0; i < content.length; i++) {
@@ -69,7 +60,7 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
     examId: cassandraTypes.TimeUuid.now(),
     duration: duration,
     content: content,
-    startAt: getTimeStamp(startAt),
+    startAt: Number(startAt),
     title: title
   };
   const schema = Joi.object({
@@ -128,11 +119,10 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
     });
     return;
   }
-
   try {
     const result = await examService.upsertExam(newExam, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ message: 'Create new exam successfully' });
+      res.status(200).json({ successful: true, examId: newExam.examId });
     } else {
       res.status(400).json({ message: 'Can not create exam' });
     }
@@ -248,8 +238,6 @@ examRouter.put('/:examId', isCourseCreator, async (req, res) => {
   const courseId = req.params.courseId;
   const examId = req.params.examId;
 
-  console.log('dcm admadmasd');
-
   try {
     let oldExam = await examService.getExamById(teacherId, courseId, examId);
     if (oldExam.body.found) {
@@ -261,7 +249,7 @@ examRouter.put('/:examId', isCourseCreator, async (req, res) => {
         duration: req.body.duration !== undefined ? req.body.duration : oldExam.duration,
         examId: oldExam.id,
         content: req.body.content !== undefined ? req.body.content : oldExam.content,
-        startAt: req.body.startAt !== undefined ? getTimeStamp(req.body.startAt) : oldExam.start_at,
+        startAt: req.body.startAt !== undefined ? req.body.startAt : oldExam.start_at,
         title: req.body.title !== undefined ? req.body.title : oldExam.title
       };
       const result = await examService.upsertExam(

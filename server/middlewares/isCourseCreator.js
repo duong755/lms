@@ -6,14 +6,15 @@ const courseService = require('../services/Course');
  * @type {RequestHandler}
  */
 const isCourseCreator = async (req, res, next) => {
-  const teacher = res.locals.user;
+  const userId = req.session.userId;
+  const courseId = req.params.courseId;
   try {
-    const result = await courseService.getCourseById(teacher.id, req.params.courseId);
+    const result = await courseService.getCourseById(userId, courseId);
     if (result.body.found) {
       next();
     } else {
       res.status(400).json({
-        error: 'You do not own this course'
+        successful: false
       });
     }
   } catch (error) {

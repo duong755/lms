@@ -11,7 +11,7 @@ import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 
 import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 
 const useStyles = makeStyles((theme) => ({
@@ -96,13 +96,13 @@ CourseJoinRequest.propTypes = {
 
 CourseJoinRequest.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
-  const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
+  const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
   /**
    * TODO:
    * - get lessons by pagination API
    */
   try {
-    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/join_request/${page}`), {
+    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/join_request?page=${page}`), {
       method: 'GET'
     });
     const data = await response.json();
@@ -112,4 +112,4 @@ CourseJoinRequest.getInitialProps = async (context) => {
     console.log(error);
   }
 };
-export default withLayout(withCourse(CourseJoinRequest, 'join_request'));
+export default withLayout(withCourseLayout(CourseJoinRequest, 'join_request'));

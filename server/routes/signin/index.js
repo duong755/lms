@@ -4,7 +4,6 @@
 
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const dayjs = require('dayjs');
 
 const { UserServices } = require('../../services');
@@ -65,42 +64,23 @@ const comparePassword = (req, res, next) => {
 /**
  * @type {RequestHandler}
  */
-const generateToken = (req, res) => {
+const signin = (req, res) => {
   const user = res.locals.user;
   delete user.hash_password;
 
-  jwt.sign(
-    { id: user.id },
-    process.env.JWT_SECRET_KEY,
-    {
-      expiresIn: '7d'
-    },
-    (err, encoded) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({
-          err: err.message
-        });
-      } else {
-        const expireAt = dayjs()
-          .add(7, 'day')
-          .toDate();
-        res.cookie('access_token', encoded, {
-          httpOnly: true,
-          sameSite: true,
-          path: '/',
-          expires: expireAt
-        });
-        res.status(200).json({
-          successful: true,
-          token: encoded,
-          user: user
-        });
-      }
-    }
-  );
+  req.session.userId = user.id;
+  res.cookie('lms.user', user, {
+    sameSite: true,
+    path: '/',
+    expires: dayjs()
+      .add(7, 'date')
+      .toDate()
+  });
+  res.status(200).json({
+    successful: true
+  });
 };
 
-signinRouter.post('/*', findUserByUsernameOrEmail, comparePassword, generateToken);
+signinRouter.post('/*', findUserByUsernameOrEmail, comparePassword, signin);
 
 module.exports = signinRouter;
