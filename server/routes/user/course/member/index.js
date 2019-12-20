@@ -13,9 +13,9 @@ const memberRouter = Router({ mergeParams: true });
 memberRouter.get('/', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
-
+  const page = req.query.page || 1;
   try {
-    const result = await memberService.getMembersByCourse(teacherId, courseId);
+    const result = await memberService.getMembersByCourse(teacherId, courseId, page);
     const members = result.body.hits.hits.map((current) => current._source);
     const userIdArr = members.map((current) => current.student_id);
     const resultGet = await userService.getMultipleUsersById(userIdArr, ['username', 'id']);

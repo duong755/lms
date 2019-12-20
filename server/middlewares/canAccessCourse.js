@@ -9,7 +9,6 @@ const canAccessCourse = async (req, res, next) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const userId = req.session.userId;
-  console.log(userId);
   try {
     const result = await courseService.getCourseById(teacherId, courseId);
     const course = result.body._source;

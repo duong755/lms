@@ -82,8 +82,8 @@ function CourseExam(props) {
 
   useEffect(() => {
     router.push(
-      `/user/[userId]/course/[courseId]/exam/?page=${currentPage}`,
-      `/user/${userId}/course/${courseId}/exam/?page=${currentPage}`
+      `/user/[userId]/course/[courseId]/exam?page=${currentPage}`,
+      `/user/${userId}/course/${courseId}/exam?page=${currentPage}`
     );
   }, [currentPage]);
 
