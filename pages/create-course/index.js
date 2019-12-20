@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 const searchTopic = async (input) => {
   try {
-    const res = await fetch(absURL(`/api/topic/${input}`));
+    const res = await fetch(absURL(`/api/topic?query=${input}`));
     const json = await res.json();
     return json.topics.map((topic) => ({ value: topic, label: topic }));
   } catch {
@@ -177,7 +177,11 @@ function CreateCourseForm() {
             id="topics"
             loadOptions={searchTopic}
             onChange={(value) => {
-              setFieldValue('topics', value.map((currentSelectedOption) => currentSelectedOption.value));
+              if (value) {
+                setFieldValue('topics', value.map((currentSelectedOption) => currentSelectedOption.value));
+              } else {
+                setFieldValue('topics', []);
+              }
             }}
           />
         </Grid>

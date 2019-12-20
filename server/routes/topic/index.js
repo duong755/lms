@@ -4,7 +4,7 @@
 const { Router } = require('express');
 const Joi = require('@hapi/joi');
 
-const { TopicServices } = require('../../services');
+const { TopicServices, CourseServices } = require('../../services');
 
 const topicRouter = Router({ mergeParams: true });
 
@@ -26,13 +26,6 @@ const validateTopicName = (req, res, next) => {
     next();
   }
 };
-
-/**
- * search topic
- */
-topicRouter.get('/', (req, res) => {
-  res.end('/api/topic?q=*');
-});
 
 /**
  * create topic
@@ -58,11 +51,11 @@ topicRouter.post('/', validateTopicName, async (req, res) => {
 });
 
 /**
- * get courses by topic
+ * search topics
  */
-topicRouter.all('/:topicName', async (req, res) => {
+topicRouter.all('/', async (req, res) => {
   let topicList = [];
-  const topicName = String(req.params.topicName).trim();
+  const topicName = String(req.query.query).trim();
   try {
     const topicRes = await TopicServices.searchTopic(topicName, 1);
     if (topicRes.body.hits.total) {
@@ -79,6 +72,26 @@ topicRouter.all('/:topicName', async (req, res) => {
     console.error(err);
     res.status(200).json({
       topics: topicList
+    });
+  }
+});
+
+/**
+ * search courses by topic
+ */
+topicRouter.get('/:topicName', async (req, res) => {
+  const topicName = req.params.topicName;
+  const page = Number(req.query.page) || 1;
+  try {
+    const courseRes = await CourseServices.searchCourses('', [topicName], void 0, void 0, page);
+    const courses = courseRes.body.hits.hits.map((current) => current._source);
+    res.status(200).json({
+      courses: courses,
+      total: courseRes.body.hits.total
+    });
+  } catch (searchCourseErr) {
+    res.status(500).json({
+      error: 'An unexpected error occured'
     });
   }
 });
