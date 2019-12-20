@@ -18,7 +18,7 @@ const courseRouter = Router({ mergeParams: true });
 /**
  * course pagination
  */
-courseRouter.get('/', canAccessCourse, async (req, res) => {
+courseRouter.get('/', async (req, res) => {
   try {
     const userId = req.params.userId;
     const page = Number(req.query.page) || 1;
