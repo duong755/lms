@@ -33,7 +33,7 @@ npm run compose
 
 - Chuyển các file [lms.cql](./lms.cql), [lms.user.csv](../data/lms.user.csv), [lms.topic.csv](../data/lms.topic.csv), [lms.course.csv](../data/lms.course.csv) vào container bằng các lệnh:
 ```bash
-docker cp lms.cql elassandra:~/lms.cql
+docker cp docs/lms.cql elassandra:~/lms.cql
 
 docker cp data/lms.user.csv elassandra:~/lms.user.csv
 
@@ -68,7 +68,7 @@ COPY lms.course FROM 'lms.course.csv';
 
 - Tạo các index bằng những API trong file [indices.md](./indices.md) (có thể dùng `curl` (rất vất vả) hoặc **Postman**). Trong đó mỗi API được mô tả bằng method, đường dẫn và body request. Lưu ý lúc này hãy bỏ qua các API DELETE.
 ```bash
-curl -X <method> http://localhost:5601/<đường dẫn> -H 'Content-Type: application/json' --data 'body request'
+curl -X <method> http://localhost:9200/<đường dẫn> -H 'Content-Type: application/json' --data 'body request'
 ```
 
 ## Chạy ứng dụng
