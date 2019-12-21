@@ -7,5 +7,5 @@ export const CourseType = PropTypes.shape({
   created_at: PropTypes.string.isRequired,
   archive: PropTypes.bool,
   topics: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-  members: PropTypes.arrayOf(PropTypes.string)
+  members: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
 });

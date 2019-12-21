@@ -5,7 +5,7 @@ const { searchCourses } = require('../../services/Course');
 const searchRouter = Router({ mergeParams: true });
 
 searchRouter.all('/', async (req, res) => {
-  const { query, topics } = req.query;
+  const { query = '', topics } = req.query;
   const page = Number(req.query.page) || 1;
   let parsedTopics = [];
   try {

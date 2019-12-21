@@ -21,7 +21,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import NoSsr from '@material-ui/core/NoSsr';
 import ReactSelectAsyncCreatable from 'react-select/async-creatable';
 
-import withLayout from '../../../../../components/lib/withLayout';
+import withLayout from '../../../../../components/hoc/withLayout';
 import absURL from '../../../../../components/helpers/URL';
 import AppUser from '../../../../../components/auth/AppUser';
 

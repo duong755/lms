@@ -7,11 +7,20 @@ import { useTheme } from '@material-ui/core/styles';
 export const useSelectStyles = () => {
   const theme = useTheme();
   return {
-    control: (base) => ({
+    placeholder: (base) => ({
+      ...base,
+      color: theme.palette.common.white
+    }),
+    control: (base, state) => ({
       ...base,
       minHeight: 50,
       color: theme.palette.common.white,
-      backgroundColor: theme.palette.background.default
+      backgroundColor: 'transparent',
+      boxShadow: state.isFocused && `0 0 0 1px ${theme.palette.primary.main}`,
+      borderColor: state.isFocused && theme.palette.primary.main,
+      '&:hover': {
+        borderColor: theme.palette.primary.main
+      }
     }),
     input: (base) => ({
       ...base,
@@ -40,6 +49,21 @@ export const useSelectStyles = () => {
     menuList: (base) => ({
       ...base,
       backgroundColor: theme.palette.background.default
-    })
+    }),
+    indicatorSeparator: (base, state) => {
+      return {
+        ...base,
+        backgroundColor: state.isFocused && theme.palette.primary.main
+      };
+    },
+    dropdownIndicator: (base, state) => {
+      return {
+        ...base,
+        color: state.isFocused && theme.palette.primary.main,
+        '&:hover': {
+          color: theme.palette.primary.main
+        }
+      };
+    }
   };
 };

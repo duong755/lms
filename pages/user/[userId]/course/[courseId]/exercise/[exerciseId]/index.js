@@ -17,8 +17,8 @@ import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import withLayout from '../../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../../components/lib/withCourse';
+import withLayout from '../../../../../../../components/hoc/withLayout';
+import withCourse from '../../../../../../../components/hoc/withCourse';
 import MuiRte from '../../../../../../../components/MuiRte';
 import absURL from '../../../../../../../components/helpers/URL';
 import { UserType, CourseType, ExerciseType } from '../../../../../../../components/propTypes';

@@ -4,3 +4,4 @@ export * from './lesson';
 export * from './exercise';
 export * from './exam';
 export * from './comment';
+export * from './member';

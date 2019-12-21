@@ -24,8 +24,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 
-import withLayout from '../../../../../../components/lib/withLayout';
-import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
+import withLayout from '../../../../../../components/hoc/withLayout';
+import withCourseLayout from '../../../../../../components/hoc/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../components/auth/AppUser';
 import { LessonType, CourseType } from '../../../../../../components/propTypes';

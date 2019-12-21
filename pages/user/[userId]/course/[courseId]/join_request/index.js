@@ -10,8 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 
-import withLayout from '../../../../../../components/lib/withLayout';
-import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
+import withLayout from '../../../../../../components/hoc/withLayout';
+import withCourseLayout from '../../../../../../components/hoc/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 
 const useStyles = makeStyles((theme) => ({

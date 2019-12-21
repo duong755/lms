@@ -11,8 +11,8 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import withLayout from '../../../../../components/lib/withLayout';
-import withCourseLayout from '../../../../../components/lib/withCourseLayout';
+import withLayout from '../../../../../components/hoc/withLayout';
+import withCourseLayout from '../../../../../components/hoc/withCourseLayout';
 import { CourseType, UserType } from '../../../../../components/propTypes';
 /**
  * @type {React.FunctionComponent<CoursePageProps>}
