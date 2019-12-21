@@ -15,8 +15,8 @@ import NoSsr from '@material-ui/core/NoSsr';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 
-import withLayout from '../../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../../components/lib/withCourse';
+import withLayout from '../../../../../../../components/hoc/withLayout';
+import withCourse from '../../../../../../../components/hoc/withCourse';
 import NotFound from '../../../../../../../components/NotFound';
 import absURL from '../../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../../components/auth/AppUser';

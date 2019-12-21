@@ -26,7 +26,7 @@ import NoSsr from '@material-ui/core/NoSsr';
 
 import ReactSelectAsync from 'react-select/async';
 
-import withLayout from '../../components/lib/withLayout';
+import withLayout from '../../components/hoc/withLayout';
 import absURL from '../../components/helpers/URL';
 import { CourseType } from '../../components/propTypes';
 import CourseItem from '../../components/CourseItem';

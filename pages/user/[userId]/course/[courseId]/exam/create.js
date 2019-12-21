@@ -21,7 +21,7 @@ import Divider from '@material-ui/core/Divider';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import withLayout from '../../../../../../components/lib/withLayout';
+import withLayout from '../../../../../../components/hoc/withLayout';
 import absURL from '../../../../../../components/helpers/URL';
 
 class Header extends React.Component {

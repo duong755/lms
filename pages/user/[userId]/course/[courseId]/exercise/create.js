@@ -27,8 +27,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import NoSsr from '@material-ui/core/NoSsr';
 import { DateTimePicker } from '@material-ui/pickers';
 
-import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withLayout from '../../../../../../components/hoc/withLayout';
+import withCourse from '../../../../../../components/hoc/withCourse';
 import { UserType, CourseType } from '../../../../../../components/propTypes';
 import MuiRte from '../../../../../../components/MuiRte';
 import AppUser from '../../../../../../components/auth/AppUser';
