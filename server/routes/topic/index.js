@@ -53,7 +53,7 @@ topicRouter.post('/', isAuthenticated, validateTopicName, async (req, res) => {
 /**
  * search topics
  */
-topicRouter.all('/', isAuthenticated, async (req, res) => {
+topicRouter.all('/', async (req, res) => {
   let topicList = [];
   const topicName = String(req.query.query).trim();
   try {

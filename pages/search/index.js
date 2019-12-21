@@ -2,7 +2,7 @@
  * @typedef {{ id: string, teacher_id: string, course_name: string, created_at: string, archive?: boolean, description?: string, topics?: string | string[], members?: string | string[] }} Course
  * @typedef {{ searchResults: { courses: Course[], total: number }, query?: string, topics?: string[] }} SearchProps
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -22,6 +22,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import NoSsr from '@material-ui/core/NoSsr';
 
 import ReactSelectAsync from 'react-select/async';
 
@@ -30,6 +31,7 @@ import absURL from '../../components/helpers/URL';
 import { CourseType } from '../../components/propTypes';
 import CourseItem from '../../components/CourseItem';
 import { searchTopic } from '../../components/helpers/searchTopic';
+import { useSelectStyles } from '../../components/styles/select';
 
 const useStyles = makeStyles((theme) => ({
   cell: {
@@ -55,8 +57,20 @@ const SearchPage = (props) => {
     });
   }, [currentPage]);
 
+  const handleNewSearch = useCallback(() => {
+    router.push({
+      pathname: '/search',
+      query: {
+        query: searchQuery,
+        topics: encodeURIComponent(JSON.stringify(searchTopics)),
+        page: page
+      }
+    });
+  }, [searchQuery, searchTopics]);
+
   const totalPages = Math.ceil(searchResults.total / 10);
   const classes = useStyles();
+  const selectClasses = useSelectStyles();
 
   return ((
     <>
@@ -77,21 +91,25 @@ const SearchPage = (props) => {
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
             />
-            <ReactSelectAsync
-              isMulti
-              placeholder="Select topics..."
-              value={searchTopics}
-              loadOptions={searchTopic}
-              onChange={(value) => {
-                if (value) {
-                  setSearchTopics(value.map((currentSelectedOption) => currentSelectedOption.value));
-                } else {
-                  setSearchTopics([]);
-                }
-              }}
-            />
+            <Box pt={2} />
+            <NoSsr>
+              <ReactSelectAsync
+                isMulti
+                placeholder="Select topics..."
+                loadOptions={searchTopic}
+                styles={selectClasses}
+                defaultValue={searchTopics.map((topic) => ({ label: topic, value: topic }))}
+                onChange={(value) => {
+                  if (value) {
+                    setSearchTopics(value.map((currentSelectedOption) => currentSelectedOption.value));
+                  } else {
+                    setSearchTopics([]);
+                  }
+                }}
+              />
+            </NoSsr>
             <Box pt={2}>
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={handleNewSearch}>
                 <Icon>search</Icon>
               </Button>
             </Box>
