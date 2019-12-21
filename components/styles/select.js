@@ -7,11 +7,15 @@ import { useTheme } from '@material-ui/core/styles';
 export const useSelectStyles = () => {
   const theme = useTheme();
   return {
+    placeholder: (base) => ({
+      ...base,
+      color: theme.palette.common.white
+    }),
     control: (base, state) => ({
       ...base,
       minHeight: 50,
       color: theme.palette.common.white,
-      backgroundColor: theme.palette.background.default,
+      backgroundColor: 'transparent',
       boxShadow: state.isFocused && `0 0 0 1px ${theme.palette.primary.main}`,
       borderColor: state.isFocused && theme.palette.primary.main,
       '&:hover': {

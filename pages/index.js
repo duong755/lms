@@ -20,6 +20,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TextField from '@material-ui/core/TextField';
 import Icon from '@material-ui/core/Icon';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import NoSsr from '@material-ui/core/NoSsr';
 
 import ReactSelectAsync from 'react-select/async';
@@ -32,6 +34,31 @@ import { searchTopic } from '../components/helpers/searchTopic';
 import { useSelectStyles } from '../components/styles/select';
 
 const useStyles = makeStyles((theme) => ({
+  searchForm: {
+    backgroundImage: 'url(/images/background.jpeg)',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    height: '90vh',
+    verticalAlign: 'middle',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  white: {
+    color: theme.palette.common.white
+  },
+  searchKeyword: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: theme.palette.common.white
+      }
+    },
+    '& .MuiOutlinedInput-input::placeholder': {
+      color: theme.palette.common.white
+    }
+  },
   cell: {
     padding: theme.spacing(2, 0)
   }
@@ -75,35 +102,47 @@ const HomePage = (props) => {
       </Head>
       <Box>
         <Container maxWidth="xl">
-          <Box pt={2} display="flex" flexDirection="column">
-            <TextField
-              placeholder="Search courses..."
-              fullWidth
-              variant="outlined"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              InputProps={{
-                startAdornment: <Icon>search</Icon>
-              }}
-            />
-            <Box pt={2} />
-            <NoSsr>
-              <ReactSelectAsync
-                isMulti
-                placeholder="Select topics..."
-                loadOptions={searchTopic}
-                styles={selectClasses}
-                defaultValue={searchTopics.map((topic) => ({ label: topic, value: topic }))}
-                onChange={(value) => {
-                  if (value) {
-                    setSearchTopics(value.map((currentSelectedOption) => currentSelectedOption.value));
-                  } else {
-                    setSearchTopics([]);
-                  }
-                }}
-              />
-            </NoSsr>
+          <Box pt={2} className={clsx(classes.searchForm)}>
+            <Grid container justify="center">
+              <Grid item xs={12} sm={10} md={8}>
+                <Typography align="center" variant="h4">
+                  OpenLMS courses
+                </Typography>
+                <Box pt={2} />
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  value={searchQuery}
+                  classes={{ root: classes.searchKeyword }}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  InputProps={{
+                    'aria-label': 'search',
+                    startAdornment: <Icon className={clsx(classes.white)}>search</Icon>
+                  }}
+                />
+                <Box pt={2} />
+                <Box alignSelf="stretch">
+                  <NoSsr>
+                    <ReactSelectAsync
+                      isMulti
+                      placeholder="Select topics..."
+                      loadOptions={searchTopic}
+                      styles={selectClasses}
+                      defaultValue={searchTopics.map((topic) => ({ label: topic, value: topic }))}
+                      onChange={(value) => {
+                        if (value) {
+                          setSearchTopics(value.map((currentSelectedOption) => currentSelectedOption.value));
+                        } else {
+                          setSearchTopics([]);
+                        }
+                      }}
+                    />
+                  </NoSsr>
+                </Box>
+              </Grid>
+            </Grid>
           </Box>
+
           <Table>
             <TableBody>
               {searchResults.courses.map((currentCourse) => {
