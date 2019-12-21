@@ -4,7 +4,8 @@ import dayjs from 'dayjs';
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { isObject } from 'lodash';
+import { useState, useEffect, useMemo, useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -24,6 +25,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import withLayout from '../../../../../../components/lib/withLayout';
 import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
+import AppUser from '../../../../../../components/auth/AppUser';
 
 const useStyles = makeStyles((theme) => ({
   memberContainer: {
@@ -76,6 +78,7 @@ function CourseMember(props) {
   const [currentPage, setPage] = useState(page);
   const [members, setMembers] = useState(memberData.members);
   const router = useRouter();
+  const userCotext = useContext(AppUser);
 
   const handleDelete = async (event, id) => {
     event.preventDefault();
@@ -104,6 +107,12 @@ function CourseMember(props) {
       `/user/${userId}/course/${courseId}/member?page=${currentPage}`
     );
   }, [currentPage]);
+
+  const isCourseOwner = useMemo(() => {
+    if (isObject(userCotext.user)) {
+      return userCotext.user.id === userId;
+    }
+  }, [userCotext.user, userId]);
   return (
     <>
       <Head>
