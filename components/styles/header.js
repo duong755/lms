@@ -52,6 +52,9 @@ export const useHeaderStyles = makeStyles((theme) => ({
     fontWeight: 700
   },
   searchRoot: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: theme.palette.type === 'light' ? theme.palette.grey[500] : 'transparent',
     borderRadius: 5,
     padding: theme.spacing(0.25, 1),
     backgroundColor: fade(theme.palette.common.white, 0.2),
