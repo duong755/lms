@@ -10,9 +10,9 @@
     "yarn": "1.x"
   },
   "scripts": {
-    "start-elassandra": "docker-compose up -d",
+    "compose": "docker-compose up -d",
     "rm-elassandra": "docker rm -f elassandra",
-    "test": "./node_modules/.bin/jest --verbose",
+    "test": "./node_moduldes/.bin/jest --verbose",
     "eslint": "./node_modules/.bin/eslint",
     "dev": "cross-env NODE_ENV=development nodemon server",
     "build": "next build",
