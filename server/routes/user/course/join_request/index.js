@@ -2,12 +2,52 @@ const { Router } = require('express');
 
 const isCourseCreateor = require('../../../../middlewares/isCourseCreator');
 const joinRequestService = require('../../../../services/JoinRequest');
+const courseService = require('../../../../services/Course');
+const userService = require('../../../../services/User');
+// const canAccessJoinRequest = require('../../../../middlewares/canAccessJoinRequest');
 const joinRequestRouter = Router({ mergeParams: true });
 
 /**
  * join_request pagination
  */
-joinRequestRouter.get('/', async (req, res) => {
+
+const isStudent = async (req, res, next) => {
+  const userId = req.session.userId;
+  try {
+    const result = await userService.getUserById(userId);
+    if (result.body.found) {
+      const user = result.body._source;
+      if (user.type === 'student') {
+        next();
+      } else {
+        res.status(400).json({ message: 'You are not a student' });
+      }
+    } else {
+      res.status(401).json({ message: 'Unauthenticated' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Unexpected error occurred' });
+  }
+};
+
+const notInThisCourse = (req, res, next) => {
+  const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
+  const userId = req.session.userId;
+  try {
+    const result = courseService.getCourseById(teacherId, courseId);
+    const course = result.body._source;
+    if (course.members.indexOf(userId) < 0) {
+      next();
+    } else {
+      res.status(400).json({ message: 'You have already in this course' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Unexpected error occurred' });
+  }
+};
+
+joinRequestRouter.get('/', isCourseCreateor, async (req, res) => {
   try {
     const page = req.query.page || 1;
     const result = await joinRequestService.getJoinRequests(req.params.userId, req.params.courseId, page);
@@ -22,7 +62,7 @@ joinRequestRouter.get('/', async (req, res) => {
 /**
  * create join request
  */
-joinRequestRouter.post('/', async (req, res) => {
+joinRequestRouter.post('/', isStudent, notInThisCourse, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const studentId = res.locals.user.id;

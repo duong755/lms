@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
+import { capitalize } from 'lodash';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function CourseTab(props) {
+const CourseTab = (props) => {
   const { tabName, focusTab, userId, courseId } = props;
   const classes = useStyles();
 
@@ -40,7 +41,7 @@ function CourseTab(props) {
         prefetch={false}
       >
         <Button className={clsx(classes.tab, 'focus')} color="primary" variant="contained">
-          {tabName.replace(/_/g, ' ')}
+          {capitalize(tabName.replace(/_/g, ' '))}
         </Button>
       </NextLink>
     );
@@ -57,11 +58,11 @@ function CourseTab(props) {
         color="default"
         variant="text"
       >
-        {tabName.replace(/_/g, ' ')}
+        {capitalize(tabName.replace(/_/g, ' '))}
       </Button>
     </NextLink>
   );
-}
+};
 
 /**
  *

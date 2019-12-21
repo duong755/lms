@@ -176,7 +176,7 @@ function acceptJoinRequest(teacherId, courseId, studentId, ttl) {
  * @param {Uuid} studentId
  * @param {number} [ttl]
  */
-function declineJoinRequest(teacherId, courseId, studentId, ttl) {
+function removeJoinRequest(teacherId, courseId, studentId, ttl) {
   return JoinRequest.remove(
     {
       teacher_id: teacherId,
@@ -197,5 +197,5 @@ module.exports = {
   getJoinRequestById: getJoinRequestById,
   createJoinRequest: createJoinRequest,
   acceptJoinRequest: acceptJoinRequest,
-  declineJoinRequest: declineJoinRequest
+  removeJoinRequest: removeJoinRequest
 };

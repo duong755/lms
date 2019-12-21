@@ -17,7 +17,6 @@ const createCourseRouter = Router({ mergeParams: true });
  */
 const isTeacher = async (req, res, next) => {
   const userId = req.session.userId;
-  console.log(userId);
   if (userId) {
     try {
       const response = await userService.getUserById(userId);

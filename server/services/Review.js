@@ -95,8 +95,21 @@ function deleteReview(teacherId, courseId, studentId) {
   );
 }
 
+function getReviewById(teacherId, courseId, studentId) {
+  teacherId = String(teacherId);
+  courseId = String(courseId);
+  studentId = String(studentId);
+  const key = JSON.stringify([teacherId, courseId, studentId]);
+  return elasticsearchClient.get({
+    index: 'lms.review',
+    type: 'review',
+    id: key
+  });
+}
+
 module.exports = {
   getReviews: getReviews,
   upsertReview: upsertReview,
-  deleteReview: deleteReview
+  deleteReview: deleteReview,
+  getReviewById: getReviewById
 };

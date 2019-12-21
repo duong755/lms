@@ -11,7 +11,7 @@ const canAccessExamWork = async (req, res, next) => {
   const examId = req.params.examId;
   const studentId = req.params.studentId;
 
-  const userId = res.locals.user.id;
+  const userId = req.session.userId;
   try {
     const result = await examWorkService.getExamWorkByStudent(teacherId, courseId, examId, studentId);
     if (result.body.found) {

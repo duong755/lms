@@ -6,10 +6,10 @@ const courseService = require('../services/Course');
  * @type {RequestHandler}
  */
 const isCourseCreator = async (req, res, next) => {
-  const userId = req.session.userId;
+  const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   try {
-    const result = await courseService.getCourseById(userId, courseId);
+    const result = await courseService.getCourseById(teacherId, courseId);
     if (result.body.found) {
       next();
     } else {
