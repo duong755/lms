@@ -15,7 +15,7 @@ const exerciseRouter = Router({ mergeParams: true });
 /**
  * exercise pagination
  */
-exerciseRouter.get('/', async (req, res) => {
+exerciseRouter.get('/', canAccessCourse, async (req, res) => {
   const page = req.query.page || 1;
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
@@ -33,7 +33,7 @@ exerciseRouter.get('/', async (req, res) => {
 /**
  * create exercise
  */
-exerciseRouter.post('/', async (req, res) => {
+exerciseRouter.post('/', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const title = req.body.title;
@@ -104,7 +104,7 @@ exerciseRouter.post('/', async (req, res) => {
 /**
  * get exercise by id
  */
-exerciseRouter.get('/:exerciseId', async (req, res) => {
+exerciseRouter.get('/:exerciseId', canAccessCourse, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const exerciseId = req.params.exerciseId;

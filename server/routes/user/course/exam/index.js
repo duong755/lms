@@ -5,6 +5,7 @@ const _ = require('lodash');
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const isCourseMember = require('../../../../middlewares/isCourseMember');
 const canAccessExamWork = require('../../../../middlewares/canAccessExamWork');
+const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 const examWorkService = require('../../../../services/ExamWork');
 const examService = require('../../../../services/Exam');
 const { cassandraTypes } = require('../../../../models/connector');
@@ -14,7 +15,7 @@ const examRouter = Router({ mergeParams: true });
 function getMark(content, examContent) {
   let point = 0;
   for (let i = 0; i < content.length; i++) {
-    if (content[i].answer === examContent[i].answer) {
+    if (content[i]['answer'] === examContent[i]['answer']) {
       point += examContent[i].point;
     }
   }
@@ -24,7 +25,7 @@ function getMark(content, examContent) {
 /**
  * exam pagination
  */
-examRouter.get('/', async (req, res) => {
+examRouter.get('/', canAccessCourse, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const page = req.query.page || 1;
@@ -136,13 +137,14 @@ examRouter.post('/', isCourseCreator, async (req, res) => {
 /**
  * get exam by id
  */
-examRouter.get('/:examId', async (req, res) => {
+examRouter.get('/:examId', canAccessCourse, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const examId = req.params.examId;
 
   try {
     const result = await examService.getExamById(teacherId, courseId, examId);
+    console.log(result.body._source);
     if (result.body.found) {
       res.status(200).json({ exam: result.body._source });
     } else {
@@ -180,7 +182,6 @@ examRouter.post('/:examId', isCourseMember, async (req, res) => {
           )
           .unique()
           .required(),
-        point: Joi.number().required(),
         answer: Joi.number()
           .min(1)
           .max(4)
@@ -193,7 +194,6 @@ examRouter.post('/:examId', isCourseMember, async (req, res) => {
   const validationResult = schema.validate(content, {
     allowUnknown: true
   });
-
   if (validationResult.error && validationResult.error.details.length) {
     const error = _.reduce(validationResult.error.details, (result, value) => {
       const key = value.path[0];

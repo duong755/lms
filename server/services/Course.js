@@ -74,7 +74,7 @@ function getCoursesByStudent(studentId, page = 1, includes, excludes) {
 /**
  *
  * @param {string} keyword
- * @param {string | string[]} topics
+ * @param {string | string[]} [topics]
  * @param {string | string[]} [includes]
  * @param {string | string[]} [excludes]
  * @param {number} [page=1]
@@ -89,13 +89,7 @@ function searchCourses(keyword, topics, includes, excludes, page = 1) {
   const bodySearch = {
     query: {
       bool: {
-        must: [
-          {
-            terms: {
-              topics: topics
-            }
-          }
-        ],
+        must: [],
         should: [
           {
             match: {
@@ -112,12 +106,7 @@ function searchCourses(keyword, topics, includes, excludes, page = 1) {
     }
   };
 
-  if (typeof keyword !== 'string') {
-    delete bodySearch.query.bool.should;
-  }
-  if (!topics.length) {
-    delete bodySearch.query.bool.must;
-  }
+  bodySearch.query.bool.must = topics.filter((topic) => topic).map((topic) => ({ term: { topics: topic } }));
 
   return elasticsearchClient.search({
     index: 'lms.course',

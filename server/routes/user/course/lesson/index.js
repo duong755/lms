@@ -5,6 +5,7 @@ const _ = require('lodash');
 const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const { cassandraTypes } = require('../../../../models/connector');
 const lessonService = require('../../../../services/Lesson');
+const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 
 const commentRouter = require('./comment');
 
@@ -13,7 +14,7 @@ const lessonRouter = Router({ mergeParams: true });
 /**
  * lesson pagination
  */
-lessonRouter.get('/', async (req, res) => {
+lessonRouter.get('/', canAccessCourse, async (req, res) => {
   const page = req.query.page || 1;
   try {
     const result = await lessonService.getLessonsByTeacherAndCourse(req.params.userId, req.params.courseId, page);
@@ -85,7 +86,7 @@ lessonRouter.post('/', isCourseCreator, async (req, res) => {
 /**
  * get lesson data
  */
-lessonRouter.get('/:lessonId', async (req, res) => {
+lessonRouter.get('/:lessonId', canAccessCourse, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const lessonId = req.params.lessonId;

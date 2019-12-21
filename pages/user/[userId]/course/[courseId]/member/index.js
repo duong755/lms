@@ -24,7 +24,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import withLayout from '../../../../../../components/lib/withLayout';
 import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
-import { getDateFromTimeUuid } from '../../../../../../components/helpers/timeuuid';
 
 const useStyles = makeStyles((theme) => ({
   memberContainer: {
@@ -42,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 function MemberItem(props) {
   const classes = useStyles();
   const { member, onDelete } = props;
-  const joinedAt = getDateFromTimeUuid(member.joined_at);
   return (
     <Grid item xs={12}>
       <Paper className={clsx(classes.memberContainer)}>
@@ -58,7 +56,7 @@ function MemberItem(props) {
             <Box display="flex" alignItems="center">
               <Icon>access_time</Icon>
               &nbsp;
-              <Typography variant="caption">{dayjs(joinedAt).format('YYYY MMM D hh:mm A')}</Typography>
+              <Typography variant="caption">{dayjs(member.joined_at).format('YYYY MMM D hh:mm A')}</Typography>
             </Box>
           </Grid>
           <Grid item>
@@ -154,7 +152,7 @@ CourseMember.getInitialProps = async (context) => {
   let data = { members: [], total: 0 };
 
   try {
-    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/member/${page}`), {
+    const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/member${page}`), {
       method: 'GET'
     });
     data = await response.json();

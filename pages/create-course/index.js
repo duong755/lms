@@ -25,6 +25,8 @@ import ReactSelectAsyncCreatable from 'react-select/async-creatable';
 import withLayout from '../../components/lib/withLayout';
 import AppUser from '../../components/auth/AppUser';
 import absURL from '../../components/helpers/URL';
+import { searchTopic } from '../../components/helpers/searchTopic';
+import { useSelectStyles } from '../../components/styles/select';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -40,16 +42,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.error.main
   }
 }));
-
-const searchTopic = async (input) => {
-  try {
-    const res = await fetch(absURL(`/api/topic/${input}`));
-    const json = await res.json();
-    return json.topics.map((topic) => ({ value: topic, label: topic }));
-  } catch {
-    return [];
-  }
-};
 
 const createCourseValidationSchema = Yup.object().shape({
   courseName: Yup.string()
@@ -75,6 +67,7 @@ function CreateCourseForm() {
   const userContext = useContext(AppUser);
   const router = useRouter();
   const classes = useStyles();
+  const selectClasses = useSelectStyles();
   const formik = useFormik({
     validationSchema: createCourseValidationSchema,
     initialValues: createCourseInitialValues,
@@ -175,9 +168,14 @@ function CreateCourseForm() {
             isMulti
             placeholder="Search for topics..."
             id="topics"
+            styles={selectClasses}
             loadOptions={searchTopic}
             onChange={(value) => {
-              setFieldValue('topics', value.map((currentSelectedOption) => currentSelectedOption.value));
+              if (value) {
+                setFieldValue('topics', value.map((currentSelectedOption) => currentSelectedOption.value));
+              } else {
+                setFieldValue('topics', []);
+              }
             }}
           />
         </Grid>

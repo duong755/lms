@@ -3,12 +3,23 @@ const Joi = require('@hapi/joi');
 const _ = require('lodash');
 
 const reviewService = require('../../../../services/Review');
+const isCourseMember = require('../../../../middlewares/isCourseMember');
+const isReviewCreator = require('../../../../middlewares/isReviewCreator');
 const reviewRouter = Router({ mergeParams: true });
 
 /**
  * review pagination
  */
-reviewRouter.get('/', async (req, res) => {
+
+const isAuthenticated = (req, res, next) => {
+  if (req.session.userId) {
+    next();
+  } else {
+    res.status(401).json({ message: 'Unauthenticated' });
+  }
+};
+
+reviewRouter.get('/', isAuthenticated, async (req, res) => {
   const page = req.query.page || 1;
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
@@ -27,7 +38,7 @@ reviewRouter.get('/', async (req, res) => {
 /**
  * create review
  */
-reviewRouter.post('/', async (req, res) => {
+reviewRouter.post('/', isCourseMember, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const studentId = res.locals.user.id;
@@ -73,7 +84,7 @@ reviewRouter.post('/', async (req, res) => {
 
     const result = await reviewService.upsertReview(newReview, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ successful: 'Create new revirew successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(400).json({ error: 'Can not create new review' });
     }
@@ -87,9 +98,9 @@ reviewRouter.post('/', async (req, res) => {
 /**
  * edit review
  */
-reviewRouter.put('/:studentId', async (req, res) => {
+reviewRouter.put('/:studentId', isReviewCreator, async (req, res) => {
   const content = req.body.content;
-  const star = req.body.start;
+  const star = req.body.star;
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const studentId = req.params.studentId;
@@ -137,7 +148,7 @@ reviewRouter.put('/:studentId', async (req, res) => {
       false
     );
     if (result.wasApplied()) {
-      res.status(200).json({ successful: 'Update review successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(400).json({ error: 'Can not update this review' });
     }
@@ -148,14 +159,14 @@ reviewRouter.put('/:studentId', async (req, res) => {
   // res.end('/api/user/:userId/course/:courseId/review/:studentId');
 });
 
-reviewRouter.delete('/:studentId', async (req, res) => {
+reviewRouter.delete('/:studentId', isReviewCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const studentId = req.params.studentId;
   try {
     const result = await reviewService.deleteReview(teacherId, courseId, studentId);
     if (result.wasApplied()) {
-      res.status(200).json({ successful: 'Delete review successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(400).json({ error: 'Can not delete this review' });
     }

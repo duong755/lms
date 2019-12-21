@@ -7,7 +7,7 @@ import {
   getJoinRequestById,
   createJoinRequest,
   acceptJoinRequest,
-  declineJoinRequest
+  removeJoinRequest
 } from '../../server/services/JoinRequest';
 
 import { closeConnection } from '../helpers/close';
@@ -66,7 +66,7 @@ describe('JoinRequest Services', () => {
 
   it('declineJoinRequest', async () => {
     await createJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
-    const res = await declineJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
+    const res = await removeJoinRequest(randomTeacherId, randomCourseId, randomStudentId, TTL);
     expect(res.wasApplied()).toBe(true);
   });
 });

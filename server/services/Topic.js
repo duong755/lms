@@ -12,7 +12,7 @@ function createTopic(topicNames, ttl) {
     topicNames = [topicNames];
   }
   const newTopics = topicNames.map((currentTopicName) =>
-    Topic.batching.insert({ name: currentTopicName }, { ttl: ttl })
+    Topic.batching.insert({ name: currentTopicName.toLowerCase() }, { ttl: ttl })
   );
   return mapper.batch(newTopics);
 }
