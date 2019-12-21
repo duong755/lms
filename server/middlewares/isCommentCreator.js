@@ -16,18 +16,16 @@ const isCommentCreator = async (req, res, next) => {
     if (result.body.found) {
       const comment = result.body._source;
       if (comment.user_id === userId) {
-        console.log('hehehehehhe');
         next();
       } else {
-        res.status(400).json({ message: 'Not owner this comment' });
+        res.status(403).json({ message: 'Not owner this comment' });
       }
     } else {
-      res.status(404).json({ message: 'Not found' });
+      res.status(404).json({ message: 'Comment not found' });
     }
   } catch (error) {
     res.status(500).json({ error: 'Unexpected error occurred' });
   }
-  next();
 };
 
 module.exports = isCommentCreator;

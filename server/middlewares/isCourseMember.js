@@ -11,11 +11,15 @@ const isCourseMember = async (req, res, next) => {
   const courseId = req.params.courseId;
   try {
     const data = await courseService.getCourseById(teacherId, courseId);
-    const members = data.body._source.members;
-    if (members.indexOf(userId) >= 0) {
-      next();
+    if (data.body.found) {
+      const members = data.body._source.members;
+      if (members.indexOf(userId) >= 0) {
+        next();
+      } else {
+        res.status(403).json({ error: 'you are not members of this course' });
+      }
     } else {
-      res.status(400).json({ error: 'you are not members of this course' });
+      res.status(404).json({ error: 'Course not found' });
     }
   } catch (error) {
     console.error(error);
