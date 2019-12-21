@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { Router } = require('express');
 
 const isCourseCreateor = require('../../../../middlewares/isCourseCreator');
@@ -26,16 +27,17 @@ const isStudent = async (req, res, next) => {
       res.status(401).json({ message: 'Unauthenticated' });
     }
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Unexpected error occurred' });
   }
 };
 
-const notInThisCourse = (req, res, next) => {
+const notInThisCourse = async (req, res, next) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const userId = req.session.userId;
   try {
-    const result = courseService.getCourseById(teacherId, courseId);
+    const result = await courseService.getCourseById(teacherId, courseId);
     const course = result.body._source;
     if (course.members.indexOf(userId) < 0) {
       next();
@@ -43,15 +45,25 @@ const notInThisCourse = (req, res, next) => {
       res.status(400).json({ message: 'You have already in this course' });
     }
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Unexpected error occurred' });
   }
 };
 
 joinRequestRouter.get('/', isCourseCreateor, async (req, res) => {
+  const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
   try {
     const page = req.query.page || 1;
-    const result = await joinRequestService.getJoinRequests(req.params.userId, req.params.courseId, page);
+    const result = await joinRequestService.getJoinRequestsByCourse(teacherId, courseId, page);
     const joinRequests = result.body.hits.hits.map((current) => current._source);
+    const userIds = joinRequests.map((current) => current.student_id);
+    const users = await userService.getMultipleUsersById(userIds, ['id', 'username']);
+    const idsAndUsernames = users.body.hits.hits.map((current) => current._source);
+    for (let i = 0; i < idsAndUsernames.length; i++) {
+      const find = idsAndUsernames.find((element) => element.id === joinRequests[i].student_id);
+      joinRequests[i]['username'] = find.username;
+    }
     res.status(200).json({ joinRequests: joinRequests, total: result.body.hits.total });
   } catch (error) {
     console.error(error);
@@ -65,11 +77,11 @@ joinRequestRouter.get('/', isCourseCreateor, async (req, res) => {
 joinRequestRouter.post('/', isStudent, notInThisCourse, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
-  const studentId = res.locals.user.id;
+  const studentId = req.session.userId;
   try {
     const resultCreate = await joinRequestService.createJoinRequest(teacherId, courseId, studentId);
     if (resultCreate.wasApplied()) {
-      res.status(200).json({ successful: 'Create new join request successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(500).json({ error: 'Can not create join request' });
     }
