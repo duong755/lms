@@ -1,18 +1,32 @@
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
+import { useEffect, useState, useContext, useMemo, useCallback } from 'react';
 import dayjs from 'dayjs';
 import clsx from 'clsx';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import fetch from 'isomorphic-unfetch';
+import { isObject } from 'lodash';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
+import Table from '@material-ui/core/Table';
+import Icon from '@material-ui/core/Icon';
 import Link from '@material-ui/core/Link';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
+import Button from '@material-ui/core/Button';
+import TableBody from '@material-ui/core/TableBody';
 
 import withLayout from '../../../../../../components/hoc/withLayout';
 import withCourseLayout from '../../../../../../components/hoc/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
+import AppUser from '../../../../../../components/auth/AppUser';
 
 const useStyles = makeStyles((theme) => ({
   joinRequestContainer: {
@@ -24,79 +38,187 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// function getTimeInt(uuid_str) {
-//   const uuid_arr = uuid_str.split('-'),
-//     time_str = [uuid_arr[2].substring(1), uuid_arr[1], uuid_arr[0]].join('');
-//   return parseInt(time_str, 16);
-// }
-
-// function getDateObj(uuid_str) {
-//   const int_time = getTimeInt(uuid_str) - 122192928000000000,
-//     int_millisec = Math.floor(int_time / 10000);
-//   return new Date(int_millisec);
-// }
-
-const mockJoinRequests = [
-  {
-    title: 'JoinRequest 1',
-    createdAt: dayjs().format('YYYY-MM-DD hh:mm A')
-  },
-  {
-    title: 'JoinRequest 2',
-    createdAt: dayjs().format('YYYY-MM-DD hh:mm A')
-  },
-  {
-    title: 'JoinRequest 3',
-    createdAt: dayjs().format('YYYY-MM-DD hh:mm A')
-  }
-];
-
 function JoinRequestItem(props) {
   const classes = useStyles();
-  // const objDate = getDateObj(props.id);
-  // const createAt = dayjs(objDate).format('YYYY-MM-DD hh:mm A');
+  const { joinRequest, handleAccept, handleDecline } = props;
+  const userContext = useContext(AppUser);
+
+  const isCourseOwner = useMemo(() => {
+    if (isObject(userContext.user)) {
+      return userContext.user.id === joinRequest.teacher_id;
+    }
+    return false;
+  });
+
   return (
     <Grid item xs={12}>
       <Paper className={clsx(classes.joinRequestContainer)}>
-        <NextLink href="/" prefetch={false}>
-          <Link href="/" className={clsx(classes.joinRequestLink)}>
-            <Typography title={props.title} color="primary" variant="h5">
-              {props.title}
-            </Typography>
-          </Link>
-        </NextLink>
-        <Typography>{props.createdAt}</Typography>
+        <Grid container alignItems="center" justify="space-between">
+          <Grid item>
+            <NextLink href="/user/[userId]" as={`/user/${joinRequest.student_id}`} prefetch={false}>
+              <Link href={`/user/${joinRequest.student_id}`} className={clsx(classes.joinRequestLink)}>
+                <Typography title={joinRequest.username} color="primary" variant="h5">
+                  {joinRequest.username}
+                </Typography>
+              </Link>
+            </NextLink>
+            <Box display="flex" alignItems="center">
+              <Icon>access_time</Icon>
+              &nbsp;
+              <Typography variant="caption">{dayjs(joinRequest.request_at).format('YYYY MMM D hh:mm A')}</Typography>
+            </Box>
+          </Grid>
+          {isCourseOwner && (
+            <Grid item>
+              <Box display="flex">
+                <Button variant="contained" color="primary" onClick={handleAccept}>
+                  Accept
+                </Button>
+                &nbsp;
+                <Button variant="outlined" color="primary" onClick={handleDecline}>
+                  Decline
+                </Button>
+              </Box>
+            </Grid>
+          )}
+        </Grid>
       </Paper>
     </Grid>
   );
 }
 
-function CourseJoinRequest() {
+function CourseJoinRequest(props) {
+  const router = useRouter();
+  const { userId, courseId, joinRequestData, course, page } = props;
+  const [currentPage, setCurrentPage] = useState(page);
+  const [joinRequests, setJoinRequest] = useState(joinRequestData.joinRequests);
+  const [total, setTotal] = useState(joinRequestData.total);
+
+  useEffect(() => {
+    router.push(
+      `/user/[userId]/course/[courseId]/join_request?page=${currentPage}`,
+      `/user/${userId}/course/${courseId}/join_request?page=${currentPage}`
+    );
+  }, [currentPage]);
+
+  useEffect(() => {
+    setTotal(joinRequestData.total);
+    setJoinRequest(joinRequestData.joinRequests);
+  }, [joinRequestData]);
+
+  const acceptJoinRequest = useCallback(async (event, joinRequest) => {
+    event.preventDefault();
+    try {
+      const resFetch = await fetch(
+        AbsURL(`/api/user/${userId}/course/${courseId}/join_request/${joinRequest.student_id}`),
+        {
+          method: 'POST',
+          credentials: 'include',
+          mode: 'same-origin'
+        }
+      );
+      if (resFetch) {
+        setJoinRequest((joinRequests) =>
+          joinRequests.filter((current) => joinRequest.student_id !== current.student_id)
+        );
+        setTotal((total) => total--);
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const declineJoinRequest = useCallback(async (event, joinRequest) => {
+    event.preventDefault();
+    try {
+      const resFetch = await fetch(
+        AbsURL(`/api/user/${userId}/course/${courseId}/join_request/${joinRequest.student_id}`),
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          mode: 'same-origin'
+        }
+      );
+      if (resFetch) {
+        setJoinRequest((joinRequests) =>
+          joinRequests.filter((current) => joinRequest.student_id !== current.student_id)
+        );
+        setTotal((total) => total--);
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
   return (
     <>
+      <Head>
+        <title>{`${course.course_name} 's join request`}</title>
+      </Head>
       <Box py={2} />
-      <Grid container spacing={2}>
-        {mockJoinRequests.map((currentJoinRequest, currentJoinRequestIndex) => (
-          <JoinRequestItem key={currentJoinRequestIndex} {...currentJoinRequest} />
-        ))}
-      </Grid>
+      {total ? (
+        <Table>
+          <TableBody>
+            {joinRequests.map((current) => {
+              return (
+                <TableRow key={current.student_id}>
+                  <TableCell>
+                    <JoinRequestItem
+                      joinRequest={current}
+                      handleAccept={(event) => acceptJoinRequest(event, current)}
+                      handleDecline={(event) => declineJoinRequest(event, current)}
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+          {total >= 10 && (
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  page={page - 1}
+                  onChangePage={(event, page) => setCurrentPage(page + 1)}
+                  count={total}
+                  rowsPerPage={10}
+                  rowsPerPageOptions={[10]}
+                />
+              </TableRow>
+            </TableFooter>
+          )}
+        </Table>
+      ) : (
+        <Box textAlign="center">
+          <Typography variant="h5">No join request is available</Typography>
+        </Box>
+      )}
     </>
   );
 }
 
 JoinRequestItem.propTypes = {
   title: PropTypes.string.isRequired,
-  createdAt: PropTypes.string,
-  id: PropTypes.string
+  joinRequest: PropTypes.object.isRequired,
+  requestAt: PropTypes.number.isRequired,
+  handleAccept: PropTypes.func,
+  handleDecline: PropTypes.func
 };
 
 CourseJoinRequest.propTypes = {
-  johnRequests: PropTypes.array
+  johnRequests: PropTypes.array,
+  joinRequestData: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired,
+  courseId: PropTypes.string.isRequired,
+  course_name: PropTypes.string,
+  course: PropTypes.object.isRequired,
+  page: PropTypes.number.isRequired
 };
 
 CourseJoinRequest.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
   const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
+  let data = { joinRequests: [], total: 0 };
   /**
    * TODO:
    * - get lessons by pagination API
@@ -105,11 +227,15 @@ CourseJoinRequest.getInitialProps = async (context) => {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/join_request?page=${page}`), {
       method: 'GET'
     });
-    const data = await response.json();
-    console.log('Data', data);
-    return data;
+    data = await response.json();
   } catch (error) {
     console.log(error);
   }
+  return {
+    userId: userId,
+    page: Number(context.query.page) || 1,
+    courseId: courseId,
+    joinRequestData: data
+  };
 };
 export default withLayout(withCourseLayout(CourseJoinRequest, 'join_request'));

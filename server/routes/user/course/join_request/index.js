@@ -101,7 +101,7 @@ joinRequestRouter.post('/:studentId', isCourseCreateor, async (req, res) => {
   try {
     const acceptResult = await joinRequestService.acceptJoinRequest(teacherId, courseId, studentId);
     if (acceptResult.wasApplied()) {
-      res.status(200).json({ successful: 'Accept join request successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(500).json({ error: 'Can not accept this join request' });
     }
@@ -122,7 +122,7 @@ joinRequestRouter.delete('/:studentId', isCourseCreateor, async (req, res) => {
   try {
     const declineResult = await joinRequestService.declineJoinRequest(teacherId, courseId, studentId);
     if (declineResult.wasApplied()) {
-      res.status(200).json({ successful: 'decline join request successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(500).json({ error: 'Can not decline this join request' });
     }

@@ -212,10 +212,11 @@ HomePage.getInitialProps = async (context) => {
   try {
     const courseRes = await fetch(absURL(`/api/search?query=${query}&topics=${topics}&page=${page}`));
     const courseJson = await courseRes.json();
+    console.log(courseJson);
     Object.assign(searchResults, courseJson);
     return {
       page: Number(page) || 1,
-      query: query,
+      query: query || '',
       topics: parsedTopics || [],
       searchResults: searchResults
     };
