@@ -75,7 +75,9 @@ function JoinRequestItem(props) {
             <Box display="flex" alignItems="center">
               <Icon>access_time</Icon>
               &nbsp;
-              <Typography variant="caption">{dayjs(joinRequest.request_at).format('YYYY MMM D hh:mm A')}</Typography>
+              <Typography variant="caption">
+                Requested at{dayjs(joinRequest.request_at).format('YYYY MMM D hh:mm A')}
+              </Typography>
             </Box>
           </Grid>
           {isCourseOwner && (
@@ -201,7 +203,7 @@ function CourseJoinRequest(props) {
         </Table>
       ) : (
         <Box textAlign="center">
-          <Typography variant="h5">No join request is available</Typography>
+          <Typography variant="h5">No join request available</Typography>
         </Box>
       )}
     </>

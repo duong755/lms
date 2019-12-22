@@ -28,6 +28,7 @@ import withLayout from '../../../../../../components/hoc/withLayout';
 import withCourseLayout from '../../../../../../components/hoc/withCourseLayout';
 import AppUser from '../../../../../../components/auth/AppUser';
 import { getDateFromTimeUuid } from '../../../../../../components/helpers/timeuuid';
+import { ExamType, CourseType } from '../../../../../../components/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   examContainer: {
@@ -66,7 +67,7 @@ function ExamItem(props) {
         <Box display="flex" alignItems="center">
           <Icon>access_time</Icon>
           &nbsp;
-          <Typography variant="caption">{dayjs(createAt).format('YYYY MMM D hh:mm A')}</Typography>
+          <Typography variant="caption">Created at {dayjs(createAt).format('YYYY MMM D hh:mm A')}</Typography>
         </Box>
       </Paper>
     </Grid>
@@ -96,7 +97,7 @@ function CourseExam(props) {
   return (
     <>
       <Head>
-        <title>{`${course.course_name} 's exam`}</title>
+        <title>{`${course.course_name}'s exam`}</title>
       </Head>
 
       <NoSsr>
@@ -128,7 +129,7 @@ function CourseExam(props) {
               );
             })}
           </TableBody>
-          {examData.total >= 10 && (
+          {examData.total > 10 && (
             <TableFooter>
               <TableRow>
                 <TablePagination
@@ -152,9 +153,7 @@ function CourseExam(props) {
 }
 
 ExamItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  createdAt: PropTypes.string,
-  id: PropTypes.string
+  exam: ExamType.isRequired
 };
 
 CourseExam.propTypes = {
@@ -164,13 +163,16 @@ CourseExam.propTypes = {
 CourseExam.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
   const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
-  let data = { exams: [], total: 0 };
+  const data = { exams: [], total: 0 };
 
   try {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/exam?page=${page}`), {
       method: 'GET'
     });
-    data = await response.json();
+    const json = await response.json();
+    if (response.ok) {
+      Object.assign(data, json);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -189,9 +191,11 @@ ExamItem.propTypes = {
 CourseExam.propTypes = {
   userId: PropTypes.string.isRequired,
   courseId: PropTypes.string.isRequired,
-  examData: PropTypes.array.isRequired,
+  examData: PropTypes.shape({
+    exams: PropTypes.arrayOf(ExamType),
+    total: PropTypes.number
+  }).isRequired,
   page: PropTypes.number.isRequired,
-  course_name: PropTypes.string.isRequired,
-  course: PropTypes.object.isRequired
+  course: CourseType.isRequired
 };
 export default withLayout(withCourseLayout(CourseExam, 'exam'));

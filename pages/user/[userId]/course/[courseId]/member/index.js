@@ -68,7 +68,9 @@ const MemberItem = (props) => {
             <Box display="flex" alignItems="center">
               <Icon>access_time</Icon>
               &nbsp;
-              <Typography variant="caption">{dayjs(member.joined_at).format('YYYY MMM D hh:mm A')}</Typography>
+              <Typography variant="caption">
+                Member since {dayjs(member.joined_at).format('YYYY MMM D hh:mm A')}
+              </Typography>
             </Box>
           </Grid>
           {isCourseOwner && (

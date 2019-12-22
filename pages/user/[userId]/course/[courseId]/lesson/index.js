@@ -71,7 +71,7 @@ const LessonItem = (props) => {
         <Box display="flex" alignItems="center">
           <Icon>access_time</Icon>
           &nbsp;
-          <Typography variant="caption">{dayjs(createdAt).format('YYYY MMM D hh:mm A')}</Typography>
+          <Typography variant="caption">Posted at {dayjs(createdAt).format('YYYY MMM D hh:mm A')}</Typography>
         </Box>
       </Paper>
     </Grid>

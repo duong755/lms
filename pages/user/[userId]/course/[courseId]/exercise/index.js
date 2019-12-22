@@ -69,14 +69,16 @@ const ExerciseItem = (props) => {
             <Box display="flex" alignItems="center">
               <Icon>access_time</Icon>
               &nbsp;
-              <Typography variant="caption">{dayjs(createAt).format('YYYY MMM D hh:mm')}</Typography>
+              <Typography variant="caption">Posted at {dayjs(createAt).format('YYYY MMM D hh:mm A')}</Typography>
             </Box>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Box display="flex" alignItems="center">
               <Icon>timer</Icon>
               &nbsp;
-              <Typography variant="caption">{dayjs(exercise.deadline).format('YYYY MMM D hh:mm')}</Typography>
+              <Typography variant="caption">
+                Due time: {dayjs(exercise.deadline).format('YYYY MMM D hh:mm A')}
+              </Typography>
             </Box>
           </Grid>
         </Grid>
