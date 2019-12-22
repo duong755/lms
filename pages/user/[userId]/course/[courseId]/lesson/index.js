@@ -71,7 +71,7 @@ const LessonItem = (props) => {
         <Box display="flex" alignItems="center">
           <Icon>access_time</Icon>
           &nbsp;
-          <Typography variant="caption">{dayjs(createdAt).format('YYYY MMM D hh:mm A')}</Typography>
+          <Typography variant="caption">Posted at {dayjs(createdAt).format('YYYY MMM D hh:mm A')}</Typography>
         </Box>
       </Paper>
     </Grid>
@@ -176,13 +176,16 @@ CourseLessonPage.propTypes = {
 CourseLessonPage.getInitialProps = async (context) => {
   const { userId, courseId } = context.query;
   const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
-  let data = { lessons: [], total: 0 };
+  const data = { lessons: [], total: 0 };
 
   try {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/lesson?page=${page}`), {
       method: 'GET'
     });
-    data = await response.json();
+    const json = await response.json();
+    if (response.ok) {
+      Object.assign(data, json);
+    }
   } catch (err) {
     console.error(err);
   }

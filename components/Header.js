@@ -47,7 +47,7 @@ function handleSubmitSearch(event) {
 const Account = () => {
   const userContext = useContext(AppUser);
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useHeaderStyles();
   const router = useRouter();
 
@@ -179,7 +179,7 @@ const Header = () => {
   const themeContext = useContext(AppTheme);
   const userContext = useContext(AppUser);
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useHeaderStyles();
 
   useEffect(() => {

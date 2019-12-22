@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import fetch from 'isomorphic-unfetch';
 import clsx from 'clsx';
+import { scroller } from 'react-scroll';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -35,10 +36,6 @@ import { useSelectStyles } from '../components/styles/select';
 
 const useStyles = makeStyles((theme) => ({
   searchForm: {
-    backgroundImage: 'url(/images/background.jpeg)',
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
     height: '90vh',
     verticalAlign: 'middle',
     display: 'flex',
@@ -76,6 +73,27 @@ const HomePage = (props) => {
   const [searchTopics, setSearchTopics] = useState(topics);
 
   useEffect(() => {
+    Object.assign(document.body.style, {
+      backgroundImage: 'url(/images/background.jpeg)',
+      backgroundPosition: 'top',
+      backgroundSize: '100vw 100vh',
+      backgroundRepeat: 'no-repeat'
+    });
+    return () => {
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundPosition = '';
+      document.body.style.backgroundSize = '';
+      document.body.style.backgroundRepeat = '';
+    };
+  }, []);
+
+  useEffect(() => {
+    if (searchResults.courses.length) {
+      scroller.scrollTo('results', { duration: 1000, delay: 1000, smooth: true });
+    }
+  }, [searchResults.courses, searchResults.total]);
+
+  useEffect(() => {
     const encodeTopics = encodeURIComponent(JSON.stringify(topics));
     router.push({
       pathname: '/',
@@ -98,15 +116,15 @@ const HomePage = (props) => {
   return ((
     <>
       <Head>
-        <title>Search Results</title>
+        <title>OpenLMS</title>
       </Head>
       <Box>
         <Container maxWidth="xl">
           <Box pt={2} className={clsx(classes.searchForm)}>
             <Grid container justify="center">
               <Grid item xs={12} sm={10} md={8}>
-                <Typography align="center" variant="h4">
-                  OpenLMS courses
+                <Typography className={clsx(classes.white)} align="center" variant="h4">
+                  <strong>OpenLMS Courses</strong>
                 </Typography>
                 <Box pt={2} />
                 <TextField
@@ -143,7 +161,7 @@ const HomePage = (props) => {
             </Grid>
           </Box>
 
-          <Table>
+          <Table id="results">
             <TableBody>
               {searchResults.courses.map((currentCourse) => {
                 return (
@@ -197,7 +215,7 @@ HomePage.getInitialProps = async (context) => {
     Object.assign(searchResults, courseJson);
     return {
       page: Number(page) || 1,
-      query: query,
+      query: query || '',
       topics: parsedTopics || [],
       searchResults: searchResults
     };

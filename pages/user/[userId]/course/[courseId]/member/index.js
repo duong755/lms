@@ -3,6 +3,7 @@ import NextLink from 'next/link';
 import dayjs from 'dayjs';
 import clsx from 'clsx';
 import Head from 'next/head';
+import fetch from 'isomorphic-unfetch';
 import { useRouter } from 'next/router';
 import { isObject } from 'lodash';
 import { useState, useEffect, useMemo, useContext, useCallback } from 'react';
@@ -51,6 +52,7 @@ const MemberItem = (props) => {
       return userContext.user.id === member.teacher_id;
     }
   }, [userContext.user, member.teacher_id]);
+
   return (
     <Grid item xs={12}>
       <Paper className={clsx(classes.memberContainer)}>
@@ -66,7 +68,9 @@ const MemberItem = (props) => {
             <Box display="flex" alignItems="center">
               <Icon>access_time</Icon>
               &nbsp;
-              <Typography variant="caption">{dayjs(member.joined_at).format('YYYY MMM D hh:mm A')}</Typography>
+              <Typography variant="caption">
+                Member since {dayjs(member.joined_at).format('YYYY MMM D hh:mm A')}
+              </Typography>
             </Box>
           </Grid>
           {isCourseOwner && (
@@ -87,12 +91,14 @@ function CourseMember(props) {
   const classes = useStyles();
   const [currentPage, setPage] = useState(page);
   const [members, setMembers] = useState(memberData.members);
+  const [total, setTotal] = useState(memberData.total);
   const router = useRouter();
 
   const handleDelete = useCallback(async (event, member) => {
     event.preventDefault();
     if (confirm(`Are you sure that you want to remove "${member.username}" from this course?`)) {
       setMembers((members) => members.filter((currentMember) => currentMember.student_id !== member.student_id));
+      setTotal((total) => total--);
       try {
         const resFetch = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/member/${member.student_id}`), {
           method: 'DELETE',
@@ -113,6 +119,11 @@ function CourseMember(props) {
   }, []);
 
   useEffect(() => {
+    setTotal(memberData.total);
+    setMembers(memberData.members);
+  }, [memberData]);
+
+  useEffect(() => {
     router.push(
       `/user/[userId]/course/[courseId]/member?page=${currentPage}`,
       `/user/${userId}/course/${courseId}/member?page=${currentPage}`
@@ -125,7 +136,7 @@ function CourseMember(props) {
         <title>{`${course.course_name}'s member`}</title>
       </Head>
       <Box py={2} />
-      {memberData.total ? (
+      {total ? (
         <Table>
           <TableBody>
             {members.map((current) => {
@@ -138,13 +149,13 @@ function CourseMember(props) {
               );
             })}
           </TableBody>
-          {memberData.total >= 10 && (
+          {total >= 10 && (
             <TableFooter>
               <TableRow>
                 <TablePagination
                   page={page - 1}
                   onChangePage={(event, page) => setPage(page + 1)}
-                  count={memberData.total}
+                  count={total}
                   rowsPerPage={10}
                   rowsPerPageOptions={[10]}
                 />
@@ -164,13 +175,16 @@ function CourseMember(props) {
 CourseMember.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
   const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
-  let data = { members: [], total: 0 };
+  const data = { members: [], total: 0 };
 
   try {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/member${page}`), {
       method: 'GET'
     });
-    data = await response.json();
+    const json = await response.json();
+    if (response.ok) {
+      Object.assign(data, json);
+    }
   } catch (error) {
     console.log('error', error);
   }
