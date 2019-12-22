@@ -24,8 +24,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 
-import withLayout from '../../../../../../components/lib/withLayout';
-import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
+import withLayout from '../../../../../../components/hoc/withLayout';
+import withCourseLayout from '../../../../../../components/hoc/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../components/auth/AppUser';
 import { LessonType, CourseType } from '../../../../../../components/propTypes';
@@ -71,7 +71,7 @@ const LessonItem = (props) => {
         <Box display="flex" alignItems="center">
           <Icon>access_time</Icon>
           &nbsp;
-          <Typography variant="caption">{dayjs(createdAt).format('YYYY MMM D hh:mm A')}</Typography>
+          <Typography variant="caption">Posted at {dayjs(createdAt).format('YYYY MMM D hh:mm A')}</Typography>
         </Box>
       </Paper>
     </Grid>
@@ -176,13 +176,16 @@ CourseLessonPage.propTypes = {
 CourseLessonPage.getInitialProps = async (context) => {
   const { userId, courseId } = context.query;
   const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
-  let data = { lessons: [], total: 0 };
+  const data = { lessons: [], total: 0 };
 
   try {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/lesson?page=${page}`), {
       method: 'GET'
     });
-    data = await response.json();
+    const json = await response.json();
+    if (response.ok) {
+      Object.assign(data, json);
+    }
   } catch (err) {
     console.error(err);
   }

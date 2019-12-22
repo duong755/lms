@@ -26,7 +26,7 @@ import { Alert } from 'reactstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import withLayout from '../../components/lib/withLayout';
+import withLayout from '../../components/hoc/withLayout';
 import AppUser from '../../components/auth/AppUser';
 import absURL from '../../components/helpers/URL';
 

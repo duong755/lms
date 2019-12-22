@@ -10,9 +10,9 @@
     "yarn": "1.x"
   },
   "scripts": {
-    "start-elassandra": "docker-compose up -d",
+    "compose": "docker-compose up -d",
     "rm-elassandra": "docker rm -f elassandra",
-    "test": "./node_modules/.bin/jest --verbose",
+    "test": "./node_moduldes/.bin/jest --verbose",
     "eslint": "./node_modules/.bin/eslint",
     "dev": "cross-env NODE_ENV=development nodemon server",
     "build": "next build",
@@ -35,7 +35,7 @@
     "cookie-parser": "1.4.4",
     "cookies": "0.8.0",
     "cookies-js": "1.2.3",
-    "date-fns": "^2.8.1",
+    "date-fns": "2.8.1",
     "dayjs": "1.8.16",
     "dotenv": "8.2.0",
     "draft-js": "0.11.3",
@@ -60,6 +60,7 @@
     "react-cookie": "4.0.1",
     "react-dom": "16.12.0",
     "react-redux": "7.1.1",
+    "react-scroll": "1.7.14",
     "react-select": "3.0.8",
     "reactstrap": "8.1.1",
     "redux": "4.0.4",

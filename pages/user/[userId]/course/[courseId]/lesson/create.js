@@ -25,8 +25,8 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import withLayout from '../../../../../../components/lib/withLayout';
-import withCourse from '../../../../../../components/lib/withCourse';
+import withLayout from '../../../../../../components/hoc/withLayout';
+import withCourse from '../../../../../../components/hoc/withCourse';
 import { UserType, CourseType } from '../../../../../../components/propTypes';
 import MuiRte from '../../../../../../components/MuiRte';
 import AppUser from '../../../../../../components/auth/AppUser';

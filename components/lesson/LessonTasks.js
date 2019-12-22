@@ -61,7 +61,7 @@ const LessonTasks = (props) => {
         console.error(deleteLessonErr);
       }
     }
-  }, [props.lesson.teac, props.lesson.course_id, props.lesson.id, props.lesson.title]);
+  }, [props.lesson.teacher_id, props.lesson.course_id, props.lesson.id, props.lesson.title]);
 
   const formik = useFormik({
     validationSchema: EditLessonSchema,

@@ -12,11 +12,9 @@ const isReviewCreator = async (req, res, next) => {
   const studentId = req.params.studentId;
   try {
     const result = await reviewService.getReviewById(teacherId, courseId, studentId);
-    console.log(result);
     if (result.body.found) {
       const review = result.body._source;
       if (userId === review.student_id) {
-        console.log('hehehe');
         next();
       } else {
         res.status(400).json({ message: 'Not comment creator' });

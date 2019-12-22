@@ -1,4 +1,4 @@
-import withLayout from '../../../../../../../components/lib/withLayout';
+import withLayout from '../../../../../../../components/hoc/withLayout';
 
 const ExamPage = () => {
   return <div></div>;

@@ -106,7 +106,12 @@ function searchCourses(keyword, topics, includes, excludes, page = 1) {
     }
   };
 
-  bodySearch.query.bool.must = topics.filter((topic) => topic).map((topic) => ({ term: { topics: topic } }));
+  const searchTopics = topics.filter((topic) => topic).map((topic) => ({ term: { topics: topic } }));
+  if (searchTopics.length) {
+    bodySearch.query.bool.must = searchTopics;
+  } else {
+    delete bodySearch.query.bool.must;
+  }
 
   return elasticsearchClient.search({
     index: 'lms.course',

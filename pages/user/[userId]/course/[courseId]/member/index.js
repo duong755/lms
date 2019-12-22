@@ -3,8 +3,10 @@ import NextLink from 'next/link';
 import dayjs from 'dayjs';
 import clsx from 'clsx';
 import Head from 'next/head';
+import fetch from 'isomorphic-unfetch';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { isObject } from 'lodash';
+import { useState, useEffect, useMemo, useContext, useCallback } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -21,9 +23,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 
-import withLayout from '../../../../../../components/lib/withLayout';
-import withCourseLayout from '../../../../../../components/lib/withCourseLayout';
+import withLayout from '../../../../../../components/hoc/withLayout';
+import withCourseLayout from '../../../../../../components/hoc/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
+import AppUser from '../../../../../../components/auth/AppUser';
+import { MemberType, CourseType } from '../../../../../../components/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   memberContainer: {
@@ -38,9 +42,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function MemberItem(props) {
+const MemberItem = (props) => {
   const classes = useStyles();
   const { member, onDelete } = props;
+  const userContext = useContext(AppUser);
+
+  const isCourseOwner = useMemo(() => {
+    if (isObject(userContext.user)) {
+      return userContext.user.id === member.teacher_id;
+    }
+  }, [userContext.user, member.teacher_id]);
+
   return (
     <Grid item xs={12}>
       <Paper className={clsx(classes.memberContainer)}>
@@ -56,47 +68,60 @@ function MemberItem(props) {
             <Box display="flex" alignItems="center">
               <Icon>access_time</Icon>
               &nbsp;
-              <Typography variant="caption">{dayjs(member.joined_at).format('YYYY MMM D hh:mm A')}</Typography>
+              <Typography variant="caption">
+                Member since {dayjs(member.joined_at).format('YYYY MMM D hh:mm A')}
+              </Typography>
             </Box>
           </Grid>
-          <Grid item>
-            <IconButton onClick={onDelete}>
-              <Icon>delete</Icon>
-            </IconButton>
-          </Grid>
+          {isCourseOwner && (
+            <Grid item>
+              <IconButton onClick={onDelete}>
+                <Icon>delete</Icon>
+              </IconButton>
+            </Grid>
+          )}
         </Grid>
       </Paper>
     </Grid>
   );
-}
+};
 
 function CourseMember(props) {
   const { userId, courseId, memberData, course, page } = props;
   const classes = useStyles();
   const [currentPage, setPage] = useState(page);
   const [members, setMembers] = useState(memberData.members);
+  const [total, setTotal] = useState(memberData.total);
   const router = useRouter();
 
-  const handleDelete = async (event, id) => {
+  const handleDelete = useCallback(async (event, member) => {
     event.preventDefault();
-    setMembers((members) => members.filter((member) => member.student_id !== id));
-    try {
-      const resFetch = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/member/${id}`), {
-        method: 'DELETE',
-        credentials: 'include',
-        mode: 'same-origin'
-      });
-      const res = await resFetch.json();
-      if (res.successful) {
-        console.log('Delete successfully');
-        return;
-      } else {
-        console.log(res);
+    if (confirm(`Are you sure that you want to remove "${member.username}" from this course?`)) {
+      setMembers((members) => members.filter((currentMember) => currentMember.student_id !== member.student_id));
+      setTotal((total) => total--);
+      try {
+        const resFetch = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/member/${member.student_id}`), {
+          method: 'DELETE',
+          credentials: 'include',
+          mode: 'same-origin'
+        });
+        const res = await resFetch.json();
+        if (res.successful) {
+          console.log('Delete successfully');
+          return;
+        } else {
+          console.log(res);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    setTotal(memberData.total);
+    setMembers(memberData.members);
+  }, [memberData]);
 
   useEffect(() => {
     router.push(
@@ -104,32 +129,33 @@ function CourseMember(props) {
       `/user/${userId}/course/${courseId}/member?page=${currentPage}`
     );
   }, [currentPage]);
+
   return (
     <>
       <Head>
-        <title>{`${course.course_name} 's member`}</title>
+        <title>{`${course.course_name}'s member`}</title>
       </Head>
       <Box py={2} />
-      {memberData.total ? (
+      {total ? (
         <Table>
           <TableBody>
             {members.map((current) => {
               return (
                 <TableRow key={current.student_id}>
                   <TableCell className={clsx(classes.cell)}>
-                    <MemberItem member={current} onDelete={(event) => handleDelete(event, current.student_id)} />
+                    <MemberItem member={current} onDelete={(event) => handleDelete(event, current)} />
                   </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
-          {memberData.total >= 10 && (
+          {total >= 10 && (
             <TableFooter>
               <TableRow>
                 <TablePagination
                   page={page - 1}
                   onChangePage={(event, page) => setPage(page + 1)}
-                  count={memberData.total}
+                  count={total}
                   rowsPerPage={10}
                   rowsPerPageOptions={[10]}
                 />
@@ -149,13 +175,16 @@ function CourseMember(props) {
 CourseMember.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
   const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
-  let data = { members: [], total: 0 };
+  const data = { members: [], total: 0 };
 
   try {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/member${page}`), {
       method: 'GET'
     });
-    data = await response.json();
+    const json = await response.json();
+    if (response.ok) {
+      Object.assign(data, json);
+    }
   } catch (error) {
     console.log('error', error);
   }
@@ -168,16 +197,19 @@ CourseMember.getInitialProps = async (context) => {
 };
 
 MemberItem.propTypes = {
-  member: PropTypes.object.isRequired,
+  member: MemberType.isRequired,
   onDelete: PropTypes.func.isRequired
 };
 
 CourseMember.propTypes = {
   page: PropTypes.number.isRequired,
-  memberData: PropTypes.object.isRequired,
+  memberData: PropTypes.shape({
+    members: PropTypes.arrayOf(MemberType),
+    total: PropTypes.number
+  }),
   userId: PropTypes.string.isRequired,
   courseId: PropTypes.string.isRequired,
-  course: PropTypes.object.isRequired,
+  course: CourseType.isRequired,
   course_name: PropTypes.string
 };
 

@@ -5,7 +5,7 @@ export const useHeaderStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
   },
@@ -39,7 +39,7 @@ export const useHeaderStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-end'
     }
@@ -52,13 +52,16 @@ export const useHeaderStyles = makeStyles((theme) => ({
     fontWeight: 700
   },
   searchRoot: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: theme.palette.type === 'light' ? theme.palette.grey[500] : 'transparent',
     borderRadius: 5,
     padding: theme.spacing(0.25, 1),
     backgroundColor: fade(theme.palette.common.white, 0.2),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.4)
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
   },

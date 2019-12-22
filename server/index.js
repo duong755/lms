@@ -25,6 +25,17 @@ app
   .then(() => {
     const server = express();
 
+    server.use((req, res, next) => {
+      if (process.env.HEROKU) {
+        if (req.headers['x-forwarded-proto'] !== 'https') {
+          res.redirect(`https://${req.headers['host']}${req.url}`);
+        } else {
+          next();
+        }
+      } else {
+        next();
+      }
+    });
     server.use(helmet());
     server.use(compression());
     server.use(

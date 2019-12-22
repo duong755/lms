@@ -14,6 +14,10 @@
     * Nguyễn Anh Tuấn: 16021213
     * Nguyễn Đình Khoa: 16020054
 
+## [Slide thuyết trình](./slide-int3306-4-team-1.pptx)
+
+## [Hướng dẫn cài đặt và chạy ứng dụng](./docs/installation.md)
+
 ## [Tài liệu đặc tả yêu cầu](./docs/SRS.md)
 
 ## [Lược đồ cơ sở dữ liệu](./docs/schema.md)

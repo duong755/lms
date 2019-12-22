@@ -40,14 +40,14 @@ const AppSearch = createContext({
  */
 function handleSubmitSearch(event) {
   if (event.keyCode === 13 && event.currentTarget.value.trim()) {
-    Router.push(`/search?query=${event.target.value}`);
+    Router.push(`/?query=${event.target.value}`);
   }
 }
 
 const Account = () => {
   const userContext = useContext(AppUser);
   const theme = useTheme();
-  const matchDownXS = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true });
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useHeaderStyles();
   const router = useRouter();
 
@@ -66,31 +66,37 @@ const Account = () => {
       .catch(console.error);
   }, []);
 
+  const Search = useCallback(() => {
+    return (
+      <AppSearch.Consumer>
+        {({ query, setQuery, submitSearch }) => {
+          return (
+            <InputBase
+              fullWidth
+              startAdornment={<Icon>search</Icon>}
+              placeholder="Search..."
+              classes={{
+                root: classes.searchMenuRoot,
+                input: classes.searchMenuInput
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              onKeyUp={submitSearch}
+            />
+          );
+        }}
+      </AppSearch.Consumer>
+    );
+  }, []);
+
   if (isObject(userContext.user)) {
     const { id, username, info } = userContext.user;
-    if (matchDownXS) {
+    if (matchDownSM) {
       return (
         <Box className={clsx([classes.menu])}>
           <Box alignSelf="stretch">
-            <AppSearch.Consumer>
-              {({ query, setQuery, submitSearch }) => {
-                return (
-                  <InputBase
-                    fullWidth
-                    startAdornment={<Icon>search</Icon>}
-                    placeholder="Search..."
-                    classes={{
-                      root: classes.searchMenuRoot,
-                      input: classes.searchMenuInput
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    onKeyUp={submitSearch}
-                  />
-                );
-              }}
-            </AppSearch.Consumer>
+            <Search />
           </Box>
           <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
             <Avatar classes={{ img: classes.avatar }} src={info.image} />
@@ -143,18 +149,25 @@ const Account = () => {
     );
   }
   return (
-    <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
-      {!router.asPath.startsWith('/signin') && (
-        <NextLink href={`/signin?redirect=${encodeURIComponent(router.asPath)}`} prefetch={false}>
-          <Button variant="text">Sign in</Button>
-        </NextLink>
+    <Box display="flex" flexDirection="column">
+      {matchDownSM && (
+        <Box alignSelf="stretch">
+          <Search />
+        </Box>
       )}
-      &nbsp;&nbsp;
-      {!router.asPath.startsWith('/signup') && (
-        <NextLink href="/signup" as={{ path: '/signup' }} prefetch={false}>
-          <Button variant="outlined">Sign up</Button>
-        </NextLink>
-      )}
+      <Box display="flex" alignItems="center" justifyContent="flex-end" py={1}>
+        {!router.asPath.startsWith('/signin') && (
+          <NextLink href={`/signin?redirect=${encodeURIComponent(router.asPath)}`} prefetch={false}>
+            <Button variant="text">Sign in</Button>
+          </NextLink>
+        )}
+        &nbsp;&nbsp;
+        {!router.asPath.startsWith('/signup') && (
+          <NextLink href="/signup" as={{ path: '/signup' }} prefetch={false}>
+            <Button variant="outlined">Sign up</Button>
+          </NextLink>
+        )}
+      </Box>
     </Box>
   );
 };
@@ -166,7 +179,7 @@ const Header = () => {
   const themeContext = useContext(AppTheme);
   const userContext = useContext(AppUser);
   const theme = useTheme();
-  const matchDownXS = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true });
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useHeaderStyles();
 
   useEffect(() => {
@@ -250,23 +263,22 @@ const Header = () => {
                 <IconButton color="default" onClick={themeContext.toggleTheme}>
                   <Icon color="inherit">{themeIcon()}</Icon>
                 </IconButton>
-                <Hidden smUp>
+                <Hidden mdUp>
                   <IconButton color="default" onClick={toggleMenu}>
                     <Icon color="inherit">menu</Icon>
                   </IconButton>
                 </Hidden>
               </Box>
             </Box>
-            <NoSsr>
-              <Box
-                className={clsx({
-                  [classes.showMenu]: !matchDownXS,
-                  [classes.hideMenu]: matchDownXS && !menuExpand
-                })}
-              >
-                {fetchingUser ? <CircularProgress color="primary" /> : <Account />}
-              </Box>
-            </NoSsr>
+
+            <Box
+              className={clsx({
+                [classes.showMenu]: !matchDownSM,
+                [classes.hideMenu]: matchDownSM && !menuExpand
+              })}
+            >
+              <NoSsr>{fetchingUser ? <CircularProgress color="primary" /> : <Account />}</NoSsr>
+            </Box>
           </Box>
         </Container>
       </AppBar>
