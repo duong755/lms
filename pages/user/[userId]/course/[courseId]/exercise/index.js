@@ -182,13 +182,16 @@ CourseExercise.propTypes = {
 CourseExercise.getInitialProps = async (context) => {
   const { userId, courseId } = context.query;
   const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
-  let data = { exercises: [], total: 0 };
+  const data = { exercises: [], total: 0 };
 
   try {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/exercise?page=${page}`), {
       method: 'GET'
     });
-    data = await response.json();
+    const json = await response.json();
+    if (response.ok) {
+      Object.assign(data, json);
+    }
   } catch (error) {
     console.log(error);
   }

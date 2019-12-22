@@ -1,16 +1,13 @@
 /* eslint-disable */
 const { Router } = require('express');
 
-const isCourseCreateor = require('../../../../middlewares/isCourseCreator');
+const isCourseCreator = require('../../../../middlewares/isCourseCreator');
 const joinRequestService = require('../../../../services/JoinRequest');
 const courseService = require('../../../../services/Course');
 const userService = require('../../../../services/User');
 // const canAccessJoinRequest = require('../../../../middlewares/canAccessJoinRequest');
 const joinRequestRouter = Router({ mergeParams: true });
 
-/**
- * join_request pagination
- */
 
 const isStudent = async (req, res, next) => {
   const userId = req.session.userId;
@@ -50,7 +47,7 @@ const notInThisCourse = async (req, res, next) => {
   }
 };
 
-joinRequestRouter.get('/', isCourseCreateor, async (req, res) => {
+joinRequestRouter.get('/', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   try {
@@ -94,7 +91,7 @@ joinRequestRouter.post('/', isStudent, notInThisCourse, async (req, res) => {
 /**
  * accept join request
  */
-joinRequestRouter.post('/:studentId', isCourseCreateor, async (req, res) => {
+joinRequestRouter.post('/:studentId', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const studentId = req.params.studentId;
@@ -115,7 +112,7 @@ joinRequestRouter.post('/:studentId', isCourseCreateor, async (req, res) => {
 /**
  * decline join request
  */
-joinRequestRouter.delete('/:studentId', isCourseCreateor, async (req, res) => {
+joinRequestRouter.delete('/:studentId', isCourseCreator, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const studentId = req.params.studentId;
@@ -130,7 +127,6 @@ joinRequestRouter.delete('/:studentId', isCourseCreateor, async (req, res) => {
     console.error();
     res.status(500).json({ error: 'Unexpected error occurred' });
   }
-  // res.end('/api/user/:userId/course/:courseId/join_request/:studentId');
 });
 
 module.exports = joinRequestRouter;

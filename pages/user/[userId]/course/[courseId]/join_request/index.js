@@ -27,6 +27,7 @@ import withLayout from '../../../../../../components/hoc/withLayout';
 import withCourseLayout from '../../../../../../components/hoc/withCourseLayout';
 import AbsURL from '../../../../../../components/helpers/URL';
 import AppUser from '../../../../../../components/auth/AppUser';
+import { JoinRequestType, CourseType } from '../../../../../../components/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   joinRequestContainer: {
@@ -35,6 +36,15 @@ const useStyles = makeStyles((theme) => ({
   joinRequestLink: {
     color: theme.palette.primary.main,
     textDecoration: 'none'
+  },
+  joinRequestTasks: {
+    textAlign: 'right',
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: theme.spacing(1)
+    }
+  },
+  cell: {
+    padding: theme.spacing(2, 0)
   }
 }));
 
@@ -54,7 +64,7 @@ function JoinRequestItem(props) {
     <Grid item xs={12}>
       <Paper className={clsx(classes.joinRequestContainer)}>
         <Grid container alignItems="center" justify="space-between">
-          <Grid item>
+          <Grid item xs={12} sm={6}>
             <NextLink href="/user/[userId]" as={`/user/${joinRequest.student_id}`} prefetch={false}>
               <Link href={`/user/${joinRequest.student_id}`} className={clsx(classes.joinRequestLink)}>
                 <Typography title={joinRequest.username} color="primary" variant="h5">
@@ -69,8 +79,8 @@ function JoinRequestItem(props) {
             </Box>
           </Grid>
           {isCourseOwner && (
-            <Grid item>
-              <Box display="flex">
+            <Grid item xs={12} sm={6}>
+              <Box className={clsx(classes.joinRequestTasks)}>
                 <Button variant="contained" color="primary" onClick={handleAccept}>
                   Accept
                 </Button>
@@ -93,6 +103,7 @@ function CourseJoinRequest(props) {
   const [currentPage, setCurrentPage] = useState(page);
   const [joinRequests, setJoinRequest] = useState(joinRequestData.joinRequests);
   const [total, setTotal] = useState(joinRequestData.total);
+  const classes = useStyles();
 
   useEffect(() => {
     router.push(
@@ -150,7 +161,7 @@ function CourseJoinRequest(props) {
     } catch (error) {
       console.log(error);
     }
-  });
+  }, []);
   return (
     <>
       <Head>
@@ -163,7 +174,7 @@ function CourseJoinRequest(props) {
             {joinRequests.map((current) => {
               return (
                 <TableRow key={current.student_id}>
-                  <TableCell>
+                  <TableCell className={clsx(classes.cell)}>
                     <JoinRequestItem
                       joinRequest={current}
                       handleAccept={(event) => acceptJoinRequest(event, current)}
@@ -174,7 +185,7 @@ function CourseJoinRequest(props) {
               );
             })}
           </TableBody>
-          {total >= 10 && (
+          {total > 10 && (
             <TableFooter>
               <TableRow>
                 <TablePagination
@@ -198,36 +209,37 @@ function CourseJoinRequest(props) {
 }
 
 JoinRequestItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  joinRequest: PropTypes.object.isRequired,
-  requestAt: PropTypes.number.isRequired,
+  joinRequest: PropTypes.arrayOf(JoinRequestType).isRequired,
   handleAccept: PropTypes.func,
   handleDecline: PropTypes.func
 };
 
 CourseJoinRequest.propTypes = {
-  johnRequests: PropTypes.array,
-  joinRequestData: PropTypes.object.isRequired,
+  joinRequestData: PropTypes.shape({
+    joinRequests: PropTypes.arrayOf(JoinRequestType).isRequired,
+    total: PropTypes.number.isRequired
+  }).isRequired,
   userId: PropTypes.string.isRequired,
   courseId: PropTypes.string.isRequired,
   course_name: PropTypes.string,
-  course: PropTypes.object.isRequired,
+  course: CourseType.isRequired,
   page: PropTypes.number.isRequired
 };
 
 CourseJoinRequest.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
   const page = context.query.page === undefined ? 1 : Number(context.query.page) || 1;
-  let data = { joinRequests: [], total: 0 };
-  /**
-   * TODO:
-   * - get lessons by pagination API
-   */
+  const data = { joinRequests: [], total: 0 };
+
   try {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/join_request?page=${page}`), {
-      method: 'GET'
+      method: 'GET',
+      credentials: 'include'
     });
-    data = await response.json();
+    const json = await response.json();
+    if (response.ok) {
+      Object.assign(data, json);
+    }
   } catch (error) {
     console.log(error);
   }

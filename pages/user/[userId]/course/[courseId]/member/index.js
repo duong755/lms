@@ -173,13 +173,16 @@ function CourseMember(props) {
 CourseMember.getInitialProps = async (context) => {
   const { userId, courseId } = context.query; // this contain userId, courseId, page
   const page = context.query.page === undefined ? '' : `?page=${Number(context.query.page)}`;
-  let data = { members: [], total: 0 };
+  const data = { members: [], total: 0 };
 
   try {
     const response = await fetch(AbsURL(`/api/user/${userId}/course/${courseId}/member${page}`), {
       method: 'GET'
     });
-    data = await response.json();
+    const json = await response.json();
+    if (response.ok) {
+      Object.assign(data, json);
+    }
   } catch (error) {
     console.log('error', error);
   }

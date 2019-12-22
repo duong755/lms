@@ -91,7 +91,7 @@ const HomePage = (props) => {
     if (searchResults.courses.length) {
       scroller.scrollTo('results', { duration: 1000, delay: 1000, smooth: true });
     }
-  }, [searchResults.courses, searchQuery.total]);
+  }, [searchResults.courses, searchResults.total]);
 
   useEffect(() => {
     const encodeTopics = encodeURIComponent(JSON.stringify(topics));
@@ -212,7 +212,6 @@ HomePage.getInitialProps = async (context) => {
   try {
     const courseRes = await fetch(absURL(`/api/search?query=${query}&topics=${topics}&page=${page}`));
     const courseJson = await courseRes.json();
-    console.log(courseJson);
     Object.assign(searchResults, courseJson);
     return {
       page: Number(page) || 1,
