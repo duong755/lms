@@ -58,6 +58,7 @@
     "prop-types": "15.7.2",
     "react": "16.12.0",
     "react-cookie": "4.0.1",
+    "react-countdown-now": "^2.1.2",
     "react-dom": "16.12.0",
     "react-redux": "7.1.1",
     "react-scroll": "1.7.14",

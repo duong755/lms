@@ -57,7 +57,7 @@ function ExamItem(props) {
           prefetch={false}
         >
           <Link
-            href={`/user/${exam.userId}/course/${exam.courseId}/exam/${exam.examId}`}
+            href={`/user/${exam.teacher_id}/course/${exam.course_id}/exam/${exam.id}`}
             className={clsx(classes.examLink)}
           >
             <Typography title={exam.title} color="primary" variant="h5">
