@@ -6,46 +6,12 @@ const { Router } = require('express');
 const bcrypt = require('bcrypt');
 const { isObject } = require('lodash');
 
-const { isAuthenticated, validateEmail, validateUsername } = require('../../middlewares');
+const { isAuthenticated, validateEmail, validateUsername, validatePassword } = require('../../middlewares');
 const userService = require('../../services/User');
 
 const courseRouter = require('./course');
 
 const userRouter = Router({ mergeParams: true });
-
-/**
- * @type {RequestHandler}
- */
-const updatePasswordMiddleware = async (req, res, next) => {
-  const oldPassword = req.body.oldPassword;
-  const newPassword = req.body.newPassword;
-
-  try {
-    const user = await userService.getUserById(req.session.userId);
-
-    if (user.body.found) {
-      const compareWithOldPassword = await bcrypt.compare(oldPassword, user.body._source.hash_password || '');
-      const compareWithNewPassword = await bcrypt.compare(newPassword, user.body._source.hash_password || '');
-
-      if (compareWithOldPassword) {
-        if (!compareWithNewPassword) {
-          next();
-        } else {
-          res.status(400).json({ error: 'New password must be different from old password' });
-        }
-      } else {
-        res.status(400).json({ error: 'Old password does not match' });
-      }
-    } else {
-      res.status(404).json({ error: 'User not found' });
-    }
-  } catch (findUserByIdErr) {
-    console.error('Validate password', findUserByIdErr);
-    res.status(500).json({
-      error: 'An unexpected error occurred'
-    });
-  }
-};
 
 /**
  * auth user info
@@ -66,6 +32,7 @@ userRouter.put('/email', isAuthenticated, validateEmail.isEmailValid, validateEm
         successful: true
       });
     } else {
+      console.error('Update Email', 'New email was not applied');
       res.status(500).json({
         error: 'An unexpected error occurred'
       });
@@ -90,6 +57,7 @@ userRouter.put(
           successful: true
         });
       } else {
+        console.error('Update username', 'New username was not applied');
         res.status(500).json({
           error: 'An unexpected error occured'
         });
@@ -103,13 +71,14 @@ userRouter.put(
   }
 );
 
-userRouter.put('/password', isAuthenticated, updatePasswordMiddleware, async (req, res) => {
+userRouter.put('/password', isAuthenticated, validatePassword, async (req, res) => {
   try {
     const hashPassword = await bcrypt.hash(req.body.newPassword, 10);
     const updatePasswordRes = await userService.updateUserPassword(req.session.userId, hashPassword);
     if (updatePasswordRes.wasApplied()) {
       res.status(200).json({ successful: true });
     } else {
+      console.error('Update password', 'New password was not applied');
       res.status(500).json({ error: 'An unexpected error occurred' });
     }
   } catch (updatePasswordErr) {

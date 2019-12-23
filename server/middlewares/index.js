@@ -10,5 +10,6 @@ module.exports = {
   isReviewCreator: require('./isReviewCreator'),
   validateEmail: require('./validateEmail'),
   validateUsername: require('./validateUsername'),
-  isAuthenticated: require('./isAuthenticated')
+  isAuthenticated: require('./isAuthenticated'),
+  validatePassword: require('./validatePassword')
 };
