@@ -11,23 +11,9 @@ import Username from './Username';
 import Email from './Email';
 import Info from './Info';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: 0,
-    paddingLeft: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: 0,
-      paddingRight: 0,
-      paddingTop: theme.spacing(2)
-    }
-  }
-}));
-
 const AccountSettings = (props) => {
-  const classes = useStyles();
-
   return (
-    <Box className={clsx(classes.root)}>
+    <Box>
       <Avatar image={props.user.info.image} />
       <Divider variant="fullWidth" />
       <Username username={props.user.username} />

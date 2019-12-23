@@ -7,17 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Avatar from '@material-ui/core/Avatar';
 
+import { useSettingsFormStyles } from '../../styles/settingsForm';
+
 const useStyles = makeStyles((theme) => ({
-  avatarForm: {
-    padding: theme.spacing(2, 0),
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-start'
-    }
-  },
   avatar: {
     cursor: 'pointer',
     borderWidth: 5,
@@ -30,13 +22,14 @@ const useStyles = makeStyles((theme) => ({
 
 const AvatarSettings = (props) => {
   const classes = useStyles();
+  const formClasses = useSettingsFormStyles();
 
   return (
     <Box py={2}>
       <Typography>
         <strong>Avatar</strong>
       </Typography>
-      <Box className={clsx(classes.avatarForm)}>
+      <Box className={clsx(formClasses.form)}>
         <Avatar className={clsx(classes.avatar)} src={props.image} />
         &nbsp;&nbsp;
         <Link href="https://gravatar.com" target="_blank">
