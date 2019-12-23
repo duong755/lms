@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -157,6 +158,12 @@ const PasswordSettings = () => {
           </Button>
         </Box>
       </form>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={() => notiContext.setNotification({ open: false, action: '', message: '' })}
+        autoHideDuration={3000}
+        {...notiContext.notification}
+      />
     </Box>
   );
 };
