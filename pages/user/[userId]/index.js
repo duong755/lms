@@ -139,11 +139,16 @@ const ProfilePage = (props) => {
                     {currentUser.type === 'student' && <Typography>Student</Typography>}
                   </Typography>
                   <Box className={clsx(classes.otherInfo)}>
-                    {otherInfo.map((currentPair) => (
-                      <Typography key={currentPair[0]} variant="caption">{`${currentPair[0]}: ${
-                        currentPair[1]
-                      }`}</Typography>
-                    ))}
+                    {otherInfo.map((currentPair) => {
+                      if (currentPair[0] === '_update_') {
+                        return null;
+                      }
+                      return (
+                        <Typography key={currentPair[0]} variant="caption">{`${currentPair[0]}: ${
+                          currentPair[1]
+                        }`}</Typography>
+                      );
+                    })}
                   </Box>
                 </Box>
               </Box>
