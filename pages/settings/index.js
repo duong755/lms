@@ -14,6 +14,7 @@ import Tab from '@material-ui/core/Tab';
 
 import withLayout from '../../components/hoc/withLayout';
 import AppUser from '../../components/auth/AppUser';
+import ProfileNotification from '../../components/profile/Notification';
 import AccountSettingsForm from '../../components/profile/account';
 import PasswordSettingsForm from '../../components/profile/password';
 
@@ -30,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SettingsPage = () => {
+  /**
+   * @type {[{ open: boolean, message: React.ReactNode, action: React.ReactNode }, React.SetStateAction<{ open: boolean, message: React.ReactNode, action: React.ReactNode }>]}
+   */
+  const [notification, setNotification] = useState({ open: false, message: '', action: '' });
   const classes = useStyles();
   const theme = useTheme();
   const userContext = useContext(AppUser);
@@ -51,27 +56,29 @@ const SettingsPage = () => {
       <Box py={2}>
         <Container maxWidth="xl">
           <NoSsr>
-            <Box display="flex" flexDirection={matchDownSM ? 'column' : 'row'}>
-              <Tabs
-                orientation={matchDownSM ? 'horizontal' : 'vertical'}
-                color="primary"
-                textColor="primary"
-                indicatorColor="primary"
-                value={currentTab}
-                onChange={(event, value) => setCurrentTab(value)}
-              >
-                <Tab color="primary" label="Account" value="account" />
-                <Tab color="primary" label="Password" value="password" />
-              </Tabs>
-              <Box flexGrow={1} className={clsx(classes.root)}>
-                {_.isObject(userContext.user) && currentTab === 'account' && (
-                  <AccountSettingsForm user={userContext.user} />
-                )}
-                {_.isObject(userContext.user) && currentTab === 'password' && (
-                  <PasswordSettingsForm userId={userContext.user.id} />
-                )}
-              </Box>
-            </Box>
+            {_.isObject(userContext.user) && (
+              <ProfileNotification.Provider value={{ notification: notification, setNotification: setNotification }}>
+                <Box display="flex" flexDirection={matchDownSM ? 'column' : 'row'}>
+                  <Tabs
+                    orientation={matchDownSM ? 'horizontal' : 'vertical'}
+                    color="primary"
+                    textColor="primary"
+                    indicatorColor="primary"
+                    value={currentTab}
+                    onChange={(event, value) => setCurrentTab(value)}
+                  >
+                    <Tab color="primary" label="Account" value="account" />
+                    <Tab color="primary" label="Password" value="password" />
+                  </Tabs>
+                  <Box flexGrow={1} className={clsx(classes.root)}>
+                    {_.isObject(userContext.user) && currentTab === 'account' && (
+                      <AccountSettingsForm user={userContext.user} />
+                    )}
+                    {_.isObject(userContext.user) && currentTab === 'password' && <PasswordSettingsForm />}
+                  </Box>
+                </Box>
+              </ProfileNotification.Provider>
+            )}
           </NoSsr>
         </Container>
       </Box>

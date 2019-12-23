@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -6,16 +7,20 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { useFormStyles } from '../../styles/form';
 import { useSettingsFormStyles } from '../../styles/settingsForm';
+import absURL from '../../helpers/URL';
+import ProfileNotication from '../Notification';
 
 const EmailSettings = (props) => {
   const formClasses = useFormStyles();
   const formSettingsClasses = useSettingsFormStyles();
+  const notiContext = useContext(ProfileNotication);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -25,9 +30,46 @@ const EmailSettings = (props) => {
         .email('Invalid email')
         .required('Email is required')
     }),
-    onSubmit: (values, helpers) => {
+    onSubmit: async (values, helpers) => {
       if (values.email !== props.email) {
-        console.log(values, helpers);
+        try {
+          const updateEmailRes = await fetch(absURL('/api/user/email'), {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: values.email })
+          });
+          const json = await updateEmailRes.json();
+          if (updateEmailRes.ok) {
+            notiContext.setNotification({ open: true, action: <Icon>check</Icon>, message: 'Email was updated' });
+          } else {
+            switch (updateEmailRes.status) {
+              case 400:
+                notiContext.setNotification({ open: true, action: <Icon>close</Icon>, message: json.error });
+                break;
+              case 401:
+                notiContext.setNotification({
+                  open: true,
+                  action: <Icon>close</Icon>,
+                  message: 'Please sign in to continue'
+                });
+                break;
+              default:
+                notiContext.setNotification({
+                  open: true,
+                  action: <Icon>close</Icon>,
+                  message: 'Email was not updated'
+                });
+                break;
+            }
+          }
+        } catch {
+          notiContext.setNotification({ open: true, action: <Icon>close</Icon>, message: 'Email was not updated' });
+        } finally {
+          helpers.setSubmitting(false);
+        }
       }
     },
     onReset: (values, helpers) => {
@@ -69,6 +111,12 @@ const EmailSettings = (props) => {
           />
         </form>
       </Box>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={() => notiContext.setNotification({ open: false, action: '', message: '' })}
+        autoHideDuration={3000}
+        {...notiContext.notification}
+      />
     </Box>
   );
 };
