@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
 function ExamItem(props) {
   const classes = useStyles();
   const { exam } = props;
-  console.log(props);
   const createAt = getDateFromTimeUuid(exam.id);
   return (
     <Grid item xs={12}>

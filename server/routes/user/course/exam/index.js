@@ -8,6 +8,7 @@ const canAccessExamWork = require('../../../../middlewares/canAccessExamWork');
 const canAccessCourse = require('../../../../middlewares/canAccessCourse');
 const examWorkService = require('../../../../services/ExamWork');
 const examService = require('../../../../services/Exam');
+const userService = require('../../../../services/User');
 const { cassandraTypes } = require('../../../../models/connector');
 
 const examRouter = Router({ mergeParams: true });
@@ -143,16 +144,22 @@ examRouter.get('/:examId', canAccessCourse, async (req, res) => {
   const examId = req.params.examId;
 
   try {
-    const result = await examService.getExamById(
-      teacherId,
-      courseId,
-      examId,
-      ['duration', 'start_at', 'content', 'title'],
-      ['content.answer']
-    );
-    console.log(result.body._source);
+    const result = await examService.getExamById(teacherId, courseId, examId);
+    let exam = result.body._source;
+    if (!(exam.content instanceof Array)) {
+      exam.content = [exam.content];
+    }
+    exam = {
+      ...exam,
+      content: exam.content.map((current) => {
+        return {
+          ...current,
+          answer: 0
+        };
+      })
+    };
     if (result.body.found) {
-      res.status(200).json({ exam: result.body._source });
+      res.status(200).json({ exam: exam });
     } else {
       res.status(400).json({ message: 'Can not get exam' });
     }
@@ -170,7 +177,7 @@ examRouter.post('/:examId', isCourseMember, async (req, res) => {
   const teacherId = req.params.userId;
   const courseId = req.params.courseId;
   const examId = req.params.examId;
-  const studentId = res.locals.user.id;
+  const studentId = req.body.studentId;
 
   const content = req.body.content;
 
@@ -222,10 +229,10 @@ examRouter.post('/:examId', isCourseMember, async (req, res) => {
       submitAt: Date.now(),
       point: getMark(content, thisExam.body._source.content)
     };
-
+    console.log(newExamWork);
     const result = await examWorkService.upsertExamWork(newExamWork, void 0, true);
     if (result.wasApplied()) {
-      res.status(200).json({ message: 'Submit examwork successfully' });
+      res.status(200).json({ successful: true });
     } else {
       res.status(400).json({ message: 'Can not submit exam work' });
     }
@@ -303,8 +310,30 @@ examRouter.delete('/:examId', isCourseCreator, async (req, res) => {
 /**
  * exam summary
  */
-examRouter.all('/:examId/summary', (req, res) => {
-  res.end('/api/user/:userId/course/:courseId/exam/:examId/summary');
+examRouter.all('/:examId/summary', isCourseCreator, async (req, res) => {
+  const teacherId = req.params.userId;
+  const courseId = req.params.courseId;
+  const examId = req.params.examId;
+  const page = req.query.page;
+  try {
+    const resExamWork = await examWorkService.getExamWorksByExam(teacherId, courseId, examId, page);
+    const userIdArr = resExamWork.body.hits.hits.map((current) => current.username);
+    const resExam = await examService.getExamById(teacherId, courseId, examId);
+    const titleExam = resExam.body._source.title;
+    const summary = resExamWork.body.hits.hits.map((current) => {
+      return { ...current, title: titleExam };
+    });
+    const resUser = await userService.getMultipleUsersById(userIdArr, ['id', 'username']);
+    const student = resUser.body.hits.hits.map((current) => current._source);
+    for (let i = 0; i < summary.length; i++) {
+      const find = student.filter((current) => current.id === summary[i]['student_id']);
+      summary[i]['username'] = find.username;
+    }
+    res.status(500).json({ summary: summary, total: resExamWork.body.total });
+  } catch (error) {
+    res.status(500).json({ error: 'Unexpected error occurred' });
+  }
+  //res.end('/api/user/:userId/course/:courseId/exam/:examId/summary');
 });
 
 /**
