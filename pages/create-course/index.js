@@ -84,7 +84,7 @@ function CreateCourseForm() {
         });
         const json = await createCourseRes.json();
         if (json.successful) {
-          router.replace(`/user/${userContext.user.id}/course/${json.courseId}`);
+          router.replace('/user/[userId]/course/[courseId]', `/user/${userContext.user.id}/course/${json.courseId}`);
           return;
         } else {
           console.log(json);

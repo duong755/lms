@@ -55,7 +55,7 @@ const LessonTasks = (props) => {
         });
         const deleteLessonJson = await deleteLessonRes.json();
         if (deleteLessonJson.successful) {
-          router.replace(`/user/${teacher_id}/course/${course_id}/lesson`);
+          router.replace('/user/[userId]/course/[courseId]/lesson', `/user/${teacher_id}/course/${course_id}/lesson`);
         }
       } catch (deleteLessonErr) {
         console.error(deleteLessonErr);
@@ -81,7 +81,11 @@ const LessonTasks = (props) => {
         });
         const json = await response.json();
         if (json.successful) {
-          router.replace(`/user/${userId}/course/${courseId}/lesson/${lessonId}`);
+          setFormOpen(false);
+          router.replace(
+            '/user/[userId]/course/[courseId]/lesson/[lessonId]',
+            `/user/${userId}/course/${courseId}/lesson/${lessonId}`
+          );
           return;
         } else {
           // need notification

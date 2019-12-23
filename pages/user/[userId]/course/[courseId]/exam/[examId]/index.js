@@ -22,6 +22,7 @@ import Divider from '@material-ui/core/Divider';
 import withLayout from '../../../../../../../components/hoc/withLayout';
 import withCourse from '../../../../../../../components/hoc/withCourse';
 import absURL from '../../../../../../../components/helpers/URL';
+import AppUser from '../../../../../../../components/auth/AppUser';
 
 class Question extends React.Component {
   render() {
@@ -48,7 +49,7 @@ class Choice extends React.Component {
       <>
         <Box display="flex" alignItems="center">
           <FormControlLabel value={`choice${idx}`} control={<Radio />} onClick={onClick} />
-          <Typography>{value}</Typography>
+          <Typography>{String(value)}</Typography>
         </Box>
       </>
     );
@@ -74,18 +75,19 @@ class SubmitedButton extends React.Component {
 }
 
 class ExamPage extends React.Component {
+  static displayName = 'ExamPage';
   constructor(props) {
     super(props);
     this.state = { examData: undefined };
+    this.editAnswer = this.editAnswer.bind(this);
   }
-
+  static contextType = AppUser;
   async handleSubmit() {
     event.preventDefault();
     const { router } = this.props;
-    //NEED TO CHANGE
     const dataSubmit = {
-      ...this.state.examData,
-      student_id: 'aabeb34a-2b1e-4962-89e5-c627b53f9d7d'
+      content: this.state.examData.content,
+      studentId: this.context.user.id
     };
     try {
       const result = await fetch(
@@ -97,12 +99,15 @@ class ExamPage extends React.Component {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(JSON.stringify(dataSubmit))
+          body: JSON.stringify(dataSubmit)
         }
       );
       const examData = await result.json();
-      if (examData.successfull) {
-        router.replace(`/user/${router.query.userId}/course/${router.query.courseId}/exam`);
+      if (examData.successful) {
+        router.replace(
+          '/user/[userId]/course/[courseId]/exam',
+          `/user/${router.query.userId}/course/${router.query.courseId}/exam`
+        );
         return;
       } else {
         console.log(examData);
@@ -121,9 +126,8 @@ class ExamPage extends React.Component {
   }
 
   editAnswer(questionIdx, choiceIdx) {
-    console.log(questionIdx, choiceIdx);
-    const newQuestions = this.state.examData.content.map((currentQuestion, questionIndex) => {
-      if (questionIdx === questionIndex) {
+    const newQuestions = this.state.examData.content.map((currentQuestion, currentQuestionIndex) => {
+      if (currentQuestionIndex === questionIdx) {
         return {
           ...currentQuestion,
           answer: choiceIdx + 1
@@ -131,9 +135,11 @@ class ExamPage extends React.Component {
       }
       return currentQuestion;
     });
-    console.log(newQuestions);
     this.setState({
-      content: newQuestions
+      examData: {
+        ...this.state.examData,
+        content: newQuestions
+      }
     });
   }
 
@@ -149,6 +155,7 @@ class ExamPage extends React.Component {
   render() {
     const { user, course } = this.props;
     const state = this.state;
+
     return (
       <>
         <Head>
@@ -163,8 +170,12 @@ class ExamPage extends React.Component {
                   <Typography variant="h5">{user.username}</Typography>
                 </Link>
               </NextLink>
-              <NextLink href="/" as="/" prefetch={false}>
-                <Link color="textPrimary" href="/">
+              <NextLink
+                href="/user/[userId]/course/[courseId]"
+                as={`/user/${user.id}/course/${course.id}`}
+                prefetch={false}
+              >
+                <Link color="textPrimary" href={`/user/${user.id}/course/${course.id}`}>
                   <Typography variant="h5">{course.course_name}</Typography>
                 </Link>
               </NextLink>
@@ -190,7 +201,7 @@ class ExamPage extends React.Component {
                 <Grid item>
                   {this.state.examData !== undefined ? (
                     this.state.examData.content.map((currentQuestion, questionIdx) => (
-                      <Fragment key={currentQuestion.id}>
+                      <Fragment key={questionIdx}>
                         <Paper>
                           <Box py={1} px={2}>
                             <Question value={currentQuestion.question} idx={questionIdx} />

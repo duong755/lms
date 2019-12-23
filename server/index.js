@@ -8,7 +8,6 @@ const logger = require('morgan');
 const universalCookie = require('universal-cookie-express');
 const helmet = require('helmet');
 const compression = require('compression');
-const passport = require('passport');
 const session = require('express-session');
 
 const dayjs = require('dayjs');
@@ -69,7 +68,6 @@ app
         }
       })
     );
-    server.use(passport.initialize());
 
     server.use('/api', apiRoute);
 

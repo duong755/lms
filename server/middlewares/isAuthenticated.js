@@ -1,5 +1,12 @@
+/**
+ * @typedef {import('express').RequestHandler} RequestHandler
+ */
+
+/**
+ * @type {RequestHandler}
+ */
 const isAuthenticated = (req, res, next) => {
-  if (res.locals.user) {
+  if (req.session.userId) {
     next();
   } else {
     res.status(401).json({ message: 'Unauthenticated' });

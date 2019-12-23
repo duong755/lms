@@ -14,7 +14,7 @@ const signinRouter = Router({ mergeParams: true });
  * @type {RequestHandler}
  */
 const findUserByUsernameOrEmail = async (req, res, next) => {
-  if (req.isUnauthenticated()) {
+  if (!req.session.userId) {
     const emailOrUsername = req.body.emailOrUsername || req.body.email || req.body.username || '';
     try {
       const apiRes = await UserServices.getUserByEmailOrUsername(emailOrUsername);
@@ -26,7 +26,7 @@ const findUserByUsernameOrEmail = async (req, res, next) => {
       }
     } catch (err) {
       res.status(400).json({
-        error: err.message.replace(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d{1,5})?)/g, '')
+        error: err.message
       });
     }
   } else {
