@@ -108,6 +108,13 @@ const Account = () => {
               </Link>
             </NextLink>
           </Box>
+          <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
+            <NextLink href="/settings" as="/settings" prefetch={false}>
+              <Link href="/settings" color="inherit">
+                Settings
+              </Link>
+            </NextLink>
+          </Box>
           {userContext.user.type === 'teacher' && (
             <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
               <NextLink href="/create-course" as="/create-course" prefetch={false}>
@@ -131,10 +138,13 @@ const Account = () => {
             <Avatar classes={{ img: classes.avatar }} src={info.image} />
           </DropdownToggle>
           <DropdownMenu right>
-            <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
+            <NextLink href="/user/[userId]" as={`/user/${id}`} prefetch={false}>
               <DropdownItem href={`/user/${id}`} title={username} className={clsx([classes.username])}>
                 {username}
               </DropdownItem>
+            </NextLink>
+            <NextLink href="/settings" as="/settings" prefetch={false}>
+              <DropdownItem href="/settings">Settings</DropdownItem>
             </NextLink>
             {userContext.user.type === 'teacher' && (
               <NextLink href="/create-course" as="/create-course" prefetch={false}>
