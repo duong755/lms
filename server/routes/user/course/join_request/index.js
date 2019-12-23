@@ -36,10 +36,22 @@ const notInThisCourse = async (req, res, next) => {
   try {
     const result = await courseService.getCourseById(teacherId, courseId);
     const course = result.body._source;
-    if (course.members.indexOf(userId) < 0) {
-      next();
+    if (course.members) {
+      if (course.members instanceof Array) {
+        if (course.members.indexOf(userId) === -1) {
+          next();
+        } else {
+          res.status(400).json({ error: 'You have already in this course' });
+        }
+      } else {
+        if (course.members === userId) {
+          res.status(400).json({ error: 'You have already in this course' });
+        } else {
+          next();
+        }
+      }
     } else {
-      res.status(400).json({ message: 'You have already in this course' });
+      next();
     }
   } catch (error) {
     console.error(error);
