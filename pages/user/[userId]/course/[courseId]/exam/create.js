@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import Head from 'next/head';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import { withRouter } from 'next/router';
@@ -336,61 +337,66 @@ class CreateExamPage extends React.Component {
 
   render() {
     return (
-      <Container maxWidth="xl">
-        <Grid container justify="center">
-          <Grid item xs={12} sm={8}>
-            <Grid container alignItems="stretch" direction="column">
-              <Header
-                duration={this.state.duration}
-                editDuration={(event) => this.handleDuration(event)}
-                startAt={this.state.startAt}
-                editStartAt={(event) => this.handleStartedTime(event)}
-                title={this.state.title}
-                handleChangeTitle={(event) => this.editTitle(event)}
-              />
-              <Box py={2} />
-              <Grid item>
-                {this.state.content.map((currentQuestion, questionIdx) => (
-                  <Fragment key={questionIdx}>
-                    <Paper>
-                      <Box py={1} px={2}>
-                        <Box display="flex" flexDirection="row-reverse">
-                          <AddQuestionButton addQuestion={() => this.addQuestion(questionIdx)} />
+      <>
+        <Head>
+          <title>Create new exam</title>
+        </Head>
+        <Container maxWidth="xl">
+          <Grid container justify="center">
+            <Grid item xs={12} sm={8}>
+              <Grid container alignItems="stretch" direction="column">
+                <Header
+                  duration={this.state.duration}
+                  editDuration={(event) => this.handleDuration(event)}
+                  startAt={this.state.startAt}
+                  editStartAt={(event) => this.handleStartedTime(event)}
+                  title={this.state.title}
+                  handleChangeTitle={(event) => this.editTitle(event)}
+                />
+                <Box py={2} />
+                <Grid item>
+                  {this.state.content.map((currentQuestion, questionIdx) => (
+                    <Fragment key={questionIdx}>
+                      <Paper>
+                        <Box py={1} px={2}>
+                          <Box display="flex" flexDirection="row-reverse">
+                            <AddQuestionButton addQuestion={() => this.addQuestion(questionIdx)} />
+                          </Box>
+                          <Question
+                            value={currentQuestion.question}
+                            onChange={(event) => this.editQuestion(event, questionIdx)}
+                          />
+                          <Box py={2} />
+                          <RadioGroup>
+                            {currentQuestion.choices.map((currentChoice, choiceIdx) => (
+                              <Choice
+                                key={choiceIdx}
+                                value={currentChoice}
+                                idx={choiceIdx}
+                                onClick={() => this.editAnswer(questionIdx, choiceIdx)}
+                                onChange={(event) => this.editChoice(event, questionIdx, choiceIdx)}
+                              />
+                            ))}
+                          </RadioGroup>
+                          <PointAndDelete
+                            point={currentQuestion.point}
+                            deleteQuestion={() => this.deleteQuestion(questionIdx)}
+                            handlePoint={(event) => this.editPoint(event, questionIdx)}
+                          />
                         </Box>
-                        <Question
-                          value={currentQuestion.question}
-                          onChange={(event) => this.editQuestion(event, questionIdx)}
-                        />
-                        <Box py={2} />
-                        <RadioGroup>
-                          {currentQuestion.choices.map((currentChoice, choiceIdx) => (
-                            <Choice
-                              key={choiceIdx}
-                              value={currentChoice}
-                              idx={choiceIdx}
-                              onClick={() => this.editAnswer(questionIdx, choiceIdx)}
-                              onChange={(event) => this.editChoice(event, questionIdx, choiceIdx)}
-                            />
-                          ))}
-                        </RadioGroup>
-                        <PointAndDelete
-                          point={currentQuestion.point}
-                          deleteQuestion={() => this.deleteQuestion(questionIdx)}
-                          handlePoint={(event) => this.editPoint(event, questionIdx)}
-                        />
-                      </Box>
-                    </Paper>
-                    <Box py={1} />
-                    <Divider />
-                    <Box py={1} />
-                  </Fragment>
-                ))}
+                      </Paper>
+                      <Box py={1} />
+                      <Divider />
+                      <Box py={1} />
+                    </Fragment>
+                  ))}
+                </Grid>
+                <SubmitedButton handleSubmit={(event) => this.handleSubmit(event)} />
               </Grid>
-              <SubmitedButton handleSubmit={(event) => this.handleSubmit(event)} />
             </Grid>
           </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </>
     );
   }
 }

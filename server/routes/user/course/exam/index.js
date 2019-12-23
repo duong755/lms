@@ -143,7 +143,13 @@ examRouter.get('/:examId', canAccessCourse, async (req, res) => {
   const examId = req.params.examId;
 
   try {
-    const result = await examService.getExamById(teacherId, courseId, examId);
+    const result = await examService.getExamById(
+      teacherId,
+      courseId,
+      examId,
+      ['duration', 'start_at', 'content', 'title'],
+      ['content.answer']
+    );
     console.log(result.body._source);
     if (result.body.found) {
       res.status(200).json({ exam: result.body._source });

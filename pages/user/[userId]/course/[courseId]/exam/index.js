@@ -46,17 +46,18 @@ const useStyles = makeStyles((theme) => ({
 function ExamItem(props) {
   const classes = useStyles();
   const { exam } = props;
+  console.log(props);
   const createAt = getDateFromTimeUuid(exam.id);
   return (
     <Grid item xs={12}>
       <Paper className={clsx(classes.examContainer)}>
         <NextLink
           href="/user/[userId]/course/[courseId]/exam/[examId]"
-          as={`/user/${exam.userId}/course/[courseId]/exam/${exam.id}`}
+          as={`/user/${exam.teacher_id}/course/${exam.course_id}/exam/${exam.id}`}
           prefetch={false}
         >
           <Link
-            href={`/user/${exam.userId}/course/${exam.courseId}/exam/${exam.examId}`}
+            href={`/user/${exam.teacher_id}/course/${exam.course_id}/exam/${exam.id}`}
             className={clsx(classes.examLink)}
           >
             <Typography title={exam.title} color="primary" variant="h5">
