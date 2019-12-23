@@ -95,9 +95,7 @@ const Account = () => {
     if (matchDownSM) {
       return (
         <Box className={clsx([classes.menu])}>
-          <Box alignSelf="stretch">
-            <Search />
-          </Box>
+          <Box alignSelf="stretch">{router.pathname !== '/' && <Search />}</Box>
           <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
             <Avatar classes={{ img: classes.avatar }} src={info.image} />
             <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
@@ -189,6 +187,7 @@ const Header = () => {
   const themeContext = useContext(AppTheme);
   const userContext = useContext(AppUser);
   const theme = useTheme();
+  const router = useRouter();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useHeaderStyles();
 
@@ -251,24 +250,26 @@ const Header = () => {
               </Box>
               <Box display="flex" alignItems="center" justifyContent="flex-end">
                 <NoSsr>
-                  <AppSearch.Consumer>
-                    {({ query, setQuery, submitSearch }) => {
-                      return (
-                        <InputBase
-                          startAdornment={<Icon>search</Icon>}
-                          placeholder="Search..."
-                          classes={{
-                            root: classes.searchRoot,
-                            input: classes.searchInput
-                          }}
-                          inputProps={{ 'aria-label': 'search' }}
-                          value={query}
-                          onChange={(event) => setQuery(event.target.value)}
-                          onKeyUp={submitSearch}
-                        />
-                      );
-                    }}
-                  </AppSearch.Consumer>
+                  {router.pathname !== '/' && (
+                    <AppSearch.Consumer>
+                      {({ query, setQuery, submitSearch }) => {
+                        return (
+                          <InputBase
+                            startAdornment={<Icon>search</Icon>}
+                            placeholder="Search..."
+                            classes={{
+                              root: classes.searchRoot,
+                              input: classes.searchInput
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                            value={query}
+                            onChange={(event) => setQuery(event.target.value)}
+                            onKeyUp={submitSearch}
+                          />
+                        );
+                      }}
+                    </AppSearch.Consumer>
+                  )}
                 </NoSsr>
                 <IconButton color="default" onClick={themeContext.toggleTheme}>
                   <Icon color="inherit">{themeIcon()}</Icon>

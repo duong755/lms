@@ -30,7 +30,7 @@ const signUpSchema = Joi.object({
  * @type {RequestHandler}
  */
 const unauth = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.session.userId) {
     res.status(403).json({
       error: 'You need to sign out first'
     });
