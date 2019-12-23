@@ -325,7 +325,10 @@ class CreateExamPage extends React.Component {
       });
       const json = await result.json();
       if (json.successful) {
-        router.replace(`/user/${router.query.userId}/course/${router.query.courseId}/exam/${json.examId}`);
+        router.replace(
+          '/user/[userId]/course/[courseId]/exam/[examId]',
+          `/user/${router.query.userId}/course/${router.query.courseId}/exam/${json.examId}`
+        );
         return;
       } else {
         console.log(json);

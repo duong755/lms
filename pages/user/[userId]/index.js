@@ -4,8 +4,9 @@
  * @typedef {{ id: string, teacher_id: string, course_name: string, created_at: string, archive?: boolean, description?: string, topics?: string | string[], members?: string | string[] }} Course
  * @typedef {{ currentUser?: User | null, total?: number | null, courses?: Course[] }} ProfilePageProps
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import Head from 'next/head';
+import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import fetch from 'isomorphic-unfetch';
@@ -17,6 +18,7 @@ import Container from '@material-ui/core/Container';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
+import Link from '@material-ui/core/Link';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -29,6 +31,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 
 import withLayout from '../../../components/hoc/withLayout';
 import absURL from '../../../components/helpers/URL';
+import AppUser from '../../../components/auth/AppUser';
 import { UserType, CourseType } from '../../../components/propTypes';
 import CourseItem from '../../../components/CourseItem';
 
@@ -73,9 +76,17 @@ const ProfilePage = (props) => {
   const [totalCourses, setTotalCourses] = useState(Number(props.total));
   const [courses, setCourses] = useState(props.courses);
   const [currentPage, setCurrentPage] = useState(1);
+  const userContext = useContext(AppUser);
   const classes = useStyles();
 
   const totalPages = Math.ceil(totalCourses / 10);
+
+  const matchUser = useMemo(() => {
+    if (_.isObject(props.currentUser) && _.isObject(userContext.user)) {
+      return props.currentUser.id === userContext.user.id;
+    }
+    return false;
+  }, [props.currentUser, userContext.user]);
 
   useEffect(() => {
     const urlPath = `/api/user/${currentUser.id}/course?page=${currentPage}`;
@@ -110,19 +121,34 @@ const ProfilePage = (props) => {
               <Box className={clsx(classes.userInfoContainer)}>
                 <Avatar className={clsx(classes.userAvatar)} src={currentUser.info.image} />
                 <Box className={clsx(classes.usernameAndType)}>
-                  <Typography variant="h5">
-                    <strong>{currentUser.username}</strong>
-                  </Typography>
+                  <Box display="flex" justifyContent="flex-start" alignItems="center">
+                    <Typography variant="h5">
+                      <strong>{currentUser.username}</strong>
+                    </Typography>
+                    &nbsp;&nbsp;
+                    {matchUser && (
+                      <NextLink href="/settings">
+                        <Link href="/settings" color="inherit">
+                          <em>Edit profile</em>
+                        </Link>
+                      </NextLink>
+                    )}
+                  </Box>
                   <Typography variant="caption">
                     {currentUser.type === 'teacher' && <Typography>Teacher</Typography>}
                     {currentUser.type === 'student' && <Typography>Student</Typography>}
                   </Typography>
                   <Box className={clsx(classes.otherInfo)}>
-                    {otherInfo.map((currentPair) => (
-                      <Typography key={currentPair[0]} variant="caption">{`${currentPair[0]}: ${
-                        currentPair[1]
-                      }`}</Typography>
-                    ))}
+                    {otherInfo.map((currentPair) => {
+                      if (currentPair[0] === '_update_') {
+                        return null;
+                      }
+                      return (
+                        <Typography key={currentPair[0]} variant="caption">{`${currentPair[0]}: ${
+                          currentPair[1]
+                        }`}</Typography>
+                      );
+                    })}
                   </Box>
                 </Box>
               </Box>

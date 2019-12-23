@@ -1,8 +1,10 @@
+import { useContext, useMemo, useCallback, useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { capitalize } from 'lodash';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import fetch from 'isomorphic-unfetch';
 import dayjs from 'dayjs';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,8 +15,11 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
+import NoSsr from '@material-ui/core/NoSsr';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import absURL from '../helpers/URL';
+import AppUser from '../auth/AppUser';
 import { UserType, CourseType } from '../propTypes';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +46,7 @@ const CourseTab = (props) => {
         prefetch={false}
       >
         <Button className={clsx(classes.tab, 'focus')} color="primary" variant="contained">
-          {capitalize(tabName.replace(/_/g, ' '))}
+          {_.capitalize(tabName.replace(/_/g, ' '))}
         </Button>
       </NextLink>
     );
@@ -58,7 +63,7 @@ const CourseTab = (props) => {
         color="default"
         variant="text"
       >
-        {capitalize(tabName.replace(/_/g, ' '))}
+        {_.capitalize(tabName.replace(/_/g, ' '))}
       </Button>
     </NextLink>
   );
@@ -74,6 +79,59 @@ function withCourseLayout(CoursePage, tab) {
 
   const FullCoursePage = (props) => {
     const { user, course } = props;
+    const [notification, setNotification] = useState({ open: false, action: '', message: '' });
+    const userContext = useContext(AppUser);
+    const isStudent = useMemo(() => {
+      return _.isObject(userContext.user) && userContext.user.type === 'student';
+    }, [userContext.user]);
+
+    const isCourseCreator = useMemo(() => {
+      if (_.isObject(userContext.user)) {
+        return user.id === userContext.user.id;
+      }
+      return false;
+    }, [userContext.user]);
+    const isMember = useMemo(() => {
+      if (_.isObject(userContext.user)) {
+        if (userContext.user.type === 'teacher') {
+          return false;
+        } else {
+          if (!course.members) {
+            return false;
+          } else if (course.members instanceof Array) {
+            return course.members.indexOf(userContext.user.id) > -1;
+          }
+          return course.members === userContext.user.id;
+        }
+      }
+      return false;
+    }, [userContext.user]);
+
+    const sendJoinRequest = useCallback(async () => {
+      if (_.isObject(userContext.user)) {
+        try {
+          const createJoinRequestRes = await fetch(
+            absURL(`/api/user/${course.teacher_id}/course/${course.id}/join_request`),
+            {
+              method: 'POST',
+              credentials: 'include'
+            }
+          );
+          const json = await createJoinRequestRes.json();
+          if (createJoinRequestRes.ok) {
+            setNotification({ open: true, action: <Icon>check</Icon>, message: 'Sent join request' });
+          } else {
+            if (createJoinRequestRes.status === 400) {
+              setNotification({ open: true, action: <Icon>close</Icon>, message: json.error });
+            } else {
+              setNotification({ open: true, action: <Icon>close</Icon>, message: 'Cannot send join request' });
+            }
+          }
+        } catch {
+          setNotification({ open: true, action: <Icon>close</Icon>, message: 'Cannot send join request' });
+        }
+      }
+    }, [course, userContext.user]);
 
     const createdAtString = `Created on ${dayjs(course.created_at).format('YYYY MMM d')} at ${dayjs(
       course.created_at
@@ -103,19 +161,35 @@ function withCourseLayout(CoursePage, tab) {
               &nbsp;
               <Box display="inline">{createdAtString}</Box>
             </Box>
+            <NoSsr>
+              {isStudent && !isMember && (
+                <Button variant="contained" color="primary" onClick={sendJoinRequest}>
+                  Send join request
+                </Button>
+              )}
+            </NoSsr>
             <Box>
-              {tabs.map((currentTabName) => (
-                <CourseTab
-                  key={currentTabName}
-                  tabName={currentTabName}
-                  focusTab={tab}
-                  userId={props.userId}
-                  courseId={props.courseId}
-                />
-              ))}
+              <NoSsr>
+                {(isMember || isCourseCreator) &&
+                  tabs.map((currentTabName) => (
+                    <CourseTab
+                      key={currentTabName}
+                      tabName={currentTabName}
+                      focusTab={tab}
+                      userId={props.userId}
+                      courseId={props.courseId}
+                    />
+                  ))}
+              </NoSsr>
             </Box>
             <CoursePage tab={tab} {...props} />
           </Container>
+          <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            autoHideDuration={3000}
+            onClose={() => setNotification({ open: false, message: '', action: '' })}
+            {...notification}
+          />
         </Box>
       </>
     );

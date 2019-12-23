@@ -95,9 +95,7 @@ const Account = () => {
     if (matchDownSM) {
       return (
         <Box className={clsx([classes.menu])}>
-          <Box alignSelf="stretch">
-            <Search />
-          </Box>
+          <Box alignSelf="stretch">{router.pathname !== '/' && <Search />}</Box>
           <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
             <Avatar classes={{ img: classes.avatar }} src={info.image} />
             <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
@@ -105,6 +103,13 @@ const Account = () => {
                 <Typography component="h3">
                   <strong>{username}</strong>
                 </Typography>
+              </Link>
+            </NextLink>
+          </Box>
+          <Box display="flex" alignItems="center" alignSelf="flex-end" py={1}>
+            <NextLink href="/settings" as="/settings" prefetch={false}>
+              <Link href="/settings" color="inherit">
+                Settings
               </Link>
             </NextLink>
           </Box>
@@ -131,10 +136,13 @@ const Account = () => {
             <Avatar classes={{ img: classes.avatar }} src={info.image} />
           </DropdownToggle>
           <DropdownMenu right>
-            <NextLink href={'/user/[userId]'} as={`/user/${id}`} prefetch={false}>
+            <NextLink href="/user/[userId]" as={`/user/${id}`} prefetch={false}>
               <DropdownItem href={`/user/${id}`} title={username} className={clsx([classes.username])}>
                 {username}
               </DropdownItem>
+            </NextLink>
+            <NextLink href="/settings" as="/settings" prefetch={false}>
+              <DropdownItem href="/settings">Settings</DropdownItem>
             </NextLink>
             {userContext.user.type === 'teacher' && (
               <NextLink href="/create-course" as="/create-course" prefetch={false}>
@@ -179,6 +187,7 @@ const Header = () => {
   const themeContext = useContext(AppTheme);
   const userContext = useContext(AppUser);
   const theme = useTheme();
+  const router = useRouter();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useHeaderStyles();
 
@@ -241,24 +250,26 @@ const Header = () => {
               </Box>
               <Box display="flex" alignItems="center" justifyContent="flex-end">
                 <NoSsr>
-                  <AppSearch.Consumer>
-                    {({ query, setQuery, submitSearch }) => {
-                      return (
-                        <InputBase
-                          startAdornment={<Icon>search</Icon>}
-                          placeholder="Search..."
-                          classes={{
-                            root: classes.searchRoot,
-                            input: classes.searchInput
-                          }}
-                          inputProps={{ 'aria-label': 'search' }}
-                          value={query}
-                          onChange={(event) => setQuery(event.target.value)}
-                          onKeyUp={submitSearch}
-                        />
-                      );
-                    }}
-                  </AppSearch.Consumer>
+                  {router.pathname !== '/' && (
+                    <AppSearch.Consumer>
+                      {({ query, setQuery, submitSearch }) => {
+                        return (
+                          <InputBase
+                            startAdornment={<Icon>search</Icon>}
+                            placeholder="Search..."
+                            classes={{
+                              root: classes.searchRoot,
+                              input: classes.searchInput
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                            value={query}
+                            onChange={(event) => setQuery(event.target.value)}
+                            onKeyUp={submitSearch}
+                          />
+                        );
+                      }}
+                    </AppSearch.Consumer>
+                  )}
                 </NoSsr>
                 <IconButton color="default" onClick={themeContext.toggleTheme}>
                   <Icon color="inherit">{themeIcon()}</Icon>
