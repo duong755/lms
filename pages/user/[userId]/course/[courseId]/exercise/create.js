@@ -95,7 +95,10 @@ const CreateExerciseForm = () => {
         );
         const json = await response.json();
         if (json.successful) {
-          router.replace(`/user/${router.query.userId}/course/${router.query.courseId}/exercise/${json.exerciseId}`);
+          router.replace(
+            '/user/[userId]/course/[courseId]/exercise/[exerciseId]',
+            `/user/${router.query.userId}/course/${router.query.courseId}/exercise/${json.exerciseId}`
+          );
           return;
         } else {
           console.log(json);

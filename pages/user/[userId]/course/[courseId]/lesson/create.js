@@ -79,7 +79,10 @@ const CreateLessonForm = () => {
         });
         const json = await respone.json();
         if (json.successful) {
-          router.replace(`/user/${router.query.userId}/course/${router.query.courseId}/lesson/${json.lessonId}`);
+          router.replace(
+            '/user/[userId]/course/[courseId]/lesson/[lessonId]',
+            `/user/${router.query.userId}/course/${router.query.courseId}/lesson/${json.lessonId}`
+          );
           return;
         } else {
           console.log(json);

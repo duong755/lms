@@ -110,7 +110,10 @@ function EditCourseForm(props) {
         });
         const json = await response.json();
         if (json.successful) {
-          router.replace(`/api/user${router.query.userId}/course/${router.query.courseId}`);
+          router.replace(
+            '/user/[userId]/course/[courseId]',
+            `/user${router.query.userId}/course/${router.query.courseId}`
+          );
           return;
         } else {
           console.log(json);

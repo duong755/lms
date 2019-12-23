@@ -104,7 +104,10 @@ class ExamPage extends React.Component {
       );
       const examData = await result.json();
       if (examData.successful) {
-        router.replace(`/user/${router.query.userId}/course/${router.query.courseId}/exam`);
+        router.replace(
+          '/user/[userId]/course/[courseId]/exam',
+          `/user/${router.query.userId}/course/${router.query.courseId}/exam`
+        );
         return;
       } else {
         console.log(examData);
