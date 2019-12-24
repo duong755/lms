@@ -43,7 +43,7 @@ const unauth = (req, res, next) => {
  * @type {RequestHandler}
  */
 const validateBody = async (req, res, next) => {
-  if (req.isUnauthenticated()) {
+  if (!req.session.userId) {
     const validationResults = signUpSchema.validate(req.body, {
       errors: {
         render: true,
