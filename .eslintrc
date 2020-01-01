@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "env": {
     "browser": true,
     "es6": true,
@@ -10,10 +10,13 @@
   },
   "extends": [
     "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
-    "prettier/react",
-    "prettier/standard",
+    "plugin:prettier/react",
+    "plugin:prettier/standard",
+    "plugin:import/typescript",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:jest/recommended"
@@ -27,10 +30,11 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2019,
-    "sourceType": "module"
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
-  "plugins": ["react", "prettier", "import", "jest"],
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier", "import", "jest"],
   "settings": {
     "react": {
       "version": "detect"
@@ -58,6 +62,8 @@
     "prettier/prettier": ["error", {}, { "usePretierrc": true }],
     "react/react-in-jsx-scope": "off",
     "import/order": ["error", { "newlines-between": "always-and-inside-groups" }],
-    "import/no-unresolved": "error"
+    "import/no-unresolved": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "lib": [
+      "DOM",
+      "ES2015",
+      "ES2016",
+      "ES2017",
+      "ES2018"
+    ],
+    "sourceRoot": "./",
+    "outDir": "./target",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "jsx": "react",
+    "checkJs": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "jsxFactory": "React.createElement"
+  }
+}
