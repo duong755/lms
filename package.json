@@ -14,9 +14,9 @@
     "rm-elassandra": "docker rm -f elassandra",
     "test": "jest --verbose",
     "eslint": "./node_modules/.bin/eslint",
-    "dev": "cross-env NODE_ENV=development nodemon server",
+    "dev": "next",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node server",
+    "start": "next start",
     "heroku-postbuild": "yarn build"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "@material-ui/core": "4.8.0",
     "@material-ui/icons": "4.5.1",
     "@material-ui/pickers": "3.2.7",
+    "@material-ui/styles": "^4.8.2",
     "bcrypt": "3.0.6",
     "cassandra-driver": "4.3.1",
     "clsx": "1.0.4",
@@ -106,6 +107,7 @@
     "jest": "24.9.0",
     "nodemon": "2.0.1",
     "prettier": "^1.19.1",
+    "ts-node": "^8.5.4",
     "typescript": "^3.7.4"
   }
 }

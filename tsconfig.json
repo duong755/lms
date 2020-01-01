@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "esnext",
     "lib": [
       "DOM",
       "ES2015",
@@ -15,11 +15,24 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "checkJs": true,
     "sourceMap": true,
     "experimentalDecorators": true,
     "declaration": true,
-    "jsxFactory": "React.createElement"
-  }
+    "jsxFactory": "React.createElement",
+    "skipLibCheck": true,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }
