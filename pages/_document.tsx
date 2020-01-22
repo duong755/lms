@@ -1,48 +1,46 @@
-import { AppContext } from 'next/app';
-import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
-
+import NextDocument, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
 
-class CustomDocument extends Document {
-  constructor(props: any, context: any) {
-    super(props, context);
-  }
-
-  static async getInitialProps(context: DocumentContext) {
-    const sheets = new ServerStyleSheets();
+class CustomDocument extends NextDocument {
+  static async getInitialProps(context: DocumentContext): Promise<DocumentInitialProps> {
+    const stylesheets = new ServerStyleSheets();
     const originalRenderPage = context.renderPage;
 
     context.renderPage = () =>
       originalRenderPage({
-        enhanceApp: (App) => (props) => sheets.collect(<App {...props} />)
+        enhanceApp: (App) => (props) => stylesheets.collect(<App {...props} />)
       });
-
-    const initialProps = await Document.getInitialProps(context);
+    const initialProps = await NextDocument.getInitialProps(context);
 
     return {
       ...initialProps,
-      // Styles fragment is rendered after the app and page rendering finish.
       styles: (
         <>
           {initialProps.styles}
-          {sheets.getStyleElement()}
+          {stylesheets.getStyleElement()}
         </>
       )
     };
   }
 
   render() {
+    console.group('NextDocument');
+    console.log();
+    console.log('__NEXT_DATA__', this.props.__NEXT_DATA__);
+    console.log();
+    console.groupEnd();
+
     return (
       <Html>
         <Head>
-          <meta charSet="UTF-8" key="charSet" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" key="viewport" />
-          <meta httpEquiv="X-UA-Compatible" content="IE=edge" key="httpEquiv" />
+          <meta charSet="UTF-8" />
+          <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <link rel="shortcut icon" href="/favicon.ico" />
-          <link rel="stylesheet" type="text/css" href="/css/roboto.css" />
-          <link rel="stylesheet" type="text/css" href="/css/material-icons.css" />
-          <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
           <link rel="stylesheet" type="text/css" href="/css/nprogress.min.css" />
+          <link rel="stylesheet" type="text/css" href="/css/material-icons.css" />
+          <link rel="stylesheet" type="text/css" href="/css/roboto.css" />
+          <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
           <link rel="stylesheet" type="text/css" href="/css/override.css" />
         </Head>
         <body>

@@ -3,23 +3,22 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true,
-    "mongo": true,
-    "commonjs": true,
-    "jest": true
+    "node": true
   },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
-    "plugin:prettier/react",
-    "plugin:prettier/standard",
+    "prettier/@typescript-eslint",
+    "prettier/react",
+    "prettier/standard",
     "plugin:import/typescript",
     "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:jest/recommended"
+    "plugin:import/warnings"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -31,14 +30,15 @@
       "jsx": true
     },
     "ecmaVersion": 2020,
-    "sourceType": "module",
-    "project": "./tsconfig.json"
+    "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier", "import", "jest"],
+  "plugins": ["react", "@typescript-eslint", "prettier", "import", "react-hooks"],
   "settings": {
     "react": {
       "version": "detect"
-    }
+    },
+    "import/extensions": [".ts", ".tsx", ".js", ".jsx"],
+    "import/core-modules": ["react"]
   },
   "rules": {
     "indent": [
@@ -61,9 +61,11 @@
     ],
     "prettier/prettier": ["error", {}, { "usePretierrc": true }],
     "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
     "import/order": ["error", { "newlines-between": "always-and-inside-groups" }],
     "import/no-unresolved": "error",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off"
   }
 }
