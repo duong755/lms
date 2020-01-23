@@ -8,6 +8,8 @@ import { Cookies, CookiesProvider } from 'react-cookie';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
+import { CustomThemeProvider } from '../lib/theme';
+
 NProgress.configure({ showSpinner: true });
 Router.events.on('routeChangeStart', NProgress.start);
 Router.events.on('routeChangeComplete', NProgress.done);
@@ -39,10 +41,12 @@ class CustomApp extends NextApp {
 
     return (
       <CookiesProvider cookies={new Cookies()}>
-        <MuiPickersUtilsProvider utils={DayjsUtils}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </MuiPickersUtilsProvider>
+        <CustomThemeProvider>
+          <MuiPickersUtilsProvider utils={DayjsUtils}>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </MuiPickersUtilsProvider>
+        </CustomThemeProvider>
       </CookiesProvider>
     );
   }

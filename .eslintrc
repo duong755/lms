@@ -38,7 +38,7 @@
       "version": "detect"
     },
     "import/extensions": [".ts", ".tsx", ".js", ".jsx"],
-    "import/core-modules": ["react"]
+    "import/core-modules": ["react", "prop-types"]
   },
   "rules": {
     "indent": [
@@ -67,5 +67,6 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }
