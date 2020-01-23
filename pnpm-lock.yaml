@@ -18,6 +18,7 @@ dependencies:
   cookies-js: 1.2.3
   date-fns: 2.9.0
   dayjs: 1.8.19
+  debug: 4.1.1
   dotenv: 8.2.0
   draft-js: 0.11.4_react-dom@16.12.0+react@16.12.0
   draft-js-export-html: 1.4.1_draft-js@0.11.4+immutable@3.8.2
@@ -58,6 +59,7 @@ devDependencies:
   '@types/compression': 1.0.1
   '@types/cookie-parser': 1.4.2
   '@types/cookies': 0.7.4
+  '@types/debug': 4.1.5
   '@types/express': 4.17.2
   '@types/express-session': 1.15.16
   '@types/helmet': 0.0.45
@@ -2203,6 +2205,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-oTGtMzZZAVuEjTwCjIh8T8FrC8n/uwy+PG0yTvQcdZ7etoel7C7/3MSd7qrukENTgQtotG7gvBlBojuVs7X5rw==
+  /@types/debug/4.1.5:
+    dev: true
+    resolution:
+      integrity: sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==
   /@types/draft-js/0.10.38:
     dependencies:
       '@types/react': 16.9.18
@@ -11504,6 +11510,7 @@ specifiers:
   '@types/compression': ^1.0.1
   '@types/cookie-parser': ^1.4.2
   '@types/cookies': ^0.7.4
+  '@types/debug': ^4.1.5
   '@types/express': ^4.17.2
   '@types/express-session': ^1.15.16
   '@types/helmet': ^0.0.45
@@ -11534,6 +11541,7 @@ specifiers:
   cross-env: ^6.0.3
   date-fns: ^2.9.0
   dayjs: ^1.8.19
+  debug: ^4.1.1
   dotenv: ^8.2.0
   draft-js: ^0.11.4
   draft-js-export-html: ^1.4.1

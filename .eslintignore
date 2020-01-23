@@ -3,3 +3,6 @@ public
 legacy
 .vscode
 .next
+
+next.config.js
+jest.config.js

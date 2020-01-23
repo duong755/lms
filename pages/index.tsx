@@ -1,3 +1,5 @@
+import debug from 'debug';
+
 import { NextPage } from 'next';
 import Head from 'next/head';
 
@@ -16,14 +18,18 @@ const HomePage: NextPage = () => {
 
 HomePage.getInitialProps = async (ctx) => {
   const cookies = NextCookies(ctx);
-  console.group('page Home');
-  console.log();
-  console.log(ctx.req ? 'server' : 'browser');
-  console.log('asPath', ctx.asPath);
-  console.log('pathname', ctx.pathname);
-  console.log('query', ctx.query);
-  console.log('cookies', cookies);
-  console.groupEnd();
+  debug('NextPage')('%s', 'begin');
+  debug('NextPage')('%s', 'HomePage');
+  debug('NextPage:server')('%s', ctx.req ? 'true' : 'false');
+  debug('NextPage:browser')('%s', ctx.req ? 'false' : 'true');
+  debug('NextPage:req')('%O', ctx.req);
+  debug('NextPage:res')('%O', ctx.res);
+  debug('NextPage:pathname')('%O', ctx.pathname);
+  debug('NextPage:asPath')('%O', ctx.asPath);
+  debug('NextPage:query')('%O', ctx.query);
+  debug('NextPage:err')('%O', ctx.err);
+  debug('NextPage:cookies')('%O', cookies);
+  debug('NextPage')('%s', 'end');
   return {};
 };
 

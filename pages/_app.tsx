@@ -1,3 +1,5 @@
+import debug from 'debug';
+
 import NextApp, { AppContext, AppInitialProps } from 'next/app';
 import { Router } from 'next/router';
 import NProgress from 'nprogress';
@@ -11,6 +13,9 @@ Router.events.on('routeChangeStart', NProgress.start);
 Router.events.on('routeChangeComplete', NProgress.done);
 Router.events.on('routeChangeError', NProgress.done);
 
+if (typeof window === 'object') {
+  localStorage.debug = '*';
+}
 class CustomApp extends NextApp {
   static async getInitialProps(context: AppContext): Promise<AppInitialProps> {
     let pageProps = {};
@@ -27,13 +32,10 @@ class CustomApp extends NextApp {
 
   render() {
     const { Component, pageProps, router } = this.props;
-
-    console.group('NextApp');
-    console.log();
-    console.log('pageProps', pageProps);
-    console.log('router', router);
-    console.log();
-    console.groupEnd();
+    debug('NextApp')('%s', 'begin');
+    debug('NextApp:pageProps')('%O', pageProps);
+    debug('NextApp:router')('%O', router);
+    debug('NextApp')('%s', 'end');
 
     return (
       <CookiesProvider cookies={new Cookies()}>

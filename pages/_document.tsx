@@ -1,3 +1,5 @@
+import debug from 'debug';
+
 import NextDocument, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
 
@@ -24,11 +26,9 @@ class CustomDocument extends NextDocument {
   }
 
   render() {
-    console.group('NextDocument');
-    console.log();
-    console.log('__NEXT_DATA__', this.props.__NEXT_DATA__);
-    console.log();
-    console.groupEnd();
+    debug('NextDocument')('%s', 'begin');
+    debug('NextDocument:__NEXT_DATA__')('%O', this.props.__NEXT_DATA__);
+    debug('NextDocument')('%s', 'end');
 
     return (
       <Html>
