@@ -13,6 +13,6 @@
     ".git"
   ],
   "watch": ["server", "public", ".env"],
-  "exec": "tsc --build tsconfig.server.json server && node dist/app.js",
+  "exec": "ts-node --project tsconfig.server.json server/app.ts",
   "ext": "ts js"
 }

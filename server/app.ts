@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import session from 'express-session';
 import CassandraStore from 'cassandra-store';
-import { Client, DseClientOptions, ClientOptions } from 'cassandra-driver';
+import { Client, ClientOptions } from 'cassandra-driver';
 
 import apiRouter from './api';
 
@@ -29,7 +29,7 @@ app
     const CASSANDRA_USERNAME = process.env.CASSANDRA_USERNAME || 'cassandra';
     const CASSANDRA_PASSWORD = process.env.CASSANDRA_PASSWORD || 'cassandra';
 
-    const clientOptions: ClientOptions | DseClientOptions = {
+    const clientOptions: ClientOptions = {
       keyspace: 'lms',
       credentials: {
         username: CASSANDRA_USERNAME,
@@ -63,11 +63,7 @@ app
     server.use(express.json());
     server.use(express.text());
     server.use(express.raw());
-    server.use(
-      express.static(path.resolve(__dirname, '../public'), {
-        extensions: ['.css', '.js', '.ico', '.png', '.jpeg', '.jpg']
-      })
-    );
+    server.use(express.static(path.resolve(__dirname, '../public')));
 
     server.use(
       session({

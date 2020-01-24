@@ -22,7 +22,7 @@
   "scripts": {
     "test": "jest --verbose",
     "eslint": "eslint **/*.{ts,js,tsx,jsx}",
-    "dev": "NODE_ENV=development cp tsconfig.json server/tsconfig.json && nodemon",
+    "dev": "NODE_ENV=development nodemon",
     "build": "NODE_ENV=production cp tsconfig.json server/tsconfig.json && next build && tsc --build tsconfig.server.json server",
     "start": "NODE_ENV=production node dist/app.js"
   },
