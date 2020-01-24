@@ -63,3 +63,8 @@ typings/
 # editor
 .vscode/*
 !.vscode/launch.json
+
+# Customize
+server/tsconfig.json
+dist/
+*.zip

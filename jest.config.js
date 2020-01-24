@@ -3,11 +3,11 @@
 
 module.exports = {
   coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: ['/node_modules/', '.next', 'legacy'],
+  coveragePathIgnorePatterns: ['/node_modules/', '.next', 'dist'],
   rootDir: './',
   setupFiles: ['dotenv/config'],
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
   testPathIgnorePatterns: ['/node_modules/', '/__tests__/helpers'],
-  transformIgnorePatterns: ['/node_modules/', '/.next/', '/legacy/']
+  transformIgnorePatterns: ['/node_modules/', '/.next/', '/dist/']
 };
