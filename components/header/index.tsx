@@ -1,10 +1,13 @@
 import React from 'react';
 
+import NextLink from 'next/link';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 
 import SearchBar from './SearchBar';
 import Account from './Account';
@@ -41,7 +44,11 @@ const Header: React.FC = () => {
       <AppBar position="static" role="header" color="default">
         <Toolbar className={headerClasses.container}>
           <Box className={headerClasses.left}>
-            <Typography>OpenLMS</Typography>
+            <NextLink href="/" as="/" prefetch={false}>
+              <Link href="/">
+                <Typography>OpenLMS</Typography>
+              </Link>
+            </NextLink>
           </Box>
           <Box className={headerClasses.middle}>
             <SearchBar />

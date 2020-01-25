@@ -1,5 +1,3 @@
-import debug from 'debug';
-
 import NextApp, { AppContext, AppInitialProps } from 'next/app';
 import { Router } from 'next/router';
 import NProgress from 'nprogress';
@@ -33,11 +31,7 @@ class CustomApp extends NextApp {
   }
 
   render() {
-    const { Component, pageProps, router } = this.props;
-    debug('NextApp')('%s', 'begin');
-    debug('NextApp:pageProps')('%O', pageProps);
-    debug('NextApp:router')('%O', router);
-    debug('NextApp')('%s', 'end');
+    const { Component, pageProps } = this.props;
 
     return (
       <CookiesProvider cookies={new Cookies()}>
