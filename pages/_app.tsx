@@ -41,7 +41,7 @@ class CustomApp extends NextApp {
 
     return (
       <CookiesProvider cookies={new Cookies()}>
-        <CustomThemeProvider>
+        <CustomThemeProvider theme={pageProps.theme}>
           <MuiPickersUtilsProvider utils={DayjsUtils}>
             <CssBaseline />
             <Component {...pageProps} />

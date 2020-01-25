@@ -8,11 +8,16 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { ThemeContext, ThemeType } from './Context';
 import selectTheme from './themes';
 
-export const CustomThemeProvider: React.FC = (props) => {
+type CustomThemeProviderProps = {
+  theme?: string | null;
+  children: React.ReactNode;
+};
+
+export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (props) => {
   const [cookies, setCookies] = useCookies(['theme']);
 
   const toggleTheme = React.useCallback<() => void>(() => {
-    const currentTheme = cookies['theme'];
+    const currentTheme = cookies['theme'] || props.theme;
     const otherTheme = currentTheme === 'dark' ? 'light' : 'dark';
     setCookies('theme', otherTheme, {
       sameSite: true,
@@ -21,11 +26,11 @@ export const CustomThemeProvider: React.FC = (props) => {
         .add(1, 'y')
         .toDate()
     });
-  }, [cookies, setCookies]);
+  }, [cookies, setCookies, props.theme]);
 
   const currentTheme = React.useMemo<ThemeType | null | undefined>(() => {
-    return cookies['theme'] as ThemeType;
-  }, [cookies]);
+    return (cookies['theme'] || props.theme) as ThemeType;
+  }, [cookies, props.theme]);
 
   return (
     <ThemeContext.Provider value={{ type: currentTheme, setType: toggleTheme }}>
@@ -39,5 +44,6 @@ export const CustomThemeProvider: React.FC = (props) => {
 };
 
 CustomThemeProvider.propTypes = {
+  theme: PropTypes.string,
   children: PropTypes.node
 };

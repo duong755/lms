@@ -2,6 +2,7 @@ import debug from 'debug';
 
 import NextDocument, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
+import { minify } from 'csso';
 
 class CustomDocument extends NextDocument {
   static async getInitialProps(context: DocumentContext): Promise<DocumentInitialProps> {
@@ -13,13 +14,14 @@ class CustomDocument extends NextDocument {
         enhanceApp: (App) => (props) => stylesheets.collect(<App {...props} />)
       });
     const initialProps = await NextDocument.getInitialProps(context);
+    const css = minify(stylesheets.toString()).css;
 
     return {
       ...initialProps,
       styles: (
         <>
           {initialProps.styles}
-          {stylesheets.getStyleElement()}
+          <style id="jss-server-side">{`${css}`}</style>
         </>
       )
     };

@@ -4,7 +4,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import NextCookies from 'next-cookies';
 
-// import Header from '../components/header';
+import withLayout from '../components/hoc/withLayout';
 
 const HomePage: NextPage = () => {
   return (
@@ -12,8 +12,7 @@ const HomePage: NextPage = () => {
       <Head>
         <title>Open LMS</title>
       </Head>
-      {/* <Header /> */}
-      <div>Home page</div>
+      <div>Home Page</div>
     </>
   );
 };
@@ -35,4 +34,4 @@ HomePage.getInitialProps = async (ctx) => {
   return {};
 };
 
-export default HomePage;
+export default withLayout(HomePage);
