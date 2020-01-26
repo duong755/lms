@@ -9,11 +9,9 @@ import IconButton from '@material-ui/core/IconButton';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import TwitterIcon from '@material-ui/icons/Twitter';
 
-const useFooterStyles = makeStyles(() => ({
+const useFooterStyles = makeStyles((theme) => ({
   footer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%'
+    backgroundColor: theme.palette.background.default
   }
 }));
 
