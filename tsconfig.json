@@ -21,6 +21,6 @@
     "isolatedModules": true,
     "noImplicitAny": false
   },
-  "exclude": ["node_modules", "public", ".next", "target", "out", "next.config.js"],
+  "exclude": ["node_modules", "public", ".next", "target", "out", "next.config.js", "__tests__"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

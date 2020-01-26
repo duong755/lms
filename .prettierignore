@@ -7,5 +7,6 @@ dist
 target
 out
 
+.babelrc
 next.config.js
 jest.config.js
