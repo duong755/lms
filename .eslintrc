@@ -37,7 +37,8 @@
     "react": {
       "version": "detect"
     },
-    "import/extensions": [".ts", ".tsx", ".js", ".jsx"]
+    "import/extensions": [".ts", ".tsx", ".js", ".jsx"],
+    "import/core-modules": ["react", "prop-types"]
   },
   "rules": {
     "indent": [

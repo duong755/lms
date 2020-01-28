@@ -1,3 +1,5 @@
+import React from 'react';
+
 import NextApp, { AppContext, AppInitialProps } from 'next/app';
 import { Router } from 'next/router';
 import NProgress from 'nprogress';

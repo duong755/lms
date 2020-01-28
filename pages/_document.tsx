@@ -1,3 +1,5 @@
+import React from 'react';
+
 import NextDocument, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
 import { minify } from 'csso';
