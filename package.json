@@ -61,7 +61,7 @@
     "lodash": "^4.17.15",
     "morgan": "^1.9.1",
     "mui-rte": "^1.11.0",
-    "next": "^9.2.0",
+    "next": "^9.3.2",
     "next-cookies": "^2.0.3",
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
